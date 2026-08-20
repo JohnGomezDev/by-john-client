@@ -1,0 +1,184 @@
+---
+description: Folder structure and layer responsibilities for the Turborepo monorepo
+globs: apps/**/*.ts,apps/**/*.tsx,packages/**/*.ts,packages/**/*.tsx
+alwaysApply: true
+---
+
+<!-- SCOPE: all apps + all packages -->
+
+# Project Structure
+
+## Stack
+
+- Turborepo + pnpm workspaces — monorepo
+- Next.js 16 — App Router (`apps/web`, `apps/blog`, `apps/admin`)
+- TypeScript
+- Tailwind CSS (all apps) + shadcn/ui (`apps/admin`, `apps/blog`, `packages/ui`)
+- Redux Toolkit — UI state + auth session (`apps/admin` only)
+- TanStack Query v5 — server state (`apps/web`, `apps/admin`, `apps/blog`)
+- Axios — HTTP client
+- React Hook Form — forms (`apps/admin` only)
+
+## Monorepo layout
+
+```
+apps/
+  web/                          # Public landing page — custom design, no shadcn
+    src/
+      app/                      # Next.js App Router — routing only
+        layout.tsx
+        page.tsx
+        not-found.tsx
+        error.tsx
+      components/               # web-only components — never move to packages/ui
+      modules/                  # web feature modules
+        landing/
+          components/
+          hooks/
+            use-landing-data.ts # TanStack Query hooks
+          services/
+            landing.service.ts
+          types/
+            landing.types.ts
+          constants/
+            landing.query-keys.ts
+      lib/
+        api/
+          api-client.ts         # axios instance without auth interceptor
+        providers/
+          Providers.tsx         # QueryClientProvider
+        constants/
+          routes.constants.ts   # web routes
+      styles/
+        globals.css
+
+  blog/                         # Public blog — shadcn/ui + extra customization
+    src/
+      app/
+        layout.tsx
+        page.tsx                # post list
+        [slug]/
+          page.tsx              # post detail
+        not-found.tsx
+        error.tsx
+      modules/
+        blog/
+          components/           # uses @repo/ui + own styles
+          hooks/
+            use-posts.ts        # TanStack Query hooks
+            use-post.ts
+          services/
+            blog.service.ts     # axios calls
+          types/
+            blog.types.ts
+          constants/
+            blog.query-keys.ts
+      lib/
+        api/
+          api-client.ts         # axios instance without auth interceptor
+        providers/
+          Providers.tsx         # QueryClientProvider only
+        constants/
+          routes.constants.ts
+
+  admin/                        # Admin panel — own auth, shadcn/ui, Redux
+    src/
+      app/
+        (admin)/
+          layout.tsx            # protected layout — auth guard
+          dashboard/
+            page.tsx
+          posts/
+            page.tsx            # list
+            new/
+              page.tsx
+            [id]/
+              edit/
+                page.tsx
+        login/
+          page.tsx              # outside the (admin) group to avoid the guard
+        not-found.tsx
+        error.tsx
+      modules/
+        auth/
+          components/
+            LoginForm.tsx
+          hooks/
+            use-auth.ts
+          services/
+            auth.service.ts
+          types/
+            auth.types.ts
+        admin/
+          components/           # uses @repo/ui
+          hooks/
+            use-admin-posts.ts
+            use-create-post.ts
+            use-update-post.ts
+            use-delete-post.ts
+          services/
+            admin.service.ts
+          types/
+            admin.types.ts
+          constants/
+            admin.query-keys.ts
+      store/                    # Redux Toolkit — only in apps/admin, never shared
+        index.ts                # configureStore
+        hooks.ts                # typed useAppDispatch / useAppSelector
+        slices/
+          auth.slice.ts         # user session (...user data from api response, isAuthenticated)
+          ui.slice.ts           # sidebar open/close, theme
+      lib/
+        api/
+          api-client.ts         # extends @repo/lib with auth interceptor (imports store)
+        providers/
+          Providers.tsx         # QueryClientProvider + Redux Provider
+        constants/
+          routes.constants.ts
+
+packages/
+  ui/                           # Shared components between admin and blog only
+    src/
+      components/
+        ui/                     # auto-generated shadcn/ui — never edit manually
+        feedback/
+          LoadingSpinner.tsx
+          ErrorBoundary.tsx
+          EmptyState.tsx
+    package.json                # name: "@repo/ui"
+
+  lib/                          # Shared utilities — framework-agnostic
+    src/
+      api/
+        api-client.ts           # base axios instance — no auth interceptor
+        api-response.types.ts   # IApiResponse<T> — backend shape
+      hooks/
+        use-debounce.ts
+        use-local-storage.ts
+    package.json                # name: "@repo/lib"
+
+  config/                       # Shared tooling configs (no src/)
+    tsconfig/
+      base.json
+      nextjs.json
+    eslint/
+      base.js
+    tailwind/
+      base.ts
+    package.json                # name: "@repo/config"
+```
+
+## Key rules
+
+- `app/` in each app contains **only** page and layout files. Zero business logic, zero direct API calls.
+- All data fetching logic lives in `modules/<module>/hooks/` via TanStack Query.
+- All API calls live in `modules/<module>/services/`.
+- `store/` exists **only** in `apps/admin/` — Redux is never shared or moved to `packages/`.
+- `packages/ui/` contains only reusable components with no business logic and no API calls.
+- `apps/web/components/` never moves to `packages/ui/` — they are exclusive to the landing.
+- `packages/` never imports from `apps/` — the dependency is unidirectional: `apps/ → packages/`.
+- Imports between internal packages always use `@repo/<name>` — never relative paths between apps.
+- Within each app, internal imports use the `@/` alias (points to that app's `src/`).
+- `packages/ui/components/ui/` is shadcn/ui territory — never edit those files manually.
+- `lib/providers/Providers.tsx` in each app is the single place that wraps the app with context providers.
+- Routes are never hardcoded in components — always import from that app's `lib/constants/routes.constants.ts`.

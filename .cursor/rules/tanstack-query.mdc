@@ -1,0 +1,213 @@
+---
+description: TanStack Query v5 patterns — query keys, hooks, and mutation conventions
+globs: apps/admin/src/modules/**/hooks/**/*.ts,apps/admin/src/modules/**/constants/**/*.ts,apps/blog/src/modules/**/hooks/**/*.ts,apps/blog/src/modules/**/constants/**/*.ts,apps/web/src/modules/**/hooks/**/*.ts,apps/web/src/modules/**/constants/**/*.ts
+alwaysApply: false
+---
+
+<!-- SCOPE: apps/admin + apps/blog + apps/web -->
+<!-- TanStack Query owns all server state across the 3 apps -->
+
+# TanStack Query
+
+## Query keys
+
+Centralize all query keys per module in a `*.query-keys.ts` file. Use the factory pattern so keys are composable and easy to invalidate.
+
+```typescript
+// apps/blog/src/modules/blog/constants/blog.query-keys.ts
+export const postKeys = {
+  all:    ()             => ['posts']                    as const,
+  lists:  ()             => [...postKeys.all(), 'list']  as const,
+  detail: (slug: string) => [...postKeys.all(), slug]    as const,
+};
+
+// apps/admin/src/modules/admin/constants/admin.query-keys.ts
+export const adminPostKeys = {
+  all:    ()           => ['admin', 'posts']               as const,
+  lists:  ()           => [...adminPostKeys.all(), 'list'] as const,
+  detail: (id: string) => [...adminPostKeys.all(), id]     as const,
+};
+```
+
+## Query hooks — data fetching
+
+```typescript
+// apps/blog/src/modules/blog/hooks/use-posts.ts
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
+import { fetchPosts } from '../services/blog.service';
+import { postKeys } from '../constants/blog.query-keys';
+import type { IPost } from '../types/blog.types';
+
+export function usePosts(): ReturnType<typeof useQuery<IPost[]>> {
+  return useQuery({
+    queryKey: postKeys.lists(),
+    queryFn:  fetchPosts,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+}
+```
+
+```typescript
+// apps/blog/src/modules/blog/hooks/use-post.ts
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
+import { fetchPostBySlug } from '../services/blog.service';
+import { postKeys } from '../constants/blog.query-keys';
+import type { IPostDetail } from '../types/blog.types';
+
+export function usePost(slug: string): ReturnType<typeof useQuery<IPostDetail>> {
+  return useQuery({
+    queryKey: postKeys.detail(slug),
+    queryFn:  () => fetchPostBySlug(slug),
+    staleTime: 1000 * 60 * 10,
+  });
+}
+```
+
+## Mutation hooks — CUD operations (admin only)
+
+```typescript
+// apps/admin/src/modules/admin/hooks/use-create-post.ts
+'use client';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createPost } from '../services/admin.service';
+import { adminPostKeys } from '../constants/admin.query-keys';
+import type { ICreatePostPayload, IPost } from '../types/admin.types';
+
+export function useCreatePost(): ReturnType<typeof useMutation<IPost, Error, ICreatePostPayload>> {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createPost,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: adminPostKeys.lists() });
+    },
+  });
+}
+```
+
+```typescript
+// apps/admin/src/modules/admin/hooks/use-delete-post.ts
+'use client';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deletePost } from '../services/admin.service';
+import { adminPostKeys } from '../constants/admin.query-keys';
+
+export function useDeletePost(): ReturnType<typeof useMutation<void, Error, string>> {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => deletePost(id),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: adminPostKeys.lists() });
+    },
+  });
+}
+```
+
+## QueryClient setup — each app defines its own
+
+```typescript
+// apps/admin/src/lib/providers/Providers.tsx
+'use client';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Provider } from 'react-redux';
+import { store } from '@/store';
+import { useState } from 'react';
+
+export function Providers({ children }: { children: React.ReactNode }): React.JSX.Element {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 1000 * 60,  // 1 minute default
+            retry: 1,
+          },
+        },
+      }),
+  );
+
+  return (
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        {children}
+        {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
+      </QueryClientProvider>
+    </Provider>
+  );
+}
+```
+
+```typescript
+// apps/blog/src/lib/providers/Providers.tsx — no Redux
+'use client';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { useState } from 'react';
+
+export function Providers({ children }: { children: React.ReactNode }): React.JSX.Element {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: { staleTime: 1000 * 60, retry: 1 },
+        },
+      }),
+  );
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
+    </QueryClientProvider>
+  );
+}
+```
+
+`apps/web` uses the same pattern as `apps/blog` — `QueryClientProvider` without Redux:
+
+```typescript
+// apps/web/src/lib/providers/Providers.tsx — no Redux
+'use client';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { useState } from 'react';
+
+export function Providers({ children }: { children: React.ReactNode }): React.JSX.Element {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: { staleTime: 1000 * 60, retry: 1 },
+        },
+      }),
+  );
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
+    </QueryClientProvider>
+  );
+}
+```
+
+## Rules
+
+- **TanStack Query owns all server state.** Never store API responses in Redux.
+- Every module has its own query-keys file — never share keys across modules.
+- Always define `staleTime` explicitly in each query — never rely solely on the default.
+- Mutations always invalidate the relevant list query on `onSuccess`.
+- Hooks are always `'use client'` — never call `useQuery` / `useMutation` in a Server Component.
+- Prefer `void queryClient.invalidateQueries(...)` over optimistic updates unless the UX explicitly requires it.
+- Query keys for `apps/admin/`, `apps/blog/`, and `apps/web/` are independent — never share them via `packages/`.

@@ -1,0 +1,131 @@
+---
+description: React component patterns, Server vs Client component rules, and composition guidelines
+globs: apps/**/*.tsx,packages/ui/**/*.tsx
+alwaysApply: true
+---
+
+<!-- SCOPE: all apps + packages/ui -->
+<!-- Two distinct contexts: packages/ui/** (reusable components) and apps/*/components/** (app-specific components) -->
+
+# Component Patterns
+
+## Two component contexts
+
+### `packages/ui/` — reusable components (admin + blog)
+
+- No business logic, no API calls, no TanStack Query hooks, no Redux.
+- Receive everything via props — purely presentational or generic UI.
+- No `'use client'` unless the primitive itself needs it (e.g. a dropdown with internal state).
+- Auto-generated shadcn/ui components live in `packages/ui/src/components/ui/` — never edit manually.
+
+```tsx
+// packages/ui/src/components/feedback/LoadingSpinner.tsx
+interface ILoadingSpinnerProps {
+  size?: 'sm' | 'md' | 'lg';
+}
+
+export function LoadingSpinner({ size = 'md' }: ILoadingSpinnerProps): React.JSX.Element {
+  return <div className={`animate-spin rounded-full border-2 border-primary size-${size}`} />;
+}
+```
+
+### `apps/*/components/` — app-specific components
+
+- May contain app logic (TanStack Query hooks, Redux, local state).
+- Not shared across apps — if a component from `apps/admin/` becomes useful in `apps/blog/`, move it to `packages/ui/` **without** the business logic.
+- `apps/web/components/` never goes to `packages/ui/` — 100% custom landing design.
+
+## Server Components vs Client Components
+
+Next.js App Router defaults to **Server Components**. Only add `'use client'` when strictly necessary.
+
+| Use Server Component | Use Client Component (`'use client'`) |
+|---|---|
+| SEO pages (blog list, post detail, landing) | Any `useState` / `useEffect` / `useReducer` |
+| Static or async rendering | TanStack Query hooks (`useQuery`, `useMutation`) |
+| Layouts without interactivity | Redux hooks (`useAppSelector`, `useAppDispatch`) |
+| Passing data down as props | Event handlers, forms, browser APIs |
+| Environment variables at build time | Auth-gated UI (admin module) |
+
+**Rule**: push `'use client'` as far down the tree as possible. A page can be a Server Component that imports one small Client Component leaf — that is the preferred pattern.
+
+## Component anatomy
+
+```tsx
+// apps/blog/src/modules/blog/components/PostCard.tsx
+'use client'; // only if needed
+
+import type { IPost } from '../types/blog.types';
+
+interface IPostCardProps {
+  post: IPost;
+  className?: string;
+}
+
+export function PostCard({ post, className }: IPostCardProps): React.JSX.Element {
+  return (
+    <article className={className}>
+      <h2>{post.title}</h2>
+      <p>{post.excerpt}</p>
+    </article>
+  );
+}
+```
+
+- Always export as a **named export** — no default exports for components.
+- Always type props with an interface prefixed `I` (e.g. `IPostCardProps`).
+- Always declare the return type explicitly: `React.JSX.Element` or `React.ReactNode`.
+- Never put data fetching directly inside a component — delegate to a hook or receive via props.
+
+## Composition rules
+
+- **One component per file.** Co-located sub-components are allowed only when they are never used outside that file, and must be clearly commented.
+- **Props over context** for passing data between parent and child. Use context only for truly cross-cutting concerns (theme, auth status).
+- **Avoid prop drilling beyond 2 levels.** Lift state or use a hook instead.
+- **No anonymous arrow components.** Always use named function declarations or named `const`.
+
+```tsx
+// ✅ correct
+export function PostList({ posts }: IPostListProps): React.JSX.Element { ... }
+
+// ❌ avoid
+export default ({ posts }) => { ... }
+```
+
+## Loading and error states
+
+Every Client Component that fetches data must handle three states explicitly:
+
+```tsx
+export function PostList(): React.JSX.Element {
+  const { data, isLoading, isError } = usePosts();
+
+  if (isLoading) return <LoadingSpinner />;
+  if (isError)   return <ErrorState message="No se pudieron cargar los posts." />;
+  if (!data?.length) return <EmptyState message="Aún no hay posts publicados." />;
+
+  return (
+    <ul>
+      {data.map((post) => <PostCard key={post.id} post={post} />)}
+    </ul>
+  );
+}
+```
+
+## Page components (`app/` files)
+
+Page files are thin shells. They own the route, set metadata, and compose module components:
+
+```tsx
+// apps/blog/src/app/page.tsx
+import { PostListContainer } from '@/modules/blog/components/PostListContainer';
+
+export const metadata = { title: 'Blog' };
+
+export default function BlogPage(): React.JSX.Element {
+  return <PostListContainer />;
+}
+```
+
+- Pages never contain JSX beyond layout composition.
+- Pages never import axios, Redux, or TanStack Query directly.

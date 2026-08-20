@@ -1,0 +1,59 @@
+---
+description: Naming conventions for all files, variables, components, and types
+globs: apps/**/*.ts,apps/**/*.tsx,packages/**/*.ts,packages/**/*.tsx
+alwaysApply: true
+---
+
+<!-- SCOPE: all apps + all packages -->
+
+# Naming Conventions
+
+- **Language**: always English in code. Spanish is allowed only in UI-facing text and copy.
+- **Variables, functions, parameters, hooks**: camelCase.
+- **React components**: PascalCase — one component per file, filename matches the component name.
+- **Interfaces**: PascalCase with prefix `I` (e.g. `IPost`).
+- **Type aliases**: PascalCase with prefix `T` (e.g. `TApiResponse<T>`).
+- **Enums**: PascalCase, no prefix (e.g. `PostStatus`).
+- **Custom hooks**: camelCase with prefix `use` (e.g. `useAuth`, `usePosts`).
+- **Redux slices**: camelCase with suffix `Slice` (e.g. `authSlice`, `uiSlice`).
+- **TanStack Query keys**: defined as `const` arrays in a dedicated `query-keys.ts` file, camelCase (e.g. `postKeys`).
+- **Folders**: kebab-case.
+- **Files**:
+  - Components: `PascalCase.tsx` (e.g. `PostCard.tsx`).
+  - Hooks, utils, services, stores: kebab-case (e.g. `use-auth.ts`, `api-client.ts`).
+  - Types: kebab-case with suffix `.types.ts` (e.g. `post.types.ts`).
+  - Constants: kebab-case with suffix `.constants.ts`.
+- **CSS / Tailwind**: utility-first; no custom class names unless encapsulating a repeated pattern via `@apply` in a dedicated `.css` module.
+
+## Imports in the monorepo
+
+| Situation | Correct form | Incorrect form |
+|---|---|---|
+| Import from an internal package | `@repo/ui`, `@repo/lib` | `../../packages/ui/src/...` |
+| Import within the same app | `@/modules/...`, `@/lib/...` | `../../../lib/...` |
+| Import from one app into another | **Forbidden** | `../../apps/admin/src/...` |
+| Import from an app into packages | **Forbidden** | `../../apps/admin/src/store` |
+
+```typescript
+// ✅ correct — internal package import
+import { LoadingSpinner } from '@repo/ui/components/feedback/LoadingSpinner';
+import type { IApiResponse } from '@repo/lib/api/api-response.types';
+
+// ✅ correct — internal import within the app
+import { useAuth } from '@/modules/auth/hooks/use-auth';
+import { ROUTES } from '@/lib/constants/routes.constants';
+
+// ❌ incorrect — relative path between apps or into packages
+import { LoadingSpinner } from '../../../packages/ui/src/components/...';
+import { store } from '../../admin/src/store'; // from packages
+```
+
+## Internal package names
+
+Packages under `packages/` follow the pattern `@repo/<kebab-name>`:
+
+```
+@repo/ui      → packages/ui
+@repo/lib     → packages/lib
+@repo/config  → packages/config
+```

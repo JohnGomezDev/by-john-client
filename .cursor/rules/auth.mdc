@@ -1,0 +1,168 @@
+---
+description: Frontend authentication — login flow, token handling, route guard, and useAuth hook
+globs: apps/admin/**/*.ts,apps/admin/**/*.tsx
+alwaysApply: false
+---
+
+<!-- SCOPE: apps/admin only -->
+<!-- apps/web and apps/blog have no authentication logic -->
+
+# Authentication
+
+## Token mechanism
+
+| Piece | Where it lives in the frontend | Usage |
+| --- | --- | --- |
+| Access token (JWT, TTL 15 min) | Redux `state.auth.accessToken` — in memory only | `Authorization: Bearer <token>` on every protected request |
+| Refresh token (TTL 48 h from login) | `httpOnly` cookie managed by the browser | Only `POST /auth/refresh` and `DELETE /auth/logout` |
+
+The JWT is **not** renewed on every request — only on login and refresh.  
+The `sameSite: strict` cookie requires the frontend origin to be in the backend's `CORS_ORIGIN` with `credentials: true`.
+
+## Flow
+
+1. User submits credentials → `auth.service.ts` calls `POST /api/auth/login`.
+2. Backend responds `201` with `{ accessToken, admin: {...} }` and sets the `refresh_token` cookie.
+3. Frontend stores the `accessToken` in Redux (`authSlice`) — **never in `localStorage`**.
+4. The Axios interceptor attaches the access token to every request automatically.
+5. On **401**, the interceptor silently calls `POST /api/auth/refresh` (cookie sent automatically) and retries the original request with the new token.
+6. If refresh also returns 401 → dispatch `clearAuth()`, redirect to `/login`.
+7. Logout: `DELETE /api/auth/logout` — requires Bearer **and** cookie; the backend clears the whitelist and removes the cookie.
+
+## Auth service
+
+```typescript
+// apps/admin/src/modules/auth/services/auth.service.ts
+import { apiClient } from "@/lib/api/api-client";
+import type { IApiResponse } from "@repo/lib/api/api-response.types";
+import type { ILoginPayload, IAuthAdmin } from "../types/auth.types";
+
+export async function login(
+  payload: ILoginPayload,
+): Promise<{ accessToken: string; admin: IAuthAdmin }> {
+  const { data } = await apiClient.post<
+    IApiResponse<{ accessToken: string; admin: IAuthAdmin }>
+  >("/auth/login", payload);
+  return data.data;
+}
+
+export async function logout(): Promise<void> {
+  // DELETE — requires Bearer (attached by the interceptor) + httpOnly cookie
+  await apiClient.delete("/auth/logout");
+}
+```
+
+## useAuth hook
+
+```typescript
+// apps/admin/src/modules/auth/hooks/use-auth.ts
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { setAuth, clearAuth } from "@/store/slices/auth.slice";
+import { login, logout } from "../services/auth.service";
+import type { ILoginPayload } from "../types/auth.types";
+import { ROUTES } from "@/lib/constants/routes.constants";
+
+export function useAuth(): {
+  user: IAuthAdmin | null;
+  isAuthenticated: boolean;
+  login: (payload: ILoginPayload) => Promise<void>;
+  logout: () => Promise<void>;
+} {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const user = useAppSelector((state) => state.auth.user);
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+
+  const handleLogin = async (payload: ILoginPayload): Promise<void> => {
+    const { accessToken, admin } = await login(payload);
+    dispatch(setAuth({ accessToken, user: admin }));
+    router.push(ROUTES.admin.dashboard);
+  };
+
+  const handleLogout = async (): Promise<void> => {
+    await logout();
+    dispatch(clearAuth());
+    router.push(ROUTES.login);
+  };
+
+  return { user, isAuthenticated, login: handleLogin, logout: handleLogout };
+}
+```
+
+## Route guard — admin layout
+
+The admin layout is the only place that enforces the guard. No individual page checks auth on its own.
+
+```tsx
+// apps/admin/src/app/(admin)/layout.tsx
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/store/hooks";
+import { ROUTES } from "@/lib/constants/routes.constants";
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.JSX.Element {
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace(ROUTES.login);
+    }
+  }, [isAuthenticated, router]);
+
+  if (!isAuthenticated) return <></>;
+
+  return (
+    <div className="flex h-screen">
+      <Sidebar />
+      <main className="flex-1 overflow-auto p-6">{children}</main>
+    </div>
+  );
+}
+```
+
+## Auth types
+
+```typescript
+// apps/admin/src/modules/auth/types/auth.types.ts
+
+// Login uses username, not email
+export interface ILoginPayload {
+  username: string;
+  password: string;
+}
+
+// Exact shape of the 'admin' object returned by the backend
+export interface IAuthAdmin {
+  id: string;
+  name: string;
+  lastName: string;
+  username: string;
+  email: string;
+}
+
+export interface IAuthTokens {
+  accessToken: string;
+  admin: IAuthAdmin;
+}
+```
+
+## Rules
+
+- The access token lives **only in Redux** (`state.auth.accessToken`) — never in `localStorage`, never in a JS-managed cookie.
+- The refresh token is an `httpOnly` cookie — the frontend never reads or writes it directly.
+- The login field is `username`, **not** `email`. The backend responds `401` with the same message whether the username or password is wrong.
+- Logout is `DELETE /auth/logout` — requires the active Bearer plus the cookie; without Bearer the backend returns 401.
+- Authentication is enforced at **layout level** (`app/(admin)/layout.tsx`), not page by page.
+- The login page must be **outside** the `(admin)` route group to avoid the guard.
+- `useAuth` is the only hook that dispatches auth actions — components never dispatch `setAuth` or `clearAuth` directly.
+- This rule applies **exclusively** to `apps/admin/`. `apps/web` and `apps/blog` have no auth logic.

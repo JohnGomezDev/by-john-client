@@ -1,0 +1,201 @@
+---
+description: ESLint, Prettier, TypeScript, Turborepo, and CI conventions for the monorepo
+globs: packages/config/**,apps/**/tsconfig*,apps/**/.eslintrc*,turbo.json,.github/**/*.yml,package.json
+alwaysApply: false
+---
+
+<!-- SCOPE: monorepo root + packages/config + all apps -->
+
+# Tooling & Config
+
+## Core monorepo principle
+
+TypeScript, ESLint, and Tailwind configs are **not duplicated** — they are extended from `@repo/config`. Each app keeps only the minimal local config needed to customize its context.
+
+## TypeScript
+
+- `strict: true` — no exceptions.
+- `noImplicitAny: true`, `strictNullChecks: true`.
+- **No `as` type assertions** unless casting from a known-safe generic (e.g. event targets). Prefer type guards.
+- **No `// @ts-ignore` or `// @ts-expect-error`** without an explanatory comment immediately above.
+
+### Base configs in `packages/config`
+
+```jsonc
+// packages/config/tsconfig/base.json
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
+```
+
+```jsonc
+// packages/config/tsconfig/nextjs.json — extends base.json
+{
+  "extends": "./base.json",
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [{ "name": "next" }]
+  }
+}
+```
+
+### Each app extends without duplicating
+
+```jsonc
+// apps/admin/tsconfig.json
+{
+  "extends": "@repo/config/tsconfig/nextjs.json",
+  "compilerOptions": {
+    "paths": { "@/*": ["./src/*"] }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
+```
+
+## ESLint
+
+Extends `next/core-web-vitals` + `@typescript-eslint/recommended-type-checked`. The shared base config lives in `packages/config/eslint/base.js`.
+
+```javascript
+// packages/config/eslint/base.js
+module.exports = {
+  extends: ['next/core-web-vitals', 'plugin:@typescript-eslint/recommended-type-checked'],
+  rules: {
+    '@typescript-eslint/no-explicit-any':            'error',
+    '@typescript-eslint/explicit-function-return-type': 'error',
+    '@typescript-eslint/consistent-type-imports':    'error',
+    '@typescript-eslint/no-unused-vars':             'error',
+    '@typescript-eslint/naming-convention': [
+      'error',
+      { selector: 'variable',  format: ['camelCase', 'PascalCase', 'UPPER_CASE'] },
+      { selector: 'function',  format: ['camelCase', 'PascalCase'] },
+      { selector: 'parameter', format: ['camelCase'] },
+      { selector: 'class',     format: ['PascalCase'] },
+      { selector: 'interface', format: ['PascalCase'], prefix: ['I'] },
+      { selector: 'typeAlias', format: ['PascalCase'], prefix: ['T'] },
+    ],
+    'react/display-name':         'error',
+    'react-hooks/exhaustive-deps': 'warn',
+  },
+};
+```
+
+```javascript
+// apps/admin/eslint.config.js — extends without duplicating rules
+import baseConfig from '@repo/config/eslint/base.js';
+export default [...baseConfig];
+```
+
+## Prettier
+
+```json
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 100,
+  "semi": true,
+  "plugins": ["prettier-plugin-tailwindcss"]
+}
+```
+
+`prettier-plugin-tailwindcss` runs automatically to sort Tailwind classes — never sort them manually. Prettier config is defined once at the monorepo root.
+
+## Tailwind CSS
+
+```typescript
+// packages/config/tailwind/base.ts
+import type { Config } from 'tailwindcss';
+
+export const baseConfig: Partial<Config> = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      // shared tokens between admin and blog
+    },
+  },
+};
+```
+
+```typescript
+// apps/admin/tailwind.config.ts — extends the base
+import { baseConfig } from '@repo/config/tailwind/base';
+import type { Config } from 'tailwindcss';
+
+export default {
+  ...baseConfig,
+  content: ['./src/**/*.{ts,tsx}', '../../packages/ui/src/**/*.{ts,tsx}'],
+} satisfies Config;
+```
+
+`apps/web` defines its own Tailwind config without extending `@repo/config/tailwind/base` — its design is fully independent.
+
+## shadcn/ui
+
+- Add components via CLI only: `pnpm dlx shadcn@latest add <component>` run from `packages/ui/`.
+- Never edit files inside `packages/ui/src/components/ui/` manually.
+- Import from `@repo/ui/components/ui/<component>` — never from the shadcn registry URL directly.
+
+## Monorepo scripts
+
+```json
+// root package.json
+{
+  "scripts": {
+    "dev":        "turbo dev",
+    "build":      "turbo build",
+    "lint":       "turbo lint",
+    "format":     "prettier --write \"**/*.{ts,tsx}\" --ignore-path .gitignore",
+    "type-check": "turbo type-check"
+  }
+}
+```
+
+```json
+// apps/admin/package.json — app scripts
+{
+  "scripts": {
+    "dev":        "next dev",
+    "build":      "next build",
+    "start":      "next start",
+    "lint":       "next lint",
+    "type-check": "tsc --noEmit"
+  }
+}
+```
+
+## Environment variables
+
+- Public variables (browser-accessible): prefix `NEXT_PUBLIC_`.
+- Server-only variables: no prefix — never import in Client Components.
+- Each app has its own `.env.example` at its root.
+
+```
+# apps/admin/.env.example
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+```
+
+## Git conventions
+
+| | Convention | Example |
+|---|---|---|
+| Branch | `feat/<feature-name>` | `feat/admin-post-editor` |
+| Commit | `feat: <description>` | `feat: add post delete confirmation dialog` |
+
+Confirm commit messages with the user before committing.

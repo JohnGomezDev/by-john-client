@@ -1,0 +1,227 @@
+---
+description: Axios client setup, token refresh interceptor, and service layer conventions
+globs: packages/lib/src/api/**/*.ts,apps/admin/src/lib/api/**/*.ts,apps/blog/src/lib/api/**/*.ts,apps/admin/src/modules/**/services/**/*.ts,apps/blog/src/modules/**/services/**/*.ts
+alwaysApply: false
+---
+
+<!-- SCOPE: packages/lib + apps/admin + apps/blog -->
+
+# API Layer
+
+## Two-level architecture
+
+The HTTP client is split into two levels because of the unidirectional dependency rule (`packages/` cannot import from `apps/`):
+
+| Level | Location | Description |
+|---|---|---|
+| Base | `packages/lib/src/api/api-client.ts` | Axios factory — no auth interceptor; usable in any app |
+| Extended | `apps/admin/src/lib/api/api-client.ts` | Extends the base, adds auth interceptors (reads and dispatches to `store`) |
+
+`apps/blog` and `apps/web` use the base client directly — they have no auth logic.
+
+## Base client — `packages/lib`
+
+```typescript
+// packages/lib/src/api/api-client.ts
+import axios, { type AxiosInstance, type CreateAxiosDefaults } from 'axios';
+
+export function createApiClient(baseURL: string, options?: CreateAxiosDefaults): AxiosInstance {
+  return axios.create({
+    baseURL,
+    headers: { 'Content-Type': 'application/json' },
+    ...options,
+  });
+}
+```
+
+No `withCredentials` by default — only `apps/admin` needs it for the refresh token cookie.
+
+## Extended client — `apps/admin` (with auth interceptors)
+
+```typescript
+// apps/admin/src/lib/api/api-client.ts
+import axios, { type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
+import { createApiClient } from '@repo/lib/api/api-client';
+import { store } from '@/store';
+import { clearAuth, setAccessToken } from '@/store/slices/auth.slice';
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
+
+export const apiClient = createApiClient(BASE_URL, { withCredentials: true }); // refresh token cookie
+
+// ── Request interceptor: attach access token ──────────────────────────────
+apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const token = store.getState().auth.accessToken;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// ── Response interceptor: silent token refresh (401) ──────────────────────
+//
+// When the access token expires (TTL 15 min), the backend returns 401.
+// The interceptor calls POST /auth/refresh with the httpOnly cookie to
+// obtain a new accessToken and retries the original request.
+// If refresh also returns 401 (session expired or cookie missing),
+// auth state is cleared and the user is redirected to /login.
+//
+// Request queue: if several requests fail with 401 at the same time,
+// only ONE call to /auth/refresh is made; the rest wait in failedQueue
+// and are all retried with the new token once it arrives.
+
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value: unknown) => void;
+  reject:  (reason?: unknown) => void;
+}> = [];
+
+const processQueue = (error: unknown, token: string | null = null): void => {
+  failedQueue.forEach(({ resolve, reject }) => {
+    error ? reject(error) : resolve(token);
+  });
+  failedQueue = [];
+};
+
+apiClient.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  async (error: unknown) => {
+    const originalRequest = (
+      error as { config: InternalAxiosRequestConfig & { _retry?: boolean } }
+    ).config;
+    const status = (error as { response?: { status: number } }).response?.status;
+
+    if (status === 401 && !originalRequest._retry) {
+
+      // If a refresh is already in progress, enqueue this request
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then((token) => {
+          originalRequest.headers.Authorization = `Bearer ${token as string}`;
+          return apiClient(originalRequest);
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        // IMPORTANT: use axios directly (NOT apiClient) to prevent this
+        // request from also going through the auth interceptor and looping.
+        // withCredentials: true so the browser sends the refresh_token cookie.
+        const { data } = await axios.post<{ data: { accessToken: string } }>(
+          `${BASE_URL}/auth/refresh`,
+          {},
+          { withCredentials: true },
+        );
+
+        const newToken = data.data.accessToken;
+        store.dispatch(setAccessToken(newToken));
+        processQueue(null, newToken);
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return apiClient(originalRequest);
+
+      } catch (refreshError) {
+        // Refresh failed (session expired or cookie missing) → forced logout
+        processQueue(refreshError, null);
+        store.dispatch(clearAuth());
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
+```
+
+## Client in `apps/blog` and `apps/web` (no auth)
+
+```typescript
+// apps/blog/src/lib/api/api-client.ts
+import { createApiClient } from '@repo/lib/api/api-client';
+
+export const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL!);
+
+// apps/web/src/lib/api/api-client.ts — identical
+```
+
+No extra options — only requests to public endpoints, no session cookies.
+
+## API response types — `packages/lib`
+
+Matches the backend's global wrapper:
+
+```typescript
+// packages/lib/src/api/api-response.types.ts
+
+// Success wrapper: { status: 'ok', message: string, data: T }
+export interface IApiResponse<T> {
+  data:    T;
+  status:  'ok';
+  message: string;
+}
+
+// Error shape from the global filter (does not use the wrapper)
+export interface IApiErrorResponse {
+  statusCode: number;
+  message:    string | string[]; // string[] for class-validator validation errors
+  error:      string;
+}
+```
+
+## Service layer
+
+Each module owns its service file. Services are plain async functions — no classes.
+
+```typescript
+// apps/blog/src/modules/blog/services/blog.service.ts
+import { apiClient } from '@/lib/api/api-client';
+import type { IApiResponse } from '@repo/lib/api/api-response.types';
+import type { IPost, IPostDetail } from '../types/blog.types';
+
+export async function fetchPosts(): Promise<IPost[]> {
+  const { data } = await apiClient.get<IApiResponse<IPost[]>>('/blog/posts');
+  return data.data;
+}
+
+export async function fetchPostBySlug(slug: string): Promise<IPostDetail> {
+  const { data } = await apiClient.get<IApiResponse<IPostDetail>>(`/blog/posts/${slug}`);
+  return data.data;
+}
+```
+
+```typescript
+// apps/admin/src/modules/admin/services/admin.service.ts
+import { apiClient } from '@/lib/api/api-client';
+import type { IApiResponse } from '@repo/lib/api/api-response.types';
+import type { IPost, ICreatePostPayload, IUpdatePostPayload } from '../types/admin.types';
+
+export async function createPost(payload: ICreatePostPayload): Promise<IPost> {
+  const { data } = await apiClient.post<IApiResponse<IPost>>('/admin/posts', payload);
+  return data.data;
+}
+
+export async function updatePost(id: string, payload: IUpdatePostPayload): Promise<IPost> {
+  const { data } = await apiClient.patch<IApiResponse<IPost>>(`/admin/posts/${id}`, payload);
+  return data.data;
+}
+
+export async function deletePost(id: string): Promise<void> {
+  await apiClient.delete(`/admin/posts/${id}`);
+}
+```
+
+## Rules
+
+- Never import `axios` directly in a module — always use `apiClient` from `@/lib/api/api-client`.
+- The only exception is inside the refresh interceptor in `apps/admin`, where raw `axios` is used to prevent the refresh request from going through the same interceptor and creating an infinite loop.
+- Services return **unwrapped** domain data (`.data.data`), not the raw `IApiResponse`.
+- Services never throw custom errors — the interceptor and TanStack Query handle them.
+- Services are never called directly from components — always go through a TanStack Query hook.
+- `packages/lib/api/api-client.ts` does not import from `apps/` — the dependency is unidirectional.
+- The `IApiResponse` and `IApiErrorResponse` types live in `@repo/lib` and are imported from there in all services.
+- Error `message` can be `string` or `string[]` (class-validator validation) — type and handle both cases in the UI.

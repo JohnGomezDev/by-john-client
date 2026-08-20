@@ -1,0 +1,169 @@
+---
+description: Module-specific rules for web (landing), blog, and admin apps
+globs: apps/web/**/*.ts,apps/web/**/*.tsx,apps/blog/**/*.ts,apps/blog/**/*.tsx,apps/admin/**/*.ts,apps/admin/**/*.tsx
+alwaysApply: false
+---
+
+<!-- SCOPE: all apps -->
+
+# Module Rules
+
+## apps/web — Landing page
+
+- Uses **Tailwind CSS only** — no shadcn/ui or `@repo/ui`.
+- 100% custom design: components live in `apps/web/src/components/` and never move to `packages/ui/`.
+- Data fetching via TanStack Query — all fetching logic in `modules/landing/hooks/`.
+- Optimized for SEO: prefer Server Components for the initial render; use Client Components only when interactivity or TanStack Query hooks are needed.
+- All images use `next/image` with explicit `width`, `height`, and `alt`.
+- Animation is allowed (CSS or Framer Motion) but must respect `prefers-reduced-motion`.
+
+```tsx
+// apps/web/src/app/page.tsx — Server Component that composes sections
+import { HeroSection }     from '@/components/HeroSection';
+import { FeaturesSection } from '@/components/FeaturesSection';
+import { CtaSection }      from '@/components/CtaSection';
+
+export const metadata = {
+  title: 'Portfolio | Home',
+  description: 'Web developer portfolio',
+};
+
+export default function LandingPage(): React.JSX.Element {
+  return (
+    <>
+      <HeroSection />
+      <FeaturesSection />
+      <CtaSection />
+    </>
+  );
+}
+```
+
+---
+
+## apps/blog — Public blog
+
+- Uses `@repo/ui` for UI primitives (shadcn/ui) + own style customization.
+- Read-only — no write operations from the blog. No Redux.
+- The post list and detail pages are Server Components that use React's `cache` or a direct service call (not `useQuery`) for SSR/SSG.
+- The detail page renders Markdown/HTML content from the API.
+- SEO: `generateMetadata` must be implemented on every dynamic route.
+
+```tsx
+// apps/blog/src/app/[slug]/page.tsx
+import { fetchPostBySlug } from '@/modules/blog/services/blog.service';
+import { PostDetail } from '@/modules/blog/components/PostDetail';
+import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
+
+interface IProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: IProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await fetchPostBySlug(slug).catch(() => null);
+  if (!post) return { title: 'Post no encontrado' };
+  return { title: post.title, description: post.excerpt };
+}
+
+export default async function PostPage({ params }: IProps): Promise<React.JSX.Element> {
+  const { slug } = await params;
+  const post = await fetchPostBySlug(slug).catch(() => null);
+  if (!post) notFound();
+  return <PostDetail post={post} />;
+}
+```
+
+**`generateStaticParams`** must be implemented on the detail route to enable SSG:
+
+```tsx
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
+  const posts = await fetchPosts();
+  return posts.map((p) => ({ slug: p.slug }));
+}
+```
+
+---
+
+## apps/admin — Admin panel
+
+- Uses `@repo/ui` for all UI (shadcn/ui).
+- Fully client-side rendered for data — all fetching via TanStack Query.
+- Protected at layout level (see `auth.mdc`). No Redux in any other app.
+- CRUD operations go through mutation hooks, never direct service calls from components.
+- Destructive actions (delete) must always show a confirmation dialog (`AlertDialog` from shadcn/ui) before dispatching the mutation.
+- The posts table uses the shadcn/ui `DataTable` pattern.
+
+```tsx
+// apps/admin/src/modules/admin/components/DeletePostButton.tsx
+'use client';
+
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription,
+  AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from '@repo/ui/components/ui/alert-dialog';
+import { Button } from '@repo/ui/components/ui/button';
+import { useDeletePost } from '../hooks/use-delete-post';
+
+interface IDeletePostButtonProps {
+  postId: string;
+}
+
+export function DeletePostButton({ postId }: IDeletePostButtonProps): React.JSX.Element {
+  const { mutate: deletePost, isPending } = useDeletePost();
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive" size="sm">Eliminar</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>¿Eliminar este post?</AlertDialogTitle>
+          <AlertDialogDescription>Esta acción no se puede deshacer.</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => deletePost(postId)}
+            disabled={isPending}
+          >
+            {isPending ? 'Eliminando...' : 'Eliminar'}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+```
+
+---
+
+## Route constants — each app defines its own
+
+Routes are never hardcoded in components. Each app has its own routes file:
+
+```typescript
+// apps/admin/src/lib/constants/routes.constants.ts
+export const ROUTES = {
+  login:     '/login',
+  admin: {
+    dashboard: '/dashboard',
+    posts: {
+      list:   '/posts',
+      new:    '/posts/new',
+      edit:   (id: string) => `/posts/${id}/edit`,
+    },
+  },
+} as const;
+```
+
+```typescript
+// apps/blog/src/lib/constants/routes.constants.ts
+export const ROUTES = {
+  home:   '/',
+  detail: (slug: string) => `/${slug}`,
+} as const;
+```

@@ -1,0 +1,154 @@
+---
+description: Redux Toolkit conventions — store setup, auth slice, UI slice, and typed hooks
+globs: apps/admin/**/*.ts,apps/admin/**/*.tsx
+alwaysApply: false
+---
+
+<!-- SCOPE: apps/admin only -->
+<!-- Redux does not exist in apps/web or apps/blog. It is never moved to packages/. -->
+
+# Redux Toolkit
+
+Redux manages **only UI state and the auth session**. Server state belongs exclusively to TanStack Query.
+
+## What lives in Redux
+
+| Slice | State |
+|---|---|
+| `authSlice` | `accessToken`, `user` (name, role), `isAuthenticated` |
+| `uiSlice` | `sidebarOpen`, `theme` |
+
+**Never put in Redux**: posts, API responses, pagination data, loading states from API calls.
+
+## Store setup
+
+```typescript
+// apps/admin/src/store/index.ts
+import { configureStore } from '@reduxjs/toolkit';
+import { authReducer } from './slices/auth.slice';
+import { uiReducer }   from './slices/ui.slice';
+
+export const store = configureStore({
+  reducer: {
+    auth: authReducer,
+    ui:   uiReducer,
+  },
+});
+
+export type TRootState   = ReturnType<typeof store.getState>;
+export type TAppDispatch = typeof store.dispatch;
+```
+
+```typescript
+// apps/admin/src/store/hooks.ts
+import { useDispatch, useSelector } from 'react-redux';
+import type { TRootState, TAppDispatch } from './index';
+
+export const useAppDispatch = (): TAppDispatch => useDispatch<TAppDispatch>();
+export const useAppSelector = <T>(selector: (state: TRootState) => T): T =>
+  useSelector<TRootState, T>(selector);
+```
+
+## Auth slice
+
+```typescript
+// apps/admin/src/store/slices/auth.slice.ts
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+
+interface IAuthUser {
+  id: string;
+  name: string;
+  role: string;
+}
+
+interface IAuthState {
+  accessToken:     string | null;
+  user:            IAuthUser | null;
+  isAuthenticated: boolean;
+}
+
+const initialState: IAuthState = {
+  accessToken:     null,
+  user:            null,
+  isAuthenticated: false,
+};
+
+const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    setAuth(state, action: PayloadAction<{ accessToken: string; user: IAuthUser }>) {
+      state.accessToken     = action.payload.accessToken;
+      state.user            = action.payload.user;
+      state.isAuthenticated = true;
+    },
+    setAccessToken(state, action: PayloadAction<string>) {
+      state.accessToken = action.payload;
+    },
+    clearAuth(state) {
+      state.accessToken     = null;
+      state.user            = null;
+      state.isAuthenticated = false;
+    },
+  },
+});
+
+export const { setAuth, setAccessToken, clearAuth } = authSlice.actions;
+export const authReducer = authSlice.reducer;
+```
+
+## UI slice
+
+```typescript
+// apps/admin/src/store/slices/ui.slice.ts
+import { createSlice } from '@reduxjs/toolkit';
+
+interface IUiState {
+  sidebarOpen: boolean;
+  theme: 'light' | 'dark';
+}
+
+const initialState: IUiState = {
+  sidebarOpen: true,
+  theme: 'light',
+};
+
+const uiSlice = createSlice({
+  name: 'ui',
+  initialState,
+  reducers: {
+    toggleSidebar(state) {
+      state.sidebarOpen = !state.sidebarOpen;
+    },
+    setSidebarOpen(state, action) {
+      state.sidebarOpen = action.payload as boolean;
+    },
+    setTheme(state, action) {
+      state.theme = action.payload as 'light' | 'dark';
+    },
+  },
+});
+
+export const { toggleSidebar, setSidebarOpen, setTheme } = uiSlice.actions;
+export const uiReducer = uiSlice.reducer;
+```
+
+## Usage in components
+
+```typescript
+// Always use typed hooks — never raw useSelector / useDispatch
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { clearAuth } from '@/store/slices/auth.slice';
+
+const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+const dispatch = useAppDispatch();
+dispatch(clearAuth());
+```
+
+## Rules
+
+- Always use `useAppSelector` and `useAppDispatch` — never the untyped versions.
+- Never dispatch from inside a service or the Axios interceptor directly — the interceptor may import `store` as a singleton, but component logic should always go through hooks.
+- Selectors can be inline lambdas for simple cases; extract to a `selectors.ts` only when reused in 3+ places.
+- Slices never contain async logic — side effects live in TanStack Query mutations or in `use-auth.ts`.
+- The store lives in `apps/admin/src/store/` — **never** move it to `packages/` or import it from `apps/blog` or `apps/web`.
