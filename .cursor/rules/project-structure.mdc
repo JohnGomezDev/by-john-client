@@ -153,8 +153,6 @@ packages/
         api-client.ts           # base axios instance — no auth interceptor
         api-response.types.ts   # IApiResponse<T> — backend shape
       hooks/
-        use-debounce.ts
-        use-local-storage.ts
     package.json                # name: "@repo/lib"
 
   config/                       # Shared tooling configs (no src/)
