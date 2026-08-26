@@ -1,4 +1,4 @@
-import { DashboardGreeting } from './components/DashboardGreeting';
+import { DashboardGreeting } from '@/modules/dashboard/components/DashboardGreeting';
 
 export default function DashboardPage(): React.JSX.Element {
   return (
