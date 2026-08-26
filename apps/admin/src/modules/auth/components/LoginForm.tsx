@@ -1,5 +1,7 @@
 'use client';
 
+import { Lock, User } from 'lucide-react';
+
 import { Button } from '@repo/ui/components/ui/button';
 import {
   Card,
@@ -23,35 +25,60 @@ export function LoginForm(): React.JSX.Element {
   } = useLoginForm();
 
   return (
-    <Card className="mx-auto w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Iniciar sesión</CardTitle>
-        <CardDescription>Accede al panel de administración.</CardDescription>
+    <Card className="w-full border-0 py-0 shadow-lg sm:shadow-xl">
+      <CardHeader className="space-y-1 px-5 pt-6 pb-4 text-center sm:px-8 sm:pt-8">
+        <CardTitle className="text-xl font-bold sm:text-2xl">
+          Inicia sesión en tu cuenta
+        </CardTitle>
+        <CardDescription className="text-sm sm:text-base">
+          Introduce tus credenciales para acceder al dashboard administrativo.
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit} className="space-y-4">
+
+      <CardContent className="px-5 pb-6 sm:px-8 sm:pb-8">
+        <form onSubmit={onSubmit} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="username">Usuario</Label>
-            <Input
-              id="username"
-              autoComplete="username"
-              {...usernameField}
-              aria-invalid={errors.username ? true : undefined}
-            />
+            <Label htmlFor="username" className="text-sm font-semibold">
+              Usuario
+            </Label>
+            <div className="relative">
+              <User
+                aria-hidden="true"
+                className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+              />
+              <Input
+                id="username"
+                autoComplete="username"
+                placeholder="@tu.usuario"
+                className="h-11 pl-10"
+                {...usernameField}
+                aria-invalid={errors.username ? true : undefined}
+              />
+            </div>
             {errors.username && (
               <p className="text-sm text-destructive">{errors.username.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Contraseña</Label>
-            <Input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              {...passwordField}
-              aria-invalid={errors.password ? true : undefined}
-            />
+            <Label htmlFor="password" className="text-sm font-semibold">
+              Contraseña
+            </Label>
+            <div className="relative">
+              <Lock
+                aria-hidden="true"
+                className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+              />
+              <Input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                placeholder="••••••••"
+                className="h-11 pl-10"
+                {...passwordField}
+                aria-invalid={errors.password ? true : undefined}
+              />
+            </div>
             {errors.password && (
               <p className="text-sm text-destructive">{errors.password.message}</p>
             )}
@@ -61,7 +88,11 @@ export function LoginForm(): React.JSX.Element {
             <p className="text-sm text-destructive">{errors.root.message}</p>
           )}
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
+          <Button
+            type="submit"
+            className="h-11 w-full bg-blue-600 text-base font-semibold hover:bg-blue-700"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </Button>
         </form>
