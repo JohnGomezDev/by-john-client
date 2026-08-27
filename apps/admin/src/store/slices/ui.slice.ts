@@ -8,7 +8,7 @@ export interface IUiState {
 }
 
 const initialState: IUiState = {
-  sidebarOpen: true,
+  sidebarOpen: false,
   theme: 'light',
 };
 
@@ -19,11 +19,14 @@ const uiSlice = createSlice({
     toggleSidebar: (state) => {
       state.sidebarOpen = !state.sidebarOpen;
     },
+    setSidebarOpen: (state, action: PayloadAction<boolean>) => {
+      state.sidebarOpen = action.payload;
+    },
     setTheme: (state, action: PayloadAction<TUiTheme>) => {
       state.theme = action.payload;
     },
   },
 });
 
-export const { toggleSidebar, setTheme } = uiSlice.actions;
+export const { toggleSidebar, setSidebarOpen, setTheme } = uiSlice.actions;
 export const uiReducer = uiSlice.reducer;
