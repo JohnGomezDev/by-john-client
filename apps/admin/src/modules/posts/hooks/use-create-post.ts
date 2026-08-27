@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { adminPostKeys } from '../constants/post.query-keys';
-import { createPost } from '../services/admin.service';
+import { createPost } from '../services/posts.service';
 import type { ICreatePostPayload, IPost } from '../types/admin.types';
 
 export function useCreatePost(): ReturnType<

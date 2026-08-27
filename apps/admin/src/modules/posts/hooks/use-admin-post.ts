@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { adminPostKeys } from '../constants/post.query-keys';
-import { fetchAdminPostById } from '../services/admin.service';
+import { fetchAdminPostById } from '../services/posts.service';
 import type { IPost } from '../types/admin.types';
 
 export function useAdminPost(id: string): ReturnType<typeof useQuery<IPost>> {

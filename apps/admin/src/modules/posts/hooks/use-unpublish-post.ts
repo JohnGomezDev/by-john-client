@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { adminPostKeys } from '../constants/post.query-keys';
-import { unpublishPost } from '../services/admin.service';
+import { unpublishPost } from '../services/posts.service';
 import type { IPost } from '../types/admin.types';
 
 export function useUnpublishPost(): ReturnType<typeof useMutation<IPost, Error, string>> {
