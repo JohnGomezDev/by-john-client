@@ -23,7 +23,7 @@ export function useAuth(): {
   const handleLogin = async (payload: ILoginPayload): Promise<void> => {
     const { accessToken, admin } = await login(payload);
     dispatch(setAuth({ accessToken, user: admin }));
-    router.push(ROUTES.admin.dashboard);
+    router.push(ROUTES.admin.posts.list);
   };
 
   const handleLogout = async (): Promise<void> => {

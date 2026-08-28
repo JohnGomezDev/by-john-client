@@ -17,7 +17,7 @@ export function LoginRedirect({ children }: ILoginRedirectProps): React.JSX.Elem
 
   useEffect(() => {
     if (!isChecking && isAuthenticated) {
-      router.replace(ROUTES.admin.dashboard);
+      router.replace(ROUTES.admin.posts.list);
     }
   }, [isChecking, isAuthenticated, router]);
 
