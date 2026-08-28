@@ -10,6 +10,14 @@ export function formatPostDate(date: string | null): string {
   }).format(new Date(date));
 }
 
+export function formatPublishedDate(date: string | null): string {
+  if (!date) {
+    return '-- / --/ --';
+  }
+
+  return formatPostDate(date);
+}
+
 export function formatAuthorName(
   admin: { name: string; lastName: string } | null,
 ): string {
