@@ -11,7 +11,7 @@ export interface ISidebarNavItem {
 export const SIDEBAR_NAV_ITEMS: ISidebarNavItem[] = [
   {
     label: 'Posts',
-    href: ROUTES.admin.posts,
+    href: ROUTES.admin.posts.list,
     icon: FileText,
   },
   {
