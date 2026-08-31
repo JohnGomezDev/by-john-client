@@ -39,7 +39,7 @@ export function AdminSidebarUser(): React.JSX.Element {
         aria-label={isPending ? 'Cerrando sesión...' : 'Cerrar sesión'}
         className="shrink-0 text-slate-500 hover:text-slate-900"
       >
-        <LogOut className="size-5" />
+        <LogOut className="cursor-pointer size-5" />
       </Button>
     </div>
   );
