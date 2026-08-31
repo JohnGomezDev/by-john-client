@@ -18,6 +18,7 @@
     "typescript": "5.9.2"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.85.5",
     "axios": "^1.12.2",
     "react": "^19.2.0"
   }

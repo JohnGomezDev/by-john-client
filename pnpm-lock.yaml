@@ -206,6 +206,9 @@ importers:
 
   packages/lib:
     dependencies:
+      '@tanstack/react-query':
+        specifier: ^5.85.5
+        version: 5.102.4(react@19.2.0)
       axios:
         specifier: ^1.12.2
         version: 1.19.0
