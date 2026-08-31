@@ -1,6 +1,6 @@
 'use client';
 
-import { useDebounce } from '@repo/lib/hooks/use-debounce';
+import { useDebounce } from '@repo/lib/modules/common/hooks/use-debounce';
 import { useForm, type UseFormRegisterReturn } from 'react-hook-form';
 
 export interface IPostsSearchFormValues {

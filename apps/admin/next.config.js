@@ -1,5 +1,5 @@
 const nextConfig = {
-  transpilePackages: ['@repo/ui'],
+  transpilePackages: ['@repo/ui', '@mdxeditor/editor'],
 };
 
 export default nextConfig;

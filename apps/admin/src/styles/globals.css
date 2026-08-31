@@ -79,4 +79,36 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .post-form-mdx-editor-content h1 {
+    @apply mt-6 mb-4 text-3xl font-bold text-slate-900;
+  }
+
+  .post-form-mdx-editor-content h2 {
+    @apply mt-6 mb-3 text-2xl font-bold text-slate-900;
+  }
+
+  .post-form-mdx-editor-content h3 {
+    @apply mt-5 mb-2 text-xl font-semibold text-slate-900;
+  }
+
+  .post-form-mdx-editor-content h4 {
+    @apply mt-4 mb-2 text-lg font-semibold text-slate-900;
+  }
+
+  .post-form-mdx-editor-content ul {
+    @apply my-4 list-disc pl-6;
+  }
+
+  .post-form-mdx-editor-content ol {
+    @apply my-4 list-decimal pl-6;
+  }
+
+  .post-form-mdx-editor-content li {
+    @apply my-1;
+  }
+
+  .post-form-mdx-editor-content blockquote {
+    @apply my-4 rounded-lg border border-slate-200 bg-slate-50 p-4 text-slate-600;
+  }
 }

@@ -3,6 +3,7 @@ export const ROUTES = {
   admin: {
     posts: {
       list: '/posts',
+      create: '/posts/crear',
       detail: (id: string) => `/posts/${id}`,
     },
     categorias: '/categorias',
