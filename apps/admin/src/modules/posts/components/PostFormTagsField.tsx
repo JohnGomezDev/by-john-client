@@ -6,12 +6,13 @@ import { Controller } from 'react-hook-form';
 
 import { cn } from '@repo/ui/lib/utils';
 
-import type { IPostFormTagOption } from '../constants/post-form-options.constants';
+import type { ITag } from '@repo/lib/modules/taxonomy/types/taxonomy.types';
+
 import type { IPostFormValues } from '../types/post-form.types';
 
 interface IPostFormTagsFieldProps {
   control: Control<IPostFormValues>;
-  options: IPostFormTagOption[];
+  options: ITag[];
 }
 
 export function PostFormTagsField({
