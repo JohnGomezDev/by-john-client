@@ -3,6 +3,7 @@
 import { Button } from '@repo/ui/components/ui/button';
 
 import { usePostForm } from '../hooks/use-post-form';
+import type { IPostFormValues } from '../types/post-form.types';
 import { PostFormContentSection } from './PostFormContentSection';
 import { PostFormExcerptSection } from './PostFormExcerptSection';
 import { PostFormHeader } from './PostFormHeader';
@@ -11,7 +12,12 @@ import { PostFormSeoSection } from './PostFormSeoSection';
 import { PostFormSocialSection } from './PostFormSocialSection';
 import { PostFormTitleSection } from './PostFormTitleSection';
 
-export function PostForm(): React.JSX.Element {
+interface IPostFormProps {
+  postId?: string;
+  defaultValues?: IPostFormValues;
+}
+
+export function PostForm({ postId, defaultValues }: IPostFormProps): React.JSX.Element {
   const {
     titleField,
     slugField,
@@ -25,12 +31,16 @@ export function PostForm(): React.JSX.Element {
     tagIdsRules,
     onSubmit,
     isPending,
+    isEditMode,
+    isDirty,
     errors,
-  } = usePostForm();
+  } = usePostForm({ postId, defaultValues });
+
+  const isSubmitDisabled = isPending || (isEditMode && !isDirty);
 
   return (
     <div className="space-y-6">
-      <PostFormHeader />
+      <PostFormHeader title={isEditMode ? 'Editar post' : 'Crear nuevo post'} />
 
       <form onSubmit={onSubmit} className="space-y-6">
         <PostFormTitleSection
@@ -66,10 +76,10 @@ export function PostForm(): React.JSX.Element {
         <div className="flex justify-end pb-2">
           <Button
             type="submit"
-            disabled={isPending}
+            disabled={isSubmitDisabled}
             className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 sm:w-auto"
           >
-            {isPending ? 'Guardando...' : 'Guardar'}
+            {isPending ? 'Guardando...' : isEditMode ? 'Guardar cambios' : 'Guardar'}
           </Button>
         </div>
       </form>

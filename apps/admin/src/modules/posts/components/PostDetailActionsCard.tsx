@@ -1,3 +1,6 @@
+import Link from 'next/link';
+
+import { ROUTES } from '@/lib/constants/routes.constants';
 import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { cn } from '@repo/ui/lib/utils';
@@ -15,10 +18,10 @@ export function PostDetailActionsCard({ post }: IPostDetailActionsCardProps): Re
     <Card className="border-slate-200 py-0 shadow-sm">
       <CardContent className="flex flex-col gap-3 px-5 py-5">
         <Button
-          type="button"
+          asChild
           className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700"
         >
-          Editar post
+          <Link href={ROUTES.admin.posts.edit(post.id)}>Editar post</Link>
         </Button>
 
         <Button

@@ -75,6 +75,11 @@ export interface ICreatePostResult {
   message: string;
 }
 
+export interface IUpdatePostResult {
+  post: IPost;
+  message: string;
+}
+
 export interface IUpdatePostPayload {
   title?: string;
   slug?: string;

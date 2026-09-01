@@ -9,6 +9,7 @@ import type {
   IPost,
   IPostsListResponse,
   IUpdatePostPayload,
+  IUpdatePostResult,
 } from '../types/admin.types';
 
 export async function fetchAdminPosts(
@@ -33,10 +34,13 @@ export async function createPost(payload: ICreatePostPayload): Promise<ICreatePo
   return { post: data.data, message: data.message };
 }
 
-export async function updatePost(id: string, payload: IUpdatePostPayload): Promise<IPost> {
+export async function updatePost(
+  id: string,
+  payload: IUpdatePostPayload,
+): Promise<IUpdatePostResult> {
   const { data } = await apiClient.patch<IApiResponse<IPost>>(`/admin/posts/${id}`, payload);
 
-  return data.data;
+  return { post: data.data, message: data.message };
 }
 
 export async function deletePost(id: string): Promise<void> {

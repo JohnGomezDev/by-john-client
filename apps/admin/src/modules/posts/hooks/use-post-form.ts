@@ -13,37 +13,22 @@ import {
 
 import { ROUTES } from '@/lib/constants/routes.constants';
 
-import type { ICreatePostPayload } from '../types/admin.types';
 import type { IPostFormValues } from '../types/post-form.types';
+import { mapDirtyFieldsToUpdatePayload, mapFormToPayload } from '../utils/post-form.utils';
 import { useCreatePost } from './use-create-post';
+import { useUpdatePost } from './use-update-post';
 
-function mapFormToPayload(data: IPostFormValues): ICreatePostPayload {
-  const payload: ICreatePostPayload = {
-    title: data.title,
-    slug: data.slug,
-    content: data.content,
-    categoryId: data.categoryId,
-    tagIds: data.tagIds,
-  };
-
-  if (data.excerpt) {
-    payload.excerpt = data.excerpt;
-  }
-
-  if (data.metaTitle) {
-    payload.metaTitle = data.metaTitle;
-  }
-
-  if (data.metaDescription) {
-    payload.metaDescription = data.metaDescription;
-  }
-
-  if (data.ogImageUrl) {
-    payload.ogImageUrl = data.ogImageUrl;
-  }
-
-  return payload;
-}
+const emptyDefaultValues: IPostFormValues = {
+  title: '',
+  slug: '',
+  content: '',
+  excerpt: '',
+  categoryId: '',
+  tagIds: [],
+  metaTitle: '',
+  metaDescription: '',
+  ogImageUrl: '',
+};
 
 const contentRules: RegisterOptions<IPostFormValues, 'content'> = {
   validate: (value) => value.trim().length > 0 || 'El contenido es obligatorio',
@@ -53,7 +38,15 @@ const tagIdsRules: RegisterOptions<IPostFormValues, 'tagIds'> = {
   validate: (value) => (value?.length ?? 0) > 0 || 'Selecciona al menos una etiqueta',
 };
 
-export function usePostForm(): {
+interface IUsePostFormOptions {
+  postId?: string;
+  defaultValues?: IPostFormValues;
+}
+
+export function usePostForm({
+  postId,
+  defaultValues,
+}: IUsePostFormOptions = {}): {
   titleField: UseFormRegisterReturn<'title'>;
   slugField: UseFormRegisterReturn<'slug'>;
   excerptField: UseFormRegisterReturn<'excerpt'>;
@@ -66,6 +59,8 @@ export function usePostForm(): {
   tagIdsRules: RegisterOptions<IPostFormValues, 'tagIds'>;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   isPending: boolean;
+  isEditMode: boolean;
+  isDirty: boolean;
   errors: {
     title?: { message?: string };
     slug?: { message?: string };
@@ -78,28 +73,44 @@ export function usePostForm(): {
   };
 } {
   const router = useRouter();
-  const { mutate: createPost, isPending } = useCreatePost();
+  const isEditMode = Boolean(postId);
+  const { mutate: createPost, isPending: isCreating } = useCreatePost();
+  const { mutate: updatePost, isPending: isUpdating } = useUpdatePost();
+  const isPending = isEditMode ? isUpdating : isCreating;
 
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty, dirtyFields },
   } = useForm<IPostFormValues>({
-    defaultValues: {
-      title: '',
-      slug: '',
-      content: '',
-      excerpt: '',
-      categoryId: '',
-      tagIds: [],
-      metaTitle: '',
-      metaDescription: '',
-      ogImageUrl: '',
-    },
+    defaultValues: defaultValues ?? emptyDefaultValues,
   });
 
   const onSubmit: SubmitHandler<IPostFormValues> = (data): void => {
+    if (isEditMode && postId) {
+      const payload = mapDirtyFieldsToUpdatePayload(data, dirtyFields as Partial<Record<keyof IPostFormValues, boolean>>);
+
+      if (Object.keys(payload).length === 0) {
+        return;
+      }
+
+      updatePost(
+        { id: postId, payload },
+        {
+          onSuccess: ({ message }) => {
+            toast.success(message);
+            router.push(ROUTES.admin.posts.detail(postId));
+          },
+          onError: (error) => {
+            toast.error(getApiErrorMessage(error, 'Ocurrió un error al actualizar el post.'));
+          },
+        },
+      );
+
+      return;
+    }
+
     createPost(mapFormToPayload(data), {
       onSuccess: ({ message }) => {
         toast.success(message);
@@ -138,6 +149,8 @@ export function usePostForm(): {
     tagIdsRules,
     onSubmit: handleSubmit(onSubmit),
     isPending,
+    isEditMode,
+    isDirty,
     errors,
   };
 }

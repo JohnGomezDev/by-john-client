@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { adminPostKeys } from '../constants/post.query-keys';
 import { updatePost } from '../services/posts.service';
-import type { IPost, IUpdatePostPayload } from '../types/admin.types';
+import type { IUpdatePostPayload, IUpdatePostResult } from '../types/admin.types';
 
 interface IUpdatePostVariables {
   id: string;
@@ -12,15 +12,15 @@ interface IUpdatePostVariables {
 }
 
 export function useUpdatePost(): ReturnType<
-  typeof useMutation<IPost, Error, IUpdatePostVariables>
+  typeof useMutation<IUpdatePostResult, Error, IUpdatePostVariables>
 > {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ id, payload }) => updatePost(id, payload),
-    onSuccess: (data) => {
+    onSuccess: ({ post }) => {
       void queryClient.invalidateQueries({ queryKey: adminPostKeys.lists() });
-      void queryClient.invalidateQueries({ queryKey: adminPostKeys.detail(data.id) });
+      void queryClient.invalidateQueries({ queryKey: adminPostKeys.detail(post.id) });
     },
   });
 }
