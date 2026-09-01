@@ -5,6 +5,7 @@ import { apiClient } from '@/lib/api/api-client';
 import type {
   IAdminPostsListParams,
   ICreatePostPayload,
+  ICreatePostResult,
   IPost,
   IPostsListResponse,
   IUpdatePostPayload,
@@ -26,10 +27,10 @@ export async function fetchAdminPostById(id: string): Promise<IPost> {
   return data.data;
 }
 
-export async function createPost(payload: ICreatePostPayload): Promise<IPost> {
+export async function createPost(payload: ICreatePostPayload): Promise<ICreatePostResult> {
   const { data } = await apiClient.post<IApiResponse<IPost>>('/admin/posts', payload);
 
-  return data.data;
+  return { post: data.data, message: data.message };
 }
 
 export async function updatePost(id: string, payload: IUpdatePostPayload): Promise<IPost> {

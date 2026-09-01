@@ -4,6 +4,8 @@ import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { Input } from '@repo/ui/components/ui/input';
 import { Label } from '@repo/ui/components/ui/label';
 
+import { RequiredFieldIndicator } from './RequiredFieldIndicator';
+
 interface IPostFormTitleSectionProps {
   titleField: UseFormRegisterReturn<'title'>;
   slugField: UseFormRegisterReturn<'slug'>;
@@ -23,10 +25,11 @@ export function PostFormTitleSection({
         <div className="space-y-2">
           <Label htmlFor="title" className="sr-only">
             Título del post
+            <RequiredFieldIndicator />
           </Label>
           <Input
             id="title"
-            placeholder="Título del post"
+            placeholder="Título del post *"
             className="h-12 border-0 px-0 text-2xl font-bold shadow-none focus-visible:ring-0 sm:text-3xl"
             aria-invalid={titleError ? true : undefined}
             {...titleField}
@@ -37,12 +40,13 @@ export function PostFormTitleSection({
         <div className="space-y-2">
           <Label htmlFor="slug" className="text-sm font-medium text-slate-600">
             Slug del post
+            <RequiredFieldIndicator />
           </Label>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <span className="shrink-0 text-sm text-slate-500">blog.byjohn.com/posts/</span>
             <Input
               id="slug"
-              placeholder="slug-del-post"
+              placeholder="slug-del-post *"
               className="h-10 font-mono"
               aria-invalid={slugError ? true : undefined}
               {...slugField}

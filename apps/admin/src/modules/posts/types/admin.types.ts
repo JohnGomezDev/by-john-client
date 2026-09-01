@@ -70,6 +70,11 @@ export interface ICreatePostPayload {
   ogImageUrl?: string | null;
 }
 
+export interface ICreatePostResult {
+  post: IPost;
+  message: string;
+}
+
 export interface IUpdatePostPayload {
   title?: string;
   slug?: string;

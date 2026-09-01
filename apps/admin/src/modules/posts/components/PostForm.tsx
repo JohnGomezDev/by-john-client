@@ -21,7 +21,10 @@ export function PostForm(): React.JSX.Element {
     metaDescriptionField,
     ogImageUrlField,
     control,
+    contentRules,
+    tagIdsRules,
     onSubmit,
+    isPending,
     errors,
   } = usePostForm();
 
@@ -36,12 +39,22 @@ export function PostForm(): React.JSX.Element {
           titleError={errors.title?.message}
           slugError={errors.slug?.message}
         />
-        <PostFormContentSection control={control} />
+        <PostFormContentSection
+          control={control}
+          contentRules={contentRules}
+          contentError={errors.content?.message}
+        />
         <PostFormExcerptSection
           excerptField={excerptField}
           excerptError={errors.excerpt?.message}
         />
-        <PostFormOrganizationSection categoryIdField={categoryIdField} control={control} />
+        <PostFormOrganizationSection
+          categoryIdField={categoryIdField}
+          control={control}
+          categoryIdError={errors.categoryId?.message}
+          tagIdsRules={tagIdsRules}
+          tagIdsError={errors.tagIds?.message}
+        />
         <PostFormSeoSection
           metaTitleField={metaTitleField}
           metaDescriptionField={metaDescriptionField}
@@ -51,8 +64,12 @@ export function PostForm(): React.JSX.Element {
         <PostFormSocialSection ogImageUrlField={ogImageUrlField} />
 
         <div className="flex justify-end pb-2">
-          <Button type="submit" className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 sm:w-auto">
-            Guardar
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 sm:w-auto"
+          >
+            {isPending ? 'Guardando...' : 'Guardar'}
           </Button>
         </div>
       </form>

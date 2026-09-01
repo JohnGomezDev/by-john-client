@@ -1,7 +1,7 @@
 'use client';
 
 import { X } from 'lucide-react';
-import type { Control } from 'react-hook-form';
+import type { Control, RegisterOptions } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 
 import { cn } from '@repo/ui/lib/utils';
@@ -13,16 +13,19 @@ import type { IPostFormValues } from '../types/post-form.types';
 interface IPostFormTagsFieldProps {
   control: Control<IPostFormValues>;
   options: ITag[];
+  rules: RegisterOptions<IPostFormValues, 'tagIds'>;
 }
 
 export function PostFormTagsField({
   control,
   options,
+  rules,
 }: IPostFormTagsFieldProps): React.JSX.Element {
   return (
     <Controller
       name="tagIds"
       control={control}
+      rules={rules}
       render={({ field }) => {
         const selectedIds = field.value ?? [];
 

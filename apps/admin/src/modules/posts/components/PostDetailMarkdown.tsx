@@ -49,7 +49,7 @@ export function PostDetailMarkdown({ content }: IPostDetailMarkdownProps): React
           </a>
         ),
         code: ({ children }) => (
-          <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm text-slate-800">
+          <code className="rounded text-slate-100 px-1.5 py-0.5 font-mono text-sm">
             {children}
           </code>
         ),
