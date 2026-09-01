@@ -1,8 +1,10 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Eye, Pencil } from 'lucide-react';
 
 import { ROUTES } from '@/lib/constants/routes.constants';
+import { Button } from '@repo/ui/components/ui/button';
 
 import type { IPostListItem } from '../types/admin.types';
 import { formatAuthorName, formatCategoryName, formatPostDate, formatPublishedDate } from '../utils/post-list.utils';
@@ -13,45 +15,57 @@ interface IPostsTableRowProps {
 }
 
 export function PostsTableRow({ post }: IPostsTableRowProps): React.JSX.Element {
-  const router = useRouter();
-
-  const handleRowClick = (): void => {
-    router.push(ROUTES.admin.posts.detail(post.id));
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTableRowElement>): void => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      router.push(ROUTES.admin.posts.detail(post.id));
-    }
-  };
+  const categoryName = formatCategoryName(post.category);
+  const authorName = formatAuthorName(post.admin);
 
   return (
-    <tr
-      tabIndex={0}
-      onClick={handleRowClick}
-      onKeyDown={handleKeyDown}
-      className="cursor-pointer border-b border-slate-100 transition-colors hover:bg-slate-50 focus-visible:bg-slate-50 focus-visible:outline-none"
-    >
-      <td className="w-64 max-w-64 px-4 py-4 text-sm font-medium text-slate-900 sm:px-6">
-        <span className="line-clamp-2 break-words" title={post.title}>
+    <tr className="border-b border-slate-100 transition-colors hover:bg-slate-50">
+      <td className="min-w-[10rem] max-w-[14rem] px-4 py-4 align-top sm:min-w-[12rem] sm:px-6 lg:min-w-[14rem]">
+        <p className="line-clamp-2 text-sm leading-snug font-medium break-words text-slate-900" title={post.title}>
           {post.title}
-        </span>
+        </p>
       </td>
-      <td className="px-4 py-4 sm:px-6">
+      <td className="min-w-[6.5rem] px-4 py-4 align-top whitespace-nowrap sm:px-6">
         <PostStatusBadge published={post.published} />
       </td>
-      <td className="hidden px-4 py-4 text-sm text-slate-600 md:table-cell md:px-6">
-        {formatCategoryName(post.category)}
+      <td className="hidden max-w-[10rem] px-4 py-4 align-top md:table-cell md:px-6">
+        <span className="block truncate text-sm text-slate-600" title={categoryName}>
+          {categoryName}
+        </span>
       </td>
-      <td className="hidden px-4 py-4 text-sm text-slate-600 sm:table-cell sm:px-6">
-        {formatAuthorName(post.admin)}
+      <td className="hidden max-w-[10rem] px-4 py-4 align-top sm:table-cell sm:px-6">
+        <span className="block truncate text-sm text-slate-600" title={authorName}>
+          {authorName}
+        </span>
       </td>
-      <td className="px-4 py-4 text-sm whitespace-nowrap text-slate-600 sm:px-6">
+      <td className="min-w-[7.5rem] px-4 py-4 align-top text-sm whitespace-nowrap text-slate-600 sm:px-6">
         {formatPublishedDate(post.publishedAt)}
       </td>
-      <td className="hidden px-4 py-4 text-sm whitespace-nowrap text-slate-600 md:table-cell md:px-6">
+      <td className="hidden min-w-[7.5rem] px-4 py-4 align-top text-sm whitespace-nowrap text-slate-600 md:table-cell md:px-6">
         {formatPostDate(post.updatedAt)}
+      </td>
+      <td className="min-w-[5.5rem] px-4 py-4 pr-6 align-top whitespace-nowrap sm:px-6 sm:pr-8">
+        <div className="flex items-center justify-end gap-2">
+          <Button
+            asChild
+            size="icon-sm"
+            className="shrink-0 cursor-pointer bg-blue-600 text-white hover:bg-blue-700"
+          >
+            <Link href={ROUTES.admin.posts.detail(post.id)} aria-label="Ver post">
+              <Eye aria-hidden="true" className="size-4" />
+            </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="icon-sm"
+            className="shrink-0 cursor-pointer border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
+          >
+            <Link href={ROUTES.admin.posts.edit(post.id)} aria-label="Editar post">
+              <Pencil aria-hidden="true" className="size-4" />
+            </Link>
+          </Button>
+        </div>
       </td>
     </tr>
   );
