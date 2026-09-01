@@ -17,6 +17,7 @@
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^5.85.5",
     "axios": "^1.12.2",
+    "highlight.js": "^11.12.0",
     "lucide-react": "^0.542.0",
     "next": "16.3.0",
     "react": "^19.2.0",
@@ -24,6 +25,7 @@
     "react-hook-form": "^7.62.0",
     "react-markdown": "^10.1.0",
     "react-redux": "^9.2.0",
+    "rehype-highlight": "^7.0.2",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1"
   },

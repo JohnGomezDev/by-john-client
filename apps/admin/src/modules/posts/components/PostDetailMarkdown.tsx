@@ -1,6 +1,9 @@
 'use client';
 
+import 'highlight.js/styles/github-dark.min.css';
+
 import ReactMarkdown from 'react-markdown';
+import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
@@ -8,11 +11,24 @@ interface IPostDetailMarkdownProps {
   content: string;
 }
 
+const rehypeHighlightOptions = {
+  aliases: {
+    javascript: ['js', 'jsx'],
+    markdown: 'md',
+    typescript: ['ts', 'tsx'],
+    xml: 'html',
+  },
+};
+
+function isHighlightedCodeBlock(className?: string): boolean {
+  return Boolean(className?.includes('hljs'));
+}
+
 export function PostDetailMarkdown({ content }: IPostDetailMarkdownProps): React.JSX.Element {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
-      rehypePlugins={[rehypeRaw]}
+      rehypePlugins={[rehypeRaw, [rehypeHighlight, rehypeHighlightOptions]]}
       components={{
         h1: ({ children }) => (
           <h1 className="mt-8 text-2xl font-bold text-slate-900 first:mt-0">{children}</h1>
@@ -48,13 +64,29 @@ export function PostDetailMarkdown({ content }: IPostDetailMarkdownProps): React
             {children}
           </a>
         ),
-        code: ({ children }) => (
-          <code className="rounded text-slate-100 px-1.5 py-0.5 font-mono text-sm">
-            {children}
-          </code>
-        ),
-        pre: ({ children }) => (
-          <pre className="mt-4 overflow-x-auto rounded-lg bg-slate-900 p-4 text-sm text-slate-100">
+        code: ({ className, children, ...props }) => {
+          if (isHighlightedCodeBlock(className)) {
+            return (
+              <code className={className} {...props}>
+                {children}
+              </code>
+            );
+          }
+
+          return (
+            <code
+              className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm text-slate-800"
+              {...props}
+            >
+              {children}
+            </code>
+          );
+        },
+        pre: ({ children, ...props }) => (
+          <pre
+            className="mt-4 overflow-x-auto rounded-lg [&>code.hljs]:block [&>code.hljs]:overflow-x-auto [&>code.hljs]:rounded-lg [&>code.hljs]:p-4"
+            {...props}
+          >
             {children}
           </pre>
         ),
