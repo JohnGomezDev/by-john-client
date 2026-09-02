@@ -9,6 +9,8 @@ interface IPostDetailStatusCardProps {
 }
 
 export function PostDetailStatusCard({ post }: IPostDetailStatusCardProps): React.JSX.Element {
+  const isPublished = post.published;
+
   return (
     <Card className="border-slate-200 py-0 shadow-sm">
       <CardContent className="space-y-4 px-5 py-5">
@@ -31,7 +33,7 @@ export function PostDetailStatusCard({ post }: IPostDetailStatusCardProps): Reac
 
         <div className="flex items-center justify-between gap-3 text-sm">
           <span className="text-slate-500">Publicado</span>
-          <span className="font-medium text-slate-900">{formatPublishedDate(post.publishedAt)}</span>
+          <span className="font-medium text-slate-900">{formatPublishedDate(isPublished ? post.publishedAt : null)}</span>
         </div>
       </CardContent>
     </Card>
