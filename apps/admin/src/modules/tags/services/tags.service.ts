@@ -11,12 +11,6 @@ import type {
   IUpdateTagResult,
 } from '../types/tags.types';
 
-export async function fetchTags(): Promise<ITag[]> {
-  const { data } = await apiClient.get<IApiResponse<ITag[]>>('/blog/tags');
-
-  return data.data;
-}
-
 export async function createTag(payload: ICreateTagPayload): Promise<ICreateTagResult> {
   const { data } = await apiClient.post<IApiResponse<ITag>>('/admin/blog/tags', payload);
 
