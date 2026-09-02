@@ -16,7 +16,7 @@ export const SIDEBAR_NAV_ITEMS: ISidebarNavItem[] = [
   },
   {
     label: 'Categorías',
-    href: ROUTES.admin.categorias,
+    href: ROUTES.admin.categorias.list,
     icon: FolderOpen,
   },
   {

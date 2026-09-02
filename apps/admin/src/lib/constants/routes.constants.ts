@@ -7,7 +7,11 @@ export const ROUTES = {
       detail: (id: string) => `/posts/${id}`,
       edit: (id: string) => `/posts/${id}/editar`,
     },
-    categorias: '/categorias',
+    categorias: {
+      list: '/categorias',
+      create: '/categorias/crear',
+      edit: (id: string) => `/categorias/${id}/editar`,
+    },
     canciones: '/canciones',
   },
 } as const;

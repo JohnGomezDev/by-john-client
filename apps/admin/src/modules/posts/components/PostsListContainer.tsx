@@ -1,11 +1,13 @@
 'use client';
 
+import { ROUTES } from '@/lib/constants/routes.constants';
+import { ListPageHeader } from '@/modules/common/components/ListPageHeader';
+import { ListPageToolbar } from '@/modules/common/components/ListPageToolbar';
+
 import { useAdminPosts } from '../hooks/use-admin-posts';
 import { usePostsPagination } from '../hooks/use-posts-pagination';
 import { usePostsSearchForm } from '../hooks/use-posts-search-form';
-import { PostsListHeader } from './PostsListHeader';
 import { PostsListPagination } from './PostsListPagination';
-import { PostsListToolbar } from './PostsListToolbar';
 import { PostsTable } from './PostsTable';
 
 export function PostsListContainer(): React.JSX.Element {
@@ -62,9 +64,14 @@ export function PostsListContainer(): React.JSX.Element {
 
   return (
     <div className="space-y-6">
-      <PostsListHeader>
-        <PostsListToolbar searchField={searchField} />
-      </PostsListHeader>
+      <ListPageHeader title="Posts">
+        <ListPageToolbar
+          createHref={ROUTES.admin.posts.create}
+          createLabel="Crear post"
+          searchField={searchField}
+          searchPlaceholder="Buscar posts..."
+        />
+      </ListPageHeader>
 
       {renderContent()}
     </div>

@@ -5,11 +5,15 @@ import type { UseFormRegisterReturn } from 'react-hook-form';
 
 import { Input } from '@repo/ui/components/ui/input';
 
-interface IPostsSearchFormProps {
+interface IListSearchFormProps {
   searchField: UseFormRegisterReturn<'search'>;
+  placeholder: string;
 }
 
-export function PostsSearchForm({ searchField }: IPostsSearchFormProps): React.JSX.Element {
+export function ListSearchForm({
+  searchField,
+  placeholder,
+}: IListSearchFormProps): React.JSX.Element {
   return (
     <div className="relative w-full sm:max-w-xs md:max-w-sm">
       <Search
@@ -18,7 +22,7 @@ export function PostsSearchForm({ searchField }: IPostsSearchFormProps): React.J
       />
       <Input
         type="search"
-        placeholder="Buscar posts..."
+        placeholder={placeholder}
         autoComplete="off"
         className="h-10 pl-10"
         {...searchField}
