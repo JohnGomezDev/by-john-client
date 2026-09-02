@@ -1,10 +1,24 @@
+'use client';
+
 import Link from 'next/link';
 
 import { ROUTES } from '@/lib/constants/routes.constants';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@repo/ui/components/ui/alert-dialog';
 import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { cn } from '@repo/ui/lib/utils';
 
+import { usePostActions } from '../hooks/use-post-actions';
 import type { IPost } from '../types/admin.types';
 
 interface IPostDetailActionsCardProps {
@@ -12,6 +26,7 @@ interface IPostDetailActionsCardProps {
 }
 
 export function PostDetailActionsCard({ post }: IPostDetailActionsCardProps): React.JSX.Element {
+  const { handleDelete, isDeleting } = usePostActions({ postId: post.id });
   const isPublished = post.published;
 
   return (
@@ -37,12 +52,39 @@ export function PostDetailActionsCard({ post }: IPostDetailActionsCardProps): Re
           {isPublished ? 'Despublicar' : 'Publicar'}
         </Button>
 
-        <Button
-          type="button"
-          className="w-full cursor-pointer bg-red-700 text-white hover:bg-red-800"
-        >
-          Eliminar
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              type="button"
+              disabled={isDeleting}
+              className="w-full cursor-pointer bg-red-700 text-white hover:bg-red-800"
+            >
+              {isDeleting ? 'Eliminando...' : 'Eliminar'}
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>¿Eliminar este post?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Esta acción no se puede deshacer. Se eliminará permanentemente el post
+                &quot;{post.title}&quot;.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+              <AlertDialogAction
+                disabled={isDeleting}
+                className="bg-red-700 text-white hover:bg-red-800"
+                onClick={(event) => {
+                  event.preventDefault();
+                  handleDelete();
+                }}
+              >
+                {isDeleting ? 'Eliminando...' : 'Eliminar'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardContent>
     </Card>
   );

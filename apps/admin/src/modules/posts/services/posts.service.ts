@@ -6,6 +6,7 @@ import type {
   IAdminPostsListParams,
   ICreatePostPayload,
   ICreatePostResult,
+  IDeletePostResult,
   IPost,
   IPostsListResponse,
   IUpdatePostPayload,
@@ -43,8 +44,10 @@ export async function updatePost(
   return { post: data.data, message: data.message };
 }
 
-export async function deletePost(id: string): Promise<void> {
-  await apiClient.delete(`/admin/posts/${id}`);
+export async function deletePost(id: string): Promise<IDeletePostResult> {
+  const { data } = await apiClient.delete<IApiResponse<null>>(`/admin/posts/${id}`);
+
+  return { message: data.message };
 }
 
 export async function publishPost(id: string): Promise<IPost> {

@@ -80,6 +80,10 @@ export interface IUpdatePostResult {
   message: string;
 }
 
+export interface IDeletePostResult {
+  message: string;
+}
+
 export interface IUpdatePostPayload {
   title?: string;
   slug?: string;
