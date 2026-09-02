@@ -1,5 +1,6 @@
 'use client';
 
+import { getApiErrorMessage } from '@repo/lib/utils/get-api-error-message';
 import { useAdminPost } from '../hooks/use-admin-post';
 import { PostDetailContent } from './PostDetailContent';
 import { PostDetailSidebar } from './PostDetailSidebar';
@@ -9,14 +10,14 @@ interface IPostDetailContainerProps {
 }
 
 export function PostDetailContainer({ postId }: IPostDetailContainerProps): React.JSX.Element {
-  const { data: post, isLoading, isError } = useAdminPost(postId);
+  const { data: post, isLoading, isError, error } = useAdminPost(postId);
 
   if (isLoading) {
     return <p className="text-sm text-slate-500">Cargando post...</p>;
   }
 
   if (isError || !post) {
-    return <p className="text-sm text-destructive">No se pudo cargar el post.</p>;
+    return <p className="text-sm text-destructive">{getApiErrorMessage(error, 'No se pudo cargar el post.')}</p>;
   }
 
   return (
