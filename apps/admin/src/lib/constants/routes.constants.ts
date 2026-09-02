@@ -12,6 +12,11 @@ export const ROUTES = {
       create: '/categorias/crear',
       edit: (id: string) => `/categorias/${id}/editar`,
     },
+    tags: {
+      list: '/tags',
+      create: '/tags/crear',
+      edit: (id: string) => `/tags/${id}/editar`,
+    },
     canciones: '/canciones',
   },
 } as const;
