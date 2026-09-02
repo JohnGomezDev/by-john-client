@@ -8,7 +8,7 @@ import { Label } from '@repo/ui/components/ui/label';
 
 import type { IPostFormValues } from '../types/post-form.types';
 import { PostFormMdxEditorLazy } from './PostFormMdxEditorLazy';
-import { RequiredFieldIndicator } from './RequiredFieldIndicator';
+import { RequiredFieldIndicator } from '@/modules/common/components/RequiredFieldIndicator';
 
 interface IPostFormContentSectionProps {
   control: Control<IPostFormValues>;

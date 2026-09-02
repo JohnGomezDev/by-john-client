@@ -1,7 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { Pencil, Trash2 } from 'lucide-react';
 
+import { ROUTES } from '@/lib/constants/routes.constants';
 import { Button } from '@repo/ui/components/ui/button';
 import type { ICategory } from '@repo/lib/modules/taxonomy/types/taxonomy.types';
 
@@ -18,13 +20,14 @@ export function CategoriesTableRow({ category }: ICategoriesTableRowProps): Reac
       <td className="px-4 py-4 pr-6 align-top whitespace-nowrap sm:px-6 sm:pr-8">
         <div className="flex items-center justify-end gap-2">
           <Button
-            type="button"
+            asChild
             variant="outline"
             size="icon-sm"
             className="shrink-0 cursor-pointer border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
-            aria-label="Editar categoría"
           >
-            <Pencil aria-hidden="true" className="size-4" />
+            <Link href={ROUTES.admin.categorias.edit(category.id)} aria-label="Editar categoría">
+              <Pencil aria-hidden="true" className="size-4" />
+            </Link>
           </Button>
           <Button
             type="button"

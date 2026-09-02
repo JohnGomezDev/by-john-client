@@ -4,7 +4,7 @@ import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { Input } from '@repo/ui/components/ui/input';
 import { Label } from '@repo/ui/components/ui/label';
 
-import { RequiredFieldIndicator } from './RequiredFieldIndicator';
+import { RequiredFieldIndicator } from '@/modules/common/components/RequiredFieldIndicator';
 
 interface IPostFormTitleSectionProps {
   titleField: UseFormRegisterReturn<'title'>;

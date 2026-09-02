@@ -11,7 +11,7 @@ import { apiClient } from '@/lib/api/api-client';
 
 import type { IPostFormValues } from '../types/post-form.types';
 import { PostFormTagsField } from './PostFormTagsField';
-import { RequiredFieldIndicator } from './RequiredFieldIndicator';
+import { RequiredFieldIndicator } from '@/modules/common/components/RequiredFieldIndicator';
 
 interface IPostFormOrganizationSectionProps {
   categoryIdField: UseFormRegisterReturn<'categoryId'>;
