@@ -16,7 +16,6 @@ import {
 } from '@repo/ui/components/ui/alert-dialog';
 import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
-import { cn } from '@repo/ui/lib/utils';
 
 import { usePostActions } from '../hooks/use-post-actions';
 import type { IPost } from '../types/admin.types';
@@ -26,8 +25,16 @@ interface IPostDetailActionsCardProps {
 }
 
 export function PostDetailActionsCard({ post }: IPostDetailActionsCardProps): React.JSX.Element {
-  const { handleDelete, isDeleting } = usePostActions({ postId: post.id });
+  const {
+    handleDelete,
+    handlePublish,
+    handleUnpublish,
+    isDeleting,
+    isPublishing,
+    isUnpublishing,
+  } = usePostActions({ postId: post.id });
   const isPublished = post.published;
+  const isActionPending = isDeleting || isPublishing || isUnpublishing;
 
   return (
     <Card className="border-slate-200 py-0 shadow-sm">
@@ -39,24 +46,57 @@ export function PostDetailActionsCard({ post }: IPostDetailActionsCardProps): Re
           <Link href={ROUTES.admin.posts.edit(post.id)}>Editar post</Link>
         </Button>
 
-        <Button
-          type="button"
-          className={cn(
-            'w-full cursor-pointer',
-            isPublished
-              ? 'border-blue-600 bg-white text-blue-600 hover:bg-blue-50'
-              : 'bg-green-600 text-white hover:bg-green-700',
-          )}
-          variant={isPublished ? 'outline' : 'default'}
-        >
-          {isPublished ? 'Despublicar' : 'Publicar'}
-        </Button>
+        {isPublished ? (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                type="button"
+                disabled={isActionPending}
+                className="w-full cursor-pointer border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
+                variant="outline"
+              >
+                {isUnpublishing ? 'Despublicando...' : 'Despublicar'}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>¿Despublicar este post?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  El post &quot;{post.title}&quot; dejará de estar visible en el blog. Podrás
+                  publicarlo de nuevo más tarde.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={isUnpublishing}>Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  disabled={isUnpublishing}
+                  className="border-blue-600 border-1 bg-white text-blue-600 hover:bg-blue-50"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    handleUnpublish();
+                  }}
+                >
+                  {isUnpublishing ? 'Despublicando...' : 'Despublicar'}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        ) : (
+          <Button
+            type="button"
+            onClick={handlePublish}
+            disabled={isActionPending}
+            className="w-full cursor-pointer bg-green-600 text-white hover:bg-green-700"
+          >
+            {isPublishing ? 'Publicando...' : 'Publicar'}
+          </Button>
+        )}
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
               type="button"
-              disabled={isDeleting}
+              disabled={isActionPending}
               className="w-full cursor-pointer bg-red-700 text-white hover:bg-red-800"
             >
               {isDeleting ? 'Eliminando...' : 'Eliminar'}

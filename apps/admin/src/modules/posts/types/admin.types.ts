@@ -84,6 +84,16 @@ export interface IDeletePostResult {
   message: string;
 }
 
+export interface IPublishPostResult {
+  post: IPost;
+  message: string;
+}
+
+export interface IUnpublishPostResult {
+  post: IPost;
+  message: string;
+}
+
 export interface IUpdatePostPayload {
   title?: string;
   slug?: string;

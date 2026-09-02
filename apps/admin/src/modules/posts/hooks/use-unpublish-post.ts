@@ -4,16 +4,18 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { adminPostKeys } from '../constants/post.query-keys';
 import { unpublishPost } from '../services/posts.service';
-import type { IPost } from '../types/admin.types';
+import type { IUnpublishPostResult } from '../types/admin.types';
 
-export function useUnpublishPost(): ReturnType<typeof useMutation<IPost, Error, string>> {
+export function useUnpublishPost(): ReturnType<
+  typeof useMutation<IUnpublishPostResult, Error, string>
+> {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (id: string) => unpublishPost(id),
-    onSuccess: (data) => {
+    onSuccess: ({ post }) => {
       void queryClient.invalidateQueries({ queryKey: adminPostKeys.lists() });
-      void queryClient.invalidateQueries({ queryKey: adminPostKeys.detail(data.id) });
+      void queryClient.invalidateQueries({ queryKey: adminPostKeys.detail(post.id) });
     },
   });
 }

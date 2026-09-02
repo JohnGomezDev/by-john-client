@@ -9,8 +9,10 @@ import type {
   IDeletePostResult,
   IPost,
   IPostsListResponse,
+  IPublishPostResult,
   IUpdatePostPayload,
   IUpdatePostResult,
+  IUnpublishPostResult,
 } from '../types/admin.types';
 
 export async function fetchAdminPosts(
@@ -50,14 +52,14 @@ export async function deletePost(id: string): Promise<IDeletePostResult> {
   return { message: data.message };
 }
 
-export async function publishPost(id: string): Promise<IPost> {
+export async function publishPost(id: string): Promise<IPublishPostResult> {
   const { data } = await apiClient.patch<IApiResponse<IPost>>(`/admin/posts/${id}/publish`);
 
-  return data.data;
+  return { post: data.data, message: data.message };
 }
 
-export async function unpublishPost(id: string): Promise<IPost> {
+export async function unpublishPost(id: string): Promise<IUnpublishPostResult> {
   const { data } = await apiClient.patch<IApiResponse<IPost>>(`/admin/posts/${id}/unpublish`);
 
-  return data.data;
+  return { post: data.data, message: data.message };
 }
