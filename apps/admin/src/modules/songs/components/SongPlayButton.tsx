@@ -1,6 +1,6 @@
 'use client';
 
-import { Pause, Play } from 'lucide-react';
+import { Loader2, Pause, Play } from 'lucide-react';
 
 import { Button } from '@repo/ui/components/ui/button';
 import { cn } from '@repo/ui/lib/utils';
@@ -18,14 +18,22 @@ export function SongPlayButton({
   trackName,
   size = 'sm',
 }: ISongPlayButtonProps): React.JSX.Element {
-  const { isPlaying, canPlay, toggle } = useSongPreview(previewUrl);
-  const Icon = isPlaying ? Pause : Play;
+  const { isPlaying, isLoading, canPlay, toggle } = useSongPreview(previewUrl);
+
+  const Icon = isLoading ? Loader2 : isPlaying ? Pause : Play;
+  const iconClassName = cn(
+    size === 'lg' ? 'size-6' : 'size-3.5',
+    isPlaying || isLoading ? 'fill-none' : 'fill-current',
+    isLoading && 'animate-spin',
+  );
 
   const ariaLabel = !canPlay
     ? `Sin preview para ${trackName}`
-    : isPlaying
-      ? `Pausar ${trackName}`
-      : `Reproducir ${trackName}`;
+    : isLoading
+      ? `Cargando ${trackName}`
+      : isPlaying
+        ? `Pausar ${trackName}`
+        : `Reproducir ${trackName}`;
 
   if (size === 'lg') {
     return (
@@ -41,8 +49,9 @@ export function SongPlayButton({
             : 'bg-slate-300 text-white',
         )}
         aria-label={ariaLabel}
+        aria-busy={isLoading}
       >
-        <Icon aria-hidden="true" className="size-6 fill-current" />
+        <Icon aria-hidden="true" className={iconClassName} />
       </Button>
     );
   }
@@ -59,8 +68,9 @@ export function SongPlayButton({
         canPlay ? 'cursor-pointer' : null,
       )}
       aria-label={ariaLabel}
+      aria-busy={isLoading}
     >
-      <Icon aria-hidden="true" className="size-3.5 fill-current" />
+      <Icon aria-hidden="true" className={iconClassName} />
     </Button>
   );
 }

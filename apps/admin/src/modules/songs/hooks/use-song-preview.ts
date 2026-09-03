@@ -11,6 +11,7 @@ import {
 
 export function useSongPreview(previewUrl: string | null): {
   isPlaying: boolean;
+  isLoading: boolean;
   canPlay: boolean;
   toggle: () => void;
 } {
@@ -21,7 +22,9 @@ export function useSongPreview(previewUrl: string | null): {
   );
 
   const canPlay = Boolean(previewUrl);
-  const isPlaying = canPlay && state.url === previewUrl && state.isPlaying;
+  const isCurrentTrack = canPlay && state.url === previewUrl;
+  const isPlaying = isCurrentTrack && state.isPlaying;
+  const isLoading = isCurrentTrack && state.isLoading;
 
   const toggle = (): void => {
     if (!previewUrl) {
@@ -31,5 +34,5 @@ export function useSongPreview(previewUrl: string | null): {
     toggleSongPreview(previewUrl);
   };
 
-  return { isPlaying, canPlay, toggle };
+  return { isPlaying, isLoading, canPlay, toggle };
 }
