@@ -1,10 +1,11 @@
-import { Heart, Play } from 'lucide-react';
+import { Heart } from 'lucide-react';
 
 import { Button } from '@repo/ui/components/ui/button';
 
 import type { ISongSearchResult } from '../types/songs.types';
-import { formatDurationFromSeconds } from '../utils/song-duration.utils';
+import { formatDurationFromSeconds } from '../utils/song-data.utils';
 import { SongCover } from './SongCover';
+import { SongPlayButton } from './SongPlayButton';
 
 interface ISongSearchResultItemProps {
   result: ISongSearchResult;
@@ -14,7 +15,6 @@ export function SongSearchResultItem({
   result,
 }: ISongSearchResultItemProps): React.JSX.Element {
   const duration = formatDurationFromSeconds(result.duration);
-  const canPreview = Boolean(result.preview);
 
   return (
     <li className="border-b border-slate-100 last:border-b-0">
@@ -30,27 +30,17 @@ export function SongSearchResultItem({
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
-          <Button
-            type="button"
-            size="icon-sm"
-            variant="outline"
-            className="rounded-full border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100"
-            aria-label={
-              canPreview ? `Reproducir ${result.title}` : `Sin preview para ${result.title}`
-            }
-          >
-            <Play aria-hidden="true" className="size-3.5 fill-current" />
-          </Button>
+          <SongPlayButton previewUrl={result.preview} trackName={result.title} size="sm" />
 
           <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="h-8 cursor-pointer border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
-            >
-              <Heart aria-hidden="true" className="size-3.5" />
-              <span className="hidden sm:inline">Guardar</span>
-            </Button>
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-8 cursor-pointer border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
+          >
+            <Heart aria-hidden="true" className="size-3.5" />
+            <span className="hidden sm:inline">Guardar</span>
+          </Button>
         </div>
       </div>
     </li>

@@ -1,10 +1,9 @@
-import { Play, User } from 'lucide-react';
-
-import { Button } from '@repo/ui/components/ui/button';
+import { User } from 'lucide-react';
 
 import type { ISong } from '../types/songs.types';
-import { formatDurationFromMs, formatSongArtists } from '../utils/song-duration.utils';
+import { formatDurationFromMs, formatSongArtists } from '../utils/song-data.utils';
 import { SongCover } from './SongCover';
+import { SongPlayButton } from './SongPlayButton';
 
 interface IFavoriteSongCardProps {
   song: ISong;
@@ -32,14 +31,7 @@ export function FavoriteSongCard({ song }: IFavoriteSongCardProps): React.JSX.El
           </p>
         </div>
 
-        <Button
-          type="button"
-          size="icon-lg"
-          className="size-14 shrink-0 self-end rounded-full bg-blue-600 text-white hover:bg-blue-700 sm:size-16 sm:self-center"
-          aria-label={`Reproducir ${song.trackName}`}
-        >
-          <Play aria-hidden="true" className="size-6 fill-current" />
-        </Button>
+        <SongPlayButton previewUrl={song.previewUrl} trackName={song.trackName} size="lg" />
       </div>
     </article>
   );
