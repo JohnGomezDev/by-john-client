@@ -10,10 +10,22 @@ import type {
 } from '../types/songs.types';
 
 
-export async function fetchFavoriteSong(): Promise<ISong | null> {
-  const { data } = await apiClient.get<IApiResponse<ISong>>('/songs/favorite');
+function getErrorStatus(error: unknown): number | undefined {
+  return (error as { response?: { status?: number } }).response?.status;
+}
 
-  return data.data;
+export async function fetchFavoriteSong(): Promise<ISong | null> {
+  try {
+    const { data } = await apiClient.get<IApiResponse<ISong>>('/songs/favorite');
+
+    return data.data;
+  } catch (error: unknown) {
+    if (getErrorStatus(error) === 404) {
+      return null;
+    }
+
+    throw error;
+  }
 }
 
 export async function searchSongs(query: string): Promise<ISongSearchResult[]> {
