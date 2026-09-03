@@ -2,11 +2,13 @@
 
 import { Button } from '@repo/ui/components/ui/button';
 
+import { ROUTES } from '@/lib/constants/routes.constants';
+import { FormPageHeader } from '@/modules/common/components/FormPageHeader';
+
 import { usePostForm } from '../hooks/use-post-form';
 import type { IPostFormValues } from '../types/post-form.types';
 import { PostFormContentSection } from './PostFormContentSection';
 import { PostFormExcerptSection } from './PostFormExcerptSection';
-import { PostFormHeader } from './PostFormHeader';
 import { PostFormOrganizationSection } from './PostFormOrganizationSection';
 import { PostFormSeoSection } from './PostFormSeoSection';
 import { PostFormSocialSection } from './PostFormSocialSection';
@@ -40,7 +42,11 @@ export function PostForm({ postId, defaultValues }: IPostFormProps): React.JSX.E
 
   return (
     <div className="space-y-6">
-      <PostFormHeader title={isEditMode ? 'Editar post' : 'Crear nuevo post'} />
+      <FormPageHeader
+        title={isEditMode ? 'Editar post' : 'Crear nuevo post'}
+        backHref={ROUTES.admin.posts.list}
+        backAriaLabel="Volver al listado de posts"
+      />
 
       <form onSubmit={onSubmit} className="space-y-6">
         <PostFormTitleSection

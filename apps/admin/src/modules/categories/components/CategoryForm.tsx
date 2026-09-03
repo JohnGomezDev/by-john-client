@@ -2,9 +2,11 @@
 
 import { Button } from '@repo/ui/components/ui/button';
 
+import { ROUTES } from '@/lib/constants/routes.constants';
+import { FormPageHeader } from '@/modules/common/components/FormPageHeader';
+
 import { useCategoryForm } from '../hooks/use-category-form';
 import type { ICategoryFormValues } from '../types/category-form.types';
-import { CategoryFormHeader } from './CategoryFormHeader';
 import { CategoryFormNameSection } from './CategoryFormNameSection';
 
 interface ICategoryFormProps {
@@ -22,7 +24,11 @@ export function CategoryForm({ categoryId, defaultValues }: ICategoryFormProps):
 
   return (
     <div className="space-y-6">
-      <CategoryFormHeader title={isEditMode ? 'Editar categoría' : 'Crear categoría'} />
+      <FormPageHeader
+        title={isEditMode ? 'Editar categoría' : 'Crear categoría'}
+        backHref={ROUTES.admin.categorias.list}
+        backAriaLabel="Volver al listado de categorías"
+      />
 
       <form onSubmit={onSubmit} className="space-y-6">
         <CategoryFormNameSection
