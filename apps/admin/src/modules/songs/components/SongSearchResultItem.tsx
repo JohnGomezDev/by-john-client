@@ -1,7 +1,11 @@
+'use client';
+
 import { Heart } from 'lucide-react';
 
 import { Button } from '@repo/ui/components/ui/button';
 
+import { useFavoriteSong } from '../hooks/use-favorite-song';
+import { useSongActions } from '../hooks/use-song-actions';
 import type { ISongSearchResult } from '../types/songs.types';
 import { formatDurationFromSeconds } from '../utils/song-data.utils';
 import { SongCover } from './SongCover';
@@ -14,7 +18,12 @@ interface ISongSearchResultItemProps {
 export function SongSearchResultItem({
   result,
 }: ISongSearchResultItemProps): React.JSX.Element {
+  const trackId = String(result.id);
   const duration = formatDurationFromSeconds(result.duration);
+  const { data: favoriteSong } = useFavoriteSong();
+  const { handleSaveFavorite, isSavingFavorite } = useSongActions({ trackId });
+
+  const isFavorite = favoriteSong?.trackId === trackId;
 
   return (
     <li className="border-b border-slate-100 last:border-b-0">
@@ -32,15 +41,25 @@ export function SongSearchResultItem({
         <div className="flex shrink-0 items-center gap-2">
           <SongPlayButton previewUrl={result.preview} trackName={result.title} size="sm" />
 
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="h-8 cursor-pointer border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
-          >
-            <Heart aria-hidden="true" className="size-3.5" />
-            <span className="hidden sm:inline">Guardar</span>
-          </Button>
+          {isFavorite ? (
+            <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+              Favorita
+            </span>
+          ) : (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={isSavingFavorite}
+              onClick={handleSaveFavorite}
+              className="h-8 cursor-pointer border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
+            >
+              <Heart aria-hidden="true" className="size-3.5" />
+              <span className="hidden sm:inline">
+                {isSavingFavorite ? 'Guardando...' : 'Guardar'}
+              </span>
+            </Button>
+          )}
         </div>
       </div>
     </li>
