@@ -22,7 +22,7 @@ export function SongPlayButton({
 
   const Icon = isLoading ? Loader2 : isPlaying ? Pause : Play;
   const iconClassName = cn(
-    size === 'lg' ? 'size-6' : 'size-3.5',
+    size === 'lg' ? 'size-5 sm:size-6' : 'size-3.5',
     isPlaying || isLoading ? 'fill-none' : 'fill-current',
     isLoading && 'animate-spin',
   );
@@ -43,7 +43,7 @@ export function SongPlayButton({
         disabled={!canPlay}
         onClick={toggle}
         className={cn(
-          'size-14 shrink-0 self-end rounded-full sm:size-16 sm:self-center',
+          'size-12 shrink-0 rounded-full sm:size-16',
           canPlay
             ? 'cursor-pointer bg-blue-600 text-white hover:bg-blue-700'
             : 'bg-slate-300 text-white',
