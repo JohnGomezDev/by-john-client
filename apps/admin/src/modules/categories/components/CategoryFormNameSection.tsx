@@ -20,10 +20,10 @@ export function CategoryFormNameSection({
   slugError,
 }: ICategoryFormNameSectionProps): React.JSX.Element {
   return (
-    <Card className="border-slate-200 py-0 shadow-sm">
+    <Card className="border-border py-0 shadow-sm">
       <CardContent className="space-y-5 px-5 py-6 sm:px-8">
         <div className="space-y-2">
-          <Label htmlFor="name" className="text-sm font-medium text-slate-700">
+          <Label htmlFor="name" className="text-sm font-medium text-neutral">
             Nombre
             <RequiredFieldIndicator />
           </Label>
@@ -38,7 +38,7 @@ export function CategoryFormNameSection({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="slug" className="text-sm font-medium text-slate-700">
+          <Label htmlFor="slug" className="text-sm font-medium text-neutral">
             Slug
             <RequiredFieldIndicator />
           </Label>

@@ -22,7 +22,7 @@ export function AdminLayoutShell({ children }: IAdminLayoutShellProps): React.JS
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
+    <div className="flex h-screen overflow-hidden bg-white">
       {sidebarOpen && (
         <button
           type="button"
@@ -34,7 +34,7 @@ export function AdminLayoutShell({ children }: IAdminLayoutShellProps): React.JS
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 h-screen w-64 shrink-0 border-r border-slate-200 bg-white transition-transform duration-300 ease-in-out lg:static lg:z-auto lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-50 h-screen w-64 shrink-0 border-r border-border bg-white transition-transform duration-300 ease-in-out lg:static lg:z-auto lg:translate-x-0',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
@@ -42,7 +42,7 @@ export function AdminLayoutShell({ children }: IAdminLayoutShellProps): React.JS
       </aside>
 
       <div className="flex h-screen min-w-0 flex-1 flex-col overflow-hidden">
-        <header className="flex h-14 shrink-0 items-center border-b border-slate-200 bg-white px-4 lg:hidden">
+        <header className="flex h-14 shrink-0 items-center border-b border-border bg-white px-4 lg:hidden">
           <Button
             type="button"
             variant="ghost"
@@ -53,7 +53,7 @@ export function AdminLayoutShell({ children }: IAdminLayoutShellProps): React.JS
           >
             <Menu className="size-5" />
           </Button>
-          <p className="ml-2 truncate text-base font-bold text-blue-700">byJohn dashboard</p>
+          <p className="ml-2 truncate font-display text-base font-bold text-primary">byJohn dashboard</p>
         </header>
 
         <main className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">{children}</main>

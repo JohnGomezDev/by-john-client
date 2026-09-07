@@ -25,10 +25,10 @@ export function AdminSidebarUser(): React.JSX.Element {
   };
 
   return (
-    <div className="flex items-center gap-3 border-t border-slate-200 px-4 py-4">
+    <div className="flex items-center gap-3 border-t border-border px-4 py-4">
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-slate-900">{displayName}</p>
-        <p className="truncate text-xs text-slate-500">Administrador</p>
+        <p className="truncate text-sm font-semibold text-primary">{displayName}</p>
+        <p className="truncate text-xs text-neutral/65">Administrador</p>
       </div>
       <Button
         type="button"
@@ -37,7 +37,7 @@ export function AdminSidebarUser(): React.JSX.Element {
         onClick={handleLogout}
         disabled={isPending}
         aria-label={isPending ? 'Cerrando sesión...' : 'Cerrar sesión'}
-        className="shrink-0 text-slate-500 hover:text-slate-900"
+        className="shrink-0 text-neutral/65 hover:text-primary"
       >
         <LogOut className="cursor-pointer size-5" />
       </Button>

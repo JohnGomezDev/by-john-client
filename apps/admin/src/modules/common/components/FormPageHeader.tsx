@@ -16,12 +16,12 @@ export function FormPageHeader({
     <div className="flex items-center gap-3">
       <Link
         href={backHref}
-        className="flex size-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50"
+        className="flex size-9 shrink-0 items-center justify-center rounded-md border border-border bg-white text-neutral/80 transition-colors hover:bg-white"
         aria-label={backAriaLabel}
       >
         <ArrowLeft className="size-4" />
       </Link>
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{title}</h1>
+      <h1 className="text-2xl font-bold tracking-tight text-primary sm:text-3xl">{title}</h1>
     </div>
   );
 }

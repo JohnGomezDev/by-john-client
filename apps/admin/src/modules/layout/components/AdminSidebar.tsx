@@ -10,8 +10,8 @@ interface IAdminSidebarProps {
 export function AdminSidebar({ onNavigate }: IAdminSidebarProps): React.JSX.Element {
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b border-slate-200 px-6 py-5">
-        <p className="text-lg font-bold tracking-tight text-blue-700 sm:text-xl">
+      <div className="border-b border-border px-6 py-5">
+        <p className="font-display text-lg font-bold tracking-tight text-primary sm:text-xl">
           byJohn dashboard
         </p>
       </div>

@@ -37,11 +37,11 @@ export function PostDetailActionsCard({ post }: IPostDetailActionsCardProps): Re
   const isActionPending = isDeleting || isPublishing || isUnpublishing;
 
   return (
-    <Card className="border-slate-200 py-0 shadow-sm">
+    <Card className="border-border py-0 shadow-sm">
       <CardContent className="flex flex-col gap-3 px-5 py-5">
         <Button
           asChild
-          className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700"
+          className="w-full cursor-pointer bg-primary hover:bg-primary/90"
         >
           <Link href={ROUTES.admin.posts.edit(post.id)}>Editar post</Link>
         </Button>
@@ -52,7 +52,7 @@ export function PostDetailActionsCard({ post }: IPostDetailActionsCardProps): Re
               <Button
                 type="button"
                 disabled={isActionPending}
-                className="w-full cursor-pointer border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
+                className="w-full cursor-pointer border-primary bg-white text-primary hover:bg-secondary/40"
                 variant="outline"
               >
                 {isUnpublishing ? 'Despublicando...' : 'Despublicar'}
@@ -70,7 +70,7 @@ export function PostDetailActionsCard({ post }: IPostDetailActionsCardProps): Re
                 <AlertDialogCancel disabled={isUnpublishing}>Cancelar</AlertDialogCancel>
                 <AlertDialogAction
                   disabled={isUnpublishing}
-                  className="border-blue-600 border-1 bg-white text-blue-600 hover:bg-blue-50"
+                  className="border-primary border-1 bg-white text-primary hover:bg-secondary/40"
                   onClick={(event) => {
                     event.preventDefault();
                     handleUnpublish();

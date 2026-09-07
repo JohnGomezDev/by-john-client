@@ -47,7 +47,7 @@ function AlertDialogContent({
       <AlertDialogPrimitive.Content
         data-slot="alert-dialog-content"
         className={cn(
-          'fixed top-1/2 left-1/2 z-[101] grid w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border border-slate-200 bg-white p-6 text-slate-900 shadow-xl',
+          'fixed top-1/2 left-1/2 z-[101] grid w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 rounded-lg border border-border bg-white p-6 text-primary shadow-xl',
           className,
         )}
         {...props}
@@ -89,7 +89,7 @@ function AlertDialogTitle({
   return (
     <AlertDialogPrimitive.Title
       data-slot="alert-dialog-title"
-      className={cn('text-lg font-semibold text-slate-900', className)}
+      className={cn('text-lg font-semibold text-primary', className)}
       {...props}
     />
   );
@@ -102,7 +102,7 @@ function AlertDialogDescription({
   return (
     <AlertDialogPrimitive.Description
       data-slot="alert-dialog-description"
-      className={cn('text-sm text-slate-600', className)}
+      className={cn('text-sm text-neutral/80', className)}
       {...props}
     />
   );

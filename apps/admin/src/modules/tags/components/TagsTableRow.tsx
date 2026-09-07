@@ -28,9 +28,9 @@ export function TagsTableRow({ tag }: ITagsTableRowProps): React.JSX.Element {
   const { handleDelete, isDeleting } = useTagActions({ tagId: tag.id });
 
   return (
-    <tr className="border-b border-slate-100 transition-colors hover:bg-slate-50">
+    <tr className="border-b border-border transition-colors hover:bg-white">
       <td className="px-4 py-4 align-top sm:px-6">
-        <p className="text-sm font-medium text-slate-900">{tag.name}</p>
+        <p className="text-sm font-medium text-primary">{tag.name}</p>
       </td>
       <td className="px-4 py-4 pr-6 align-top whitespace-nowrap sm:px-6 sm:pr-8">
         <div className="flex items-center justify-end gap-2">
@@ -38,7 +38,7 @@ export function TagsTableRow({ tag }: ITagsTableRowProps): React.JSX.Element {
             asChild
             variant="outline"
             size="icon-sm"
-            className="shrink-0 cursor-pointer border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
+            className="shrink-0 cursor-pointer border-primary bg-white text-primary hover:bg-secondary/40"
           >
             <Link href={ROUTES.admin.tags.edit(tag.id)} aria-label="Editar tag">
               <Pencil aria-hidden="true" className="size-4" />

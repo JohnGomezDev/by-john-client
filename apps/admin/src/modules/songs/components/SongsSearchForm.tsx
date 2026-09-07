@@ -22,7 +22,7 @@ export function SongsSearchForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"
+      className="rounded-xl border border-border bg-white p-4 shadow-sm sm:p-5"
       noValidate
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
@@ -48,7 +48,7 @@ export function SongsSearchForm({
         <Button
           type="submit"
           disabled={isSearching}
-          className="h-10 w-full shrink-0 cursor-pointer bg-blue-600 hover:bg-blue-700 sm:w-auto"
+          className="h-10 w-full shrink-0 cursor-pointer bg-primary hover:bg-primary/90 sm:w-auto"
         >
           <Search aria-hidden="true" className="size-4" />
           {isSearching ? 'Buscando...' : 'Buscar canciones'}

@@ -17,7 +17,7 @@ export function EditCategoryContainer({
   const category = categories?.find((item) => item.id === categoryId);
 
   if (isLoading) {
-    return <p className="text-sm text-slate-500">Cargando categoría...</p>;
+    return <p className="text-sm text-neutral/65">Cargando categoría...</p>;
   }
 
   if (isError) {

@@ -17,8 +17,8 @@ export function SongsSearchSection(): React.JSX.Element {
   const renderResults = (): React.JSX.Element => {
     if (!hasSubmitted) {
       return (
-        <div className="rounded-xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center">
-          <p className="text-sm text-slate-500">
+        <div className="rounded-xl border border-dashed border-border bg-white px-6 py-12 text-center">
+          <p className="text-sm text-neutral/65">
             Usa el buscador para encontrar canciones.
           </p>
         </div>
@@ -26,7 +26,7 @@ export function SongsSearchSection(): React.JSX.Element {
     }
 
     if (isLoading) {
-      return <p className="text-sm text-slate-500">Buscando canciones...</p>;
+      return <p className="text-sm text-neutral/65">Buscando canciones...</p>;
     }
 
     if (isError) {
@@ -39,8 +39,8 @@ export function SongsSearchSection(): React.JSX.Element {
 
     if (!data?.length) {
       return (
-        <div className="rounded-xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center">
-          <p className="text-sm text-slate-500">No se encontraron canciones para tu búsqueda.</p>
+        <div className="rounded-xl border border-dashed border-border bg-white px-6 py-12 text-center">
+          <p className="text-sm text-neutral/65">No se encontraron canciones para tu búsqueda.</p>
         </div>
       );
     }
@@ -52,8 +52,8 @@ export function SongsSearchSection(): React.JSX.Element {
     <>
       <section className="space-y-3">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">Buscar canciones</h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <h2 className="text-lg font-semibold text-primary">Buscar canciones</h2>
+          <p className="mt-1 text-sm text-neutral/65">
             Encuentra pistas por título, artista o álbum.
           </p>
         </div>
@@ -66,7 +66,7 @@ export function SongsSearchSection(): React.JSX.Element {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-slate-900">Canciones encontradas</h2>
+        <h2 className="text-lg font-semibold text-primary">Canciones encontradas</h2>
         {renderResults()}
       </section>
     </>

@@ -27,11 +27,11 @@ export function AdminSidebarNavItem({
       className={cn(
         'flex items-center gap-3 border-l-4 px-4 py-3 text-sm font-medium transition-colors',
         isActive
-          ? 'border-blue-600 bg-blue-50 text-blue-700'
-          : 'border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900',
+          ? 'border-secondary bg-secondary/30 text-primary'
+          : 'border-transparent text-neutral/80 hover:bg-muted hover:text-primary',
       )}
     >
-      <Icon aria-hidden="true" className="size-5 shrink-0 text-blue-700" />
+      <Icon aria-hidden="true" className="size-5 shrink-0 text-primary" />
       {item.label}
     </Link>
   );

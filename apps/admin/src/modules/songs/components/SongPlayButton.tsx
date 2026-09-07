@@ -45,8 +45,8 @@ export function SongPlayButton({
         className={cn(
           'size-12 shrink-0 rounded-full sm:size-16',
           canPlay
-            ? 'cursor-pointer bg-blue-600 text-white hover:bg-blue-700'
-            : 'bg-slate-300 text-white',
+            ? 'cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90'
+            : 'bg-neutral/30 text-white',
         )}
         aria-label={ariaLabel}
         aria-busy={isLoading}
@@ -64,7 +64,7 @@ export function SongPlayButton({
       disabled={!canPlay}
       onClick={toggle}
       className={cn(
-        'rounded-full border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100',
+        'rounded-full border-secondary bg-secondary/30 text-primary hover:bg-secondary/40',
         canPlay ? 'cursor-pointer' : null,
       )}
       aria-label={ariaLabel}

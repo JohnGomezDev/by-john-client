@@ -91,13 +91,13 @@ export function PostFormMdxEditor({
   const initialMarkdownRef = useRef(defaultValue);
 
   return (
-    <div className="post-form-mdx-editor overflow-hidden rounded-md border border-input [&_.mdxeditor-toolbar]:border-b [&_.mdxeditor-toolbar]:border-input [&_.mdxeditor-toolbar]:bg-slate-50">
+    <div className="post-form-mdx-editor overflow-hidden rounded-md border border-input [&_.mdxeditor-toolbar]:border-b [&_.mdxeditor-toolbar]:border-input [&_.mdxeditor-toolbar]:bg-white">
       <MDXEditor
         ref={editorRef}
         markdown={initialMarkdownRef.current}
         onChange={onChange}
         placeholder="Comienza a escribir tu increíble post aquí..."
-        contentEditableClassName="post-form-mdx-editor-content min-h-64 px-4 py-3 text-base text-slate-700"
+        contentEditableClassName="post-form-mdx-editor-content min-h-64 px-4 py-3 text-base text-neutral"
         plugins={MDX_EDITOR_PLUGINS}
       />
     </div>

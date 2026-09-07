@@ -14,7 +14,7 @@ export function TagsListContainer(): React.JSX.Element {
 
   const renderContent = (): React.JSX.Element => {
     if (isLoading) {
-      return <p className="text-sm text-slate-500">Cargando tags...</p>;
+      return <p className="text-sm text-neutral/65">Cargando tags...</p>;
     }
 
     if (isError) {
@@ -23,8 +23,8 @@ export function TagsListContainer(): React.JSX.Element {
 
     if (!data?.length) {
       return (
-        <div className="rounded-xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center">
-          <p className="text-sm text-slate-500">Aún no hay tags registrados.</p>
+        <div className="rounded-xl border border-dashed border-border bg-white px-6 py-12 text-center">
+          <p className="text-sm text-neutral/65">Aún no hay tags registrados.</p>
         </div>
       );
     }

@@ -90,7 +90,7 @@ export function LoginForm(): React.JSX.Element {
 
           <Button
             type="submit"
-            className="h-11 w-full bg-blue-600 text-base font-semibold hover:bg-blue-700"
+            className="h-11 w-full bg-primary text-base font-semibold hover:bg-primary/90"
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Iniciando sesión...' : 'Iniciar sesión'}

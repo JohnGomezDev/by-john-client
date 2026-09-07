@@ -50,7 +50,7 @@ export function PostFormTagsField({
                     key={tag.id}
                     type="button"
                     onClick={() => toggleTag(tag.id)}
-                    className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-200"
+                    className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-secondary/40 px-3 py-1 text-xs font-medium text-primary transition-colors hover:bg-secondary/60"
                   >
                     {tag.name}
                     <X aria-hidden="true" className="size-3" />
@@ -68,7 +68,7 @@ export function PostFormTagsField({
                       type="button"
                       onClick={() => toggleTag(tag.id)}
                       className={cn(
-                        'cursor-pointer rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700',
+                        'cursor-pointer rounded-full border border-border px-3 py-1 text-xs font-medium text-neutral/80 transition-colors hover:border-secondary hover:bg-secondary/30 hover:text-primary',
                       )}
                     >
                       {tag.name}
@@ -76,11 +76,11 @@ export function PostFormTagsField({
                   ))}
                 </div>
               ) : (
-                <p className="px-2 py-1 text-sm text-slate-400">Todas las etiquetas seleccionadas</p>
+                <p className="px-2 py-1 text-sm text-neutral/50">Todas las etiquetas seleccionadas</p>
               )}
             </div>
 
-            <p className="text-xs text-slate-500">Haz clic para agregar o quitar etiquetas</p>
+            <p className="text-xs text-neutral/65">Haz clic para agregar o quitar etiquetas</p>
           </div>
         );
       }}

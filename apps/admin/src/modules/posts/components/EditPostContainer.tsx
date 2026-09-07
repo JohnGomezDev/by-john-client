@@ -13,7 +13,7 @@ export function EditPostContainer({ postId }: IEditPostContainerProps): React.JS
   const { data: post, isLoading, isError, error } = useAdminPost(postId);
 
   if (isLoading) {
-    return <p className="text-sm text-slate-500">Cargando post...</p>;
+    return <p className="text-sm text-neutral/65">Cargando post...</p>;
   }
 
   if (isError || !post) {

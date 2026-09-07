@@ -83,7 +83,7 @@ export function PostForm({ postId, defaultValues }: IPostFormProps): React.JSX.E
           <Button
             type="submit"
             disabled={isSubmitDisabled}
-            className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 sm:w-auto"
+            className="w-full cursor-pointer bg-primary hover:bg-primary/90 sm:w-auto"
           >
             {isPending ? 'Guardando...' : isEditMode ? 'Guardar cambios' : 'Guardar'}
           </Button>

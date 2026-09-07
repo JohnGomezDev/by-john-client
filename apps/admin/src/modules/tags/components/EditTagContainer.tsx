@@ -16,7 +16,7 @@ export function EditTagContainer({ tagId }: IEditTagContainerProps): React.JSX.E
   const tag = tags?.find((item) => item.id === tagId);
 
   if (isLoading) {
-    return <p className="text-sm text-slate-500">Cargando tag...</p>;
+    return <p className="text-sm text-neutral/65">Cargando tag...</p>;
   }
 
   if (isError) {

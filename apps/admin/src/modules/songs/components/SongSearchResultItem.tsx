@@ -26,14 +26,14 @@ export function SongSearchResultItem({
   const isFavorite = favoriteSong?.trackId === trackId;
 
   return (
-    <li className="border-b border-slate-100 last:border-b-0">
+    <li className="border-b border-border last:border-b-0">
       <div className="flex items-start gap-3 px-4 py-4 sm:items-center sm:px-5">
         <SongCover src={result.album.cover} alt={`Portada de ${result.album.title}`} size="sm" />
 
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-slate-900">{result.title}</p>
-          <p className="mt-0.5 truncate text-sm text-slate-500">{result.artist.name}</p>
-          <p className="mt-1 truncate text-xs text-slate-400">
+          <p className="truncate text-sm font-semibold text-primary">{result.title}</p>
+          <p className="mt-0.5 truncate text-sm text-neutral/65">{result.artist.name}</p>
+          <p className="mt-1 truncate text-xs text-neutral/50">
             {result.album.title} • {duration} min
           </p>
         </div>
@@ -42,7 +42,7 @@ export function SongSearchResultItem({
           <SongPlayButton previewUrl={result.preview} trackName={result.title} size="sm" />
 
           {isFavorite ? (
-            <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+            <span className="inline-flex items-center rounded-full bg-secondary/40 px-2.5 py-0.5 text-xs font-medium text-primary">
               Favorita
             </span>
           ) : (
@@ -52,7 +52,7 @@ export function SongSearchResultItem({
               size="sm"
               disabled={isSavingFavorite}
               onClick={handleSaveFavorite}
-              className="h-8 cursor-pointer border-blue-600 bg-white text-blue-600 hover:bg-blue-50"
+              className="h-8 cursor-pointer border-primary bg-white text-primary hover:bg-secondary/40"
             >
               <Heart aria-hidden="true" className="size-3.5" />
               <span className="hidden sm:inline">

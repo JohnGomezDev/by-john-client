@@ -36,12 +36,12 @@ export function PostFormOrganizationSection({
   const { data: tags, isLoading: isLoadingTags, isError: isErrorTags } = useTags(apiClient);
 
   return (
-    <Card className="border-slate-200 py-0 shadow-sm">
+    <Card className="border-border py-0 shadow-sm">
       <CardContent className="space-y-6 px-5 py-6 sm:px-8">
-        <h2 className="text-base font-semibold text-slate-900">Organización</h2>
+        <h2 className="text-base font-semibold text-primary">Organización</h2>
 
         <div className="space-y-2">
-          <Label htmlFor="categoryId" className="text-sm font-medium text-slate-700">
+          <Label htmlFor="categoryId" className="text-sm font-medium text-neutral">
             Categoría
             <RequiredFieldIndicator />
           </Label>
@@ -75,12 +75,12 @@ export function PostFormOrganizationSection({
         </div>
 
         <div className="space-y-2">
-          <Label className="text-sm font-medium text-slate-700">
+          <Label className="text-sm font-medium text-neutral">
             Etiquetas
             <RequiredFieldIndicator />
           </Label>
           {isLoadingTags ? (
-            <p className="text-sm text-slate-500">Cargando etiquetas...</p>
+            <p className="text-sm text-neutral/65">Cargando etiquetas...</p>
           ) : isErrorTags ? (
             <p className="text-sm text-destructive">No se pudieron cargar las etiquetas.</p>
           ) : (

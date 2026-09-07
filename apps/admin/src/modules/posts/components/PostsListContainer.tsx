@@ -27,7 +27,7 @@ export function PostsListContainer(): React.JSX.Element {
 
   const renderContent = (): React.JSX.Element => {
     if (isLoading) {
-      return <p className="text-sm text-slate-500">Cargando posts...</p>;
+      return <p className="text-sm text-neutral/65">Cargando posts...</p>;
     }
 
     if (isError) {
@@ -36,8 +36,8 @@ export function PostsListContainer(): React.JSX.Element {
 
     if (!data?.items.length) {
       return (
-        <div className="rounded-xl border border-dashed border-slate-200 bg-white px-6 py-12 text-center">
-          <p className="text-sm text-slate-500">
+        <div className="rounded-xl border border-dashed border-border bg-white px-6 py-12 text-center">
+          <p className="text-sm text-neutral/65">
             {debouncedSearch
               ? 'No se encontraron posts para tu búsqueda.'
               : 'Aún no hay posts publicados.'}

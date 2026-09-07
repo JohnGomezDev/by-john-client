@@ -14,9 +14,9 @@ export function PostFormExcerptSection({
   excerptError,
 }: IPostFormExcerptSectionProps): React.JSX.Element {
   return (
-    <Card className="border-slate-200 py-0 shadow-sm">
+    <Card className="border-border py-0 shadow-sm">
       <CardContent className="space-y-3 px-5 py-6 sm:px-8">
-        <Label htmlFor="excerpt" className="text-sm font-semibold text-slate-900">
+        <Label htmlFor="excerpt" className="text-sm font-semibold text-primary">
           Extracto / Resumen
         </Label>
         <Textarea

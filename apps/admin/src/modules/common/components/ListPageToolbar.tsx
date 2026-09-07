@@ -26,7 +26,7 @@ export function ListPageToolbar({
       {searchField ? (
         <ListSearchForm searchField={searchField} placeholder={searchPlaceholder} />
       ) : null}
-      <Button asChild className="h-10 shrink-0 cursor-pointer bg-blue-600 hover:bg-blue-700">
+      <Button asChild className="h-10 shrink-0 cursor-pointer bg-primary hover:bg-primary/90">
         <Link href={createHref}>
           <Plus aria-hidden="true" className="size-4" />
           {createLabel}

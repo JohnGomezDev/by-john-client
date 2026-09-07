@@ -30,7 +30,7 @@ export function PostsListPagination({
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-neutral/65">
         Mostrando {startItem}–{endItem} de {totalItems} posts
       </p>
 
@@ -46,7 +46,7 @@ export function PostsListPagination({
         >
           <ChevronLeft className="size-4" />
         </Button>
-        <span className="min-w-24 text-center text-sm text-slate-600">
+        <span className="min-w-24 text-center text-sm text-neutral/80">
           Página {currentPage} de {totalPages}
         </span>
         <Button

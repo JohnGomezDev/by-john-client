@@ -20,7 +20,7 @@ export function PostFormTitleSection({
   slugError,
 }: IPostFormTitleSectionProps): React.JSX.Element {
   return (
-    <Card className="border-slate-200 py-0 shadow-sm">
+    <Card className="border-border py-0 shadow-sm">
       <CardContent className="space-y-5 px-5 py-6 sm:px-8">
         <div className="space-y-2">
           <Label htmlFor="title" className="sr-only">
@@ -38,12 +38,12 @@ export function PostFormTitleSection({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="slug" className="text-sm font-medium text-slate-600">
+          <Label htmlFor="slug" className="text-sm font-medium text-neutral/80">
             Slug del post
             <RequiredFieldIndicator />
           </Label>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-            <span className="shrink-0 text-sm text-slate-500">blog.byjohn.com/posts/</span>
+            <span className="shrink-0 text-sm text-neutral/65">blog.byjohn.com/posts/</span>
             <Input
               id="slug"
               placeholder="slug-del-post *"
