@@ -1,0 +1,85 @@
+/* Shared editorial styles for PostDetailMarkdown (admin + blog) */
+
+.post-detail-markdown .post-detail-ol {
+  list-style: none;
+  padding-left: 0;
+  counter-reset: post-detail-item;
+}
+
+.post-detail-markdown .post-detail-ol > li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  counter-increment: post-detail-item;
+}
+
+.post-detail-markdown .post-detail-ol > li::before {
+  content: counter(post-detail-item);
+  display: inline-flex;
+  height: 1.5rem;
+  width: 1.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: var(--secondary);
+  font-family: var(--font-ubuntu-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--primary);
+}
+
+.post-detail-markdown .post-detail-ol > li:nth-child(even)::before {
+  background-color: var(--tertiary);
+}
+
+@media (min-width: 640px) {
+  .post-detail-markdown .post-detail-ol > li {
+    gap: 1rem;
+  }
+
+  .post-detail-markdown .post-detail-ol > li::before {
+    height: 1.75rem;
+    width: 1.75rem;
+    font-size: 0.8125rem;
+  }
+}
+
+.post-detail-markdown .post-detail-ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.post-detail-markdown .post-detail-ul > li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.post-detail-markdown .post-detail-ul > li::before {
+  content: '';
+  margin-top: 0.55em;
+  height: 0.45rem;
+  width: 0.45rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background-color: var(--secondary);
+}
+
+.post-detail-markdown .post-detail-ul > li:nth-child(even)::before {
+  background-color: var(--tertiary);
+}
+
+.post-detail-markdown .post-detail-quote > p:first-child::before {
+  content: '«\00a0';
+}
+
+.post-detail-markdown .post-detail-quote > p:first-child::after {
+  content: '\00a0»';
+}
+
+.post-detail-markdown .post-detail-quote > p:last-child:not(:only-child)::before,
+.post-detail-markdown .post-detail-quote > p:last-child:not(:only-child)::after {
+  content: none;
+}

@@ -2,6 +2,7 @@
 @import '../../../../packages/ui/src/styles/brand.css';
 
 @source "../../../../packages/ui/src/**/*.{ts,tsx}";
+@source "../../../../packages/modules/src/**/*.{ts,tsx}";
 
 @custom-variant dark (&:is(.dark *));
 

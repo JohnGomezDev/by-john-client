@@ -1,44 +1,63 @@
+@import 'tailwindcss';
 @import '../../../packages/ui/src/styles/brand.css';
 
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+@source "../../../packages/modules/src/**/*.{ts,tsx}";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-tertiary: var(--tertiary);
+  --color-tertiary-foreground: var(--tertiary-foreground);
+  --color-neutral: var(--neutral);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-ubuntu-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-ubuntu-condensed), ui-sans-serif, system-ui, sans-serif;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
 :root {
+  --radius: 0.625rem;
   --background: var(--brand-background);
   --foreground: var(--brand-foreground);
   --primary: var(--brand-primary);
+  --primary-foreground: #ffffff;
   --secondary: var(--brand-secondary);
+  --secondary-foreground: var(--brand-primary);
   --tertiary: var(--brand-tertiary);
+  --tertiary-foreground: var(--brand-primary);
   --neutral: var(--brand-neutral);
-  --font-sans: var(--font-ubuntu-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-ubuntu-condensed), ui-sans-serif, system-ui, sans-serif;
+  --muted: color-mix(in srgb, var(--brand-neutral) 6%, white);
+  --muted-foreground: var(--brand-neutral);
+  --border: color-mix(in srgb, var(--brand-neutral) 14%, white);
+  --ring: var(--brand-secondary);
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+@layer base {
+  * {
+    @apply border-border;
+  }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: var(--font-sans);
-}
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-display);
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display;
+  }
 }
