@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance, type CreateAxiosDefaults } from 'axios';
 
-export function createApiClient(
+export function createAxiosClient(
   baseURL: string,
   options?: CreateAxiosDefaults,
 ): AxiosInstance {

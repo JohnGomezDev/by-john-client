@@ -2,7 +2,7 @@
 
 import { useCategories } from '@repo/lib/modules/taxonomy/hooks/use-categories';
 
-import { apiClient } from '@/lib/api/api-client';
+import { publicFetchClient } from '@/lib/api/public-fetch-client';
 import { ROUTES } from '@/lib/constants/routes.constants';
 import { ListPageHeader } from '@/modules/common/components/ListPageHeader';
 import { ListPageToolbar } from '@/modules/common/components/ListPageToolbar';
@@ -10,7 +10,7 @@ import { ListPageToolbar } from '@/modules/common/components/ListPageToolbar';
 import { CategoriesTable } from './CategoriesTable';
 
 export function CategoriesListContainer(): React.JSX.Element {
-  const { data, isLoading, isError } = useCategories(apiClient);
+  const { data, isLoading, isError } = useCategories(publicFetchClient);
 
   const renderContent = (): React.JSX.Element => {
     if (isLoading) {

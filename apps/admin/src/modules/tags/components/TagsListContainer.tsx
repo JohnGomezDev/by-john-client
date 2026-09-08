@@ -2,7 +2,7 @@
 
 import { useTags } from '@repo/lib/modules/taxonomy/hooks/use-tags';
 
-import { apiClient } from '@/lib/api/api-client';
+import { publicFetchClient } from '@/lib/api/public-fetch-client';
 import { ROUTES } from '@/lib/constants/routes.constants';
 import { ListPageHeader } from '@/modules/common/components/ListPageHeader';
 import { ListPageToolbar } from '@/modules/common/components/ListPageToolbar';
@@ -10,7 +10,7 @@ import { ListPageToolbar } from '@/modules/common/components/ListPageToolbar';
 import { TagsTable } from './TagsTable';
 
 export function TagsListContainer(): React.JSX.Element {
-  const { data, isLoading, isError } = useTags(apiClient);
+  const { data, isLoading, isError } = useTags(publicFetchClient);
 
   const renderContent = (): React.JSX.Element => {
     if (isLoading) {

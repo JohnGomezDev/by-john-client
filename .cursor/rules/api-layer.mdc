@@ -1,34 +1,43 @@
 ---
-description: Axios client setup, token refresh interceptor, and service layer conventions
-globs: packages/lib/src/api/**/*.ts,apps/admin/src/lib/api/**/*.ts,apps/blog/src/lib/api/**/*.ts,apps/admin/src/modules/**/services/**/*.ts,apps/blog/src/modules/**/services/**/*.ts
+description: Axios and Fetch client setup, token refresh interceptor, and service layer conventions
+globs: packages/lib/src/api/**/*.ts,apps/admin/src/lib/api/**/*.ts,apps/blog/src/lib/api/**/*.ts,apps/web/src/lib/api/**/*.ts,apps/admin/src/modules/**/services/**/*.ts,apps/blog/src/modules/**/services/**/*.ts,packages/lib/src/modules/**/services/**/*.ts
 alwaysApply: false
 ---
 
-<!-- SCOPE: packages/lib + apps/admin + apps/blog -->
+<!-- SCOPE: packages/lib + apps/admin + apps/blog + apps/web -->
 
 # API Layer
 
-## Two-level architecture
+## Client architecture
 
-The HTTP client is split into two levels because of the unidirectional dependency rule (`packages/` cannot import from `apps/`):
+HTTP clients live in `packages/lib` as factories. Apps create their own instances because `packages/` cannot import from `apps/` (unidirectional dependency).
 
-| Level | Location | Description |
-|---|---|---|
-| Base | `packages/lib/src/api/api-client.ts` | Axios factory — no auth interceptor; usable in any app |
-| Extended | `apps/admin/src/lib/api/api-client.ts` | Extends the base, adds auth interceptors (reads and dispatches to `store`) |
+| Client       | Location                                        | Transport            | Used by                                   |
+| ------------ | ----------------------------------------------- | -------------------- | ----------------------------------------- |
+| Axios base   | `packages/lib/src/api/axios-client.ts`          | Axios                | Factory only — apps extend or instantiate |
+| Axios auth   | `apps/admin/src/lib/api/axios-client.ts`        | Axios + interceptors | Admin protected endpoints (CRUD, auth)    |
+| Fetch base   | `packages/lib/src/api/fetch-client.ts`          | Native `fetch`       | Factory only — apps instantiate           |
+| Fetch public | `apps/admin/src/lib/api/public-fetch-client.ts` | Native `fetch`       | Admin public endpoints (taxonomy)         |
+| Fetch public | `apps/*/src/lib/api/api-client.ts`              | Native `fetch`       | `apps/web` and `apps/blog` (SSR-friendly) |
 
-`apps/blog` and `apps/web` use the base client directly — they have no auth logic.
+**When to use which:**
 
-## Base client — `packages/lib`
+- **Axios** — admin authenticated requests that need interceptors (Bearer token + silent refresh).
+- **Fetch** — public reads and SSR/SSG in `web`/`blog`. Prefer fetch for shared modules in `packages/lib` that must work across apps without auth coupling.
+
+## Axios base client — `packages/lib`
 
 ```typescript
-// packages/lib/src/api/api-client.ts
-import axios, { type AxiosInstance, type CreateAxiosDefaults } from 'axios';
+// packages/lib/src/api/axios-client.ts
+import axios, { type AxiosInstance, type CreateAxiosDefaults } from "axios";
 
-export function createApiClient(baseURL: string, options?: CreateAxiosDefaults): AxiosInstance {
+export function createAxiosClient(
+  baseURL: string,
+  options?: CreateAxiosDefaults,
+): AxiosInstance {
   return axios.create({
     baseURL,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { "Content-Type": "application/json" },
     ...options,
   });
 }
@@ -36,21 +45,62 @@ export function createApiClient(baseURL: string, options?: CreateAxiosDefaults):
 
 No `withCredentials` by default — only `apps/admin` needs it for the refresh token cookie.
 
-## Extended client — `apps/admin` (with auth interceptors)
+## Fetch base client — `packages/lib`
 
 ```typescript
-// apps/admin/src/lib/api/api-client.ts
-import axios, { type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
-import { createApiClient } from '@repo/lib/api/api-client';
-import { store } from '@/store';
-import { clearAuth, setAccessToken } from '@/store/slices/auth.slice';
+// packages/lib/src/api/fetch-client.ts
+export interface IFetchRequestOptions extends RequestInit {
+  next?: { revalidate?: number | false; tags?: string[] }; // Next.js ISR/cache
+}
+
+export interface IFetchClient {
+  get: <T>(path: string, options?: IFetchRequestOptions) => Promise<T>;
+  post: <T>(
+    path: string,
+    body: unknown,
+    options?: IFetchRequestOptions,
+  ) => Promise<T>;
+  patch: <T>(
+    path: string,
+    body: unknown,
+    options?: IFetchRequestOptions,
+  ) => Promise<T>;
+  put: <T>(
+    path: string,
+    body: unknown,
+    options?: IFetchRequestOptions,
+  ) => Promise<T>;
+  delete: <T>(path: string, options?: IFetchRequestOptions) => Promise<T>;
+}
+
+export function createFetchClient(
+  baseURL: string,
+  defaultOptions?: IFetchRequestOptions,
+): IFetchClient;
+```
+
+- Throws on non-`ok` responses (TanStack Query / callers handle errors).
+- Returns `response.json()` typed as `T` — services unwrap `IApiResponse<T>.data`.
+- Supports Next.js `next: { revalidate, tags }` via `IFetchRequestOptions` for Server Components.
+
+## Axios auth client — `apps/admin`
+
+```typescript
+// apps/admin/src/lib/api/axios-client.ts
+import axios, {
+  type AxiosResponse,
+  type InternalAxiosRequestConfig,
+} from "axios";
+import { createAxiosClient } from "@repo/lib/api/axios-client";
+import { store } from "@/store";
+import { clearAuth, setAccessToken } from "@/store/slices/auth.slice";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
 
-export const apiClient = createApiClient(BASE_URL, { withCredentials: true }); // refresh token cookie
+export const axiosClient = createAxiosClient(BASE_URL, { withCredentials: true }); // refresh token cookie
 
 // ── Request interceptor: attach access token ──────────────────────────────
-apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+axiosClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = store.getState().auth.accessToken;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -73,7 +123,7 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 let isRefreshing = false;
 let failedQueue: Array<{
   resolve: (value: unknown) => void;
-  reject:  (reason?: unknown) => void;
+  reject: (reason?: unknown) => void;
 }> = [];
 
 const processQueue = (error: unknown, token: string | null = null): void => {
@@ -83,23 +133,23 @@ const processQueue = (error: unknown, token: string | null = null): void => {
   failedQueue = [];
 };
 
-apiClient.interceptors.response.use(
+axiosClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: unknown) => {
     const originalRequest = (
       error as { config: InternalAxiosRequestConfig & { _retry?: boolean } }
     ).config;
-    const status = (error as { response?: { status: number } }).response?.status;
+    const status = (error as { response?: { status: number } }).response
+      ?.status;
 
     if (status === 401 && !originalRequest._retry) {
-
       // If a refresh is already in progress, enqueue this request
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         }).then((token) => {
           originalRequest.headers.Authorization = `Bearer ${token as string}`;
-          return apiClient(originalRequest);
+          return axiosClient(originalRequest);
         });
       }
 
@@ -107,7 +157,7 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // IMPORTANT: use axios directly (NOT apiClient) to prevent this
+        // IMPORTANT: use axios directly (NOT axiosClient) to prevent this
         // request from also going through the auth interceptor and looping.
         // withCredentials: true so the browser sends the refresh_token cookie.
         const { data } = await axios.post<{ data: { accessToken: string } }>(
@@ -120,13 +170,12 @@ apiClient.interceptors.response.use(
         store.dispatch(setAccessToken(newToken));
         processQueue(null, newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return apiClient(originalRequest);
-
+        return axiosClient(originalRequest);
       } catch (refreshError) {
         // Refresh failed (session expired or cookie missing) → forced logout
         processQueue(refreshError, null);
         store.dispatch(clearAuth());
-        window.location.href = '/login';
+        window.location.href = "/login";
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
@@ -138,18 +187,31 @@ apiClient.interceptors.response.use(
 );
 ```
 
-## Client in `apps/blog` and `apps/web` (no auth)
+## Fetch public client — `apps/admin` (taxonomy / public reads)
+
+```typescript
+// apps/admin/src/lib/api/public-fetch-client.ts
+import { createFetchClient } from "@repo/lib/api/fetch-client";
+
+export const publicFetchClient = createFetchClient(
+  process.env.NEXT_PUBLIC_API_URL!,
+);
+```
+
+Use `publicFetchClient` for public endpoints shared via `@repo/lib` (e.g. taxonomy). Do **not** pass the Axios `axiosClient` into shared fetch-based hooks.
+
+## Fetch client — `apps/blog` and `apps/web` (no auth)
 
 ```typescript
 // apps/blog/src/lib/api/api-client.ts
-import { createApiClient } from '@repo/lib/api/api-client';
+import { createFetchClient } from "@repo/lib/api/fetch-client";
 
-export const apiClient = createApiClient(process.env.NEXT_PUBLIC_API_URL!);
+export const apiClient = createFetchClient(process.env.NEXT_PUBLIC_API_URL!);
 
 // apps/web/src/lib/api/api-client.ts — identical
 ```
 
-No extra options — only requests to public endpoints, no session cookies.
+No auth options — public endpoints only. Use `next: { revalidate }` / `tags` in Server Component service calls when needed.
 
 ## API response types — `packages/lib`
 
@@ -160,16 +222,16 @@ Matches the backend's global wrapper:
 
 // Success wrapper: { status: 'ok', message: string, data: T }
 export interface IApiResponse<T> {
-  data:    T;
-  status:  'ok';
+  data: T;
+  status: "ok";
   message: string;
 }
 
 // Error shape from the global filter (does not use the wrapper)
 export interface IApiErrorResponse {
   statusCode: number;
-  message:    string | string[]; // string[] for class-validator validation errors
-  error:      string;
+  message: string | string[]; // string[] for class-validator validation errors
+  error: string;
 }
 ```
 
@@ -177,51 +239,98 @@ export interface IApiErrorResponse {
 
 Each module owns its service file. Services are plain async functions — no classes.
 
-```typescript
-// apps/blog/src/modules/blog/services/blog.service.ts
-import { apiClient } from '@/lib/api/api-client';
-import type { IApiResponse } from '@repo/lib/api/api-response.types';
-import type { IPost, IPostDetail } from '../types/blog.types';
+### Shared fetch services (`packages/lib`)
 
-export async function fetchPosts(): Promise<IPost[]> {
-  const { data } = await apiClient.get<IApiResponse<IPost[]>>('/blog/posts');
-  return data.data;
+Receive an `IFetchClient` from the calling app — never create the client inside the package:
+
+```typescript
+// packages/lib/src/modules/taxonomy/services/taxonomy.service.ts
+import type { IApiResponse } from "../../../api/api-response.types";
+import type { IFetchClient } from "../../../api/fetch-client";
+import type { ICategory, ITag } from "../types/taxonomy.types";
+
+export async function fetchCategories(
+  apiClient: IFetchClient,
+): Promise<ICategory[]> {
+  const response =
+    await apiClient.get<IApiResponse<ICategory[]>>("/blog/categories");
+  return response.data;
 }
 
-export async function fetchPostBySlug(slug: string): Promise<IPostDetail> {
-  const { data } = await apiClient.get<IApiResponse<IPostDetail>>(`/blog/posts/${slug}`);
-  return data.data;
+export async function fetchTags(apiClient: IFetchClient): Promise<ITag[]> {
+  const response = await apiClient.get<IApiResponse<ITag[]>>("/blog/tags");
+  return response.data;
 }
 ```
 
+### Blog / web fetch services (SSR-friendly)
+
+```typescript
+// apps/blog/src/modules/blog/services/blog.service.ts
+import { apiClient } from "@/lib/api/api-client";
+import type { IApiResponse } from "@repo/lib/api/api-response.types";
+import type { IPost, IPostDetail } from "../types/blog.types";
+
+export async function fetchPosts(): Promise<IPost[]> {
+  const response = await apiClient.get<IApiResponse<IPost[]>>("/blog/posts", {
+    next: { revalidate: 60 },
+  });
+  return response.data;
+}
+
+export async function fetchPostBySlug(slug: string): Promise<IPostDetail> {
+  const response = await apiClient.get<IApiResponse<IPostDetail>>(
+    `/blog/posts/${slug}`,
+  );
+  return response.data;
+}
+```
+
+### Admin Axios services (authenticated)
+
 ```typescript
 // apps/admin/src/modules/admin/services/admin.service.ts
-import { apiClient } from '@/lib/api/api-client';
-import type { IApiResponse } from '@repo/lib/api/api-response.types';
-import type { IPost, ICreatePostPayload, IUpdatePostPayload } from '../types/admin.types';
+import { axiosClient } from "@/lib/api/axios-client";
+import type { IApiResponse } from "@repo/lib/api/api-response.types";
+import type {
+  IPost,
+  ICreatePostPayload,
+  IUpdatePostPayload,
+} from "../types/admin.types";
 
 export async function createPost(payload: ICreatePostPayload): Promise<IPost> {
-  const { data } = await apiClient.post<IApiResponse<IPost>>('/admin/posts', payload);
+  const { data } = await axiosClient.post<IApiResponse<IPost>>(
+    "/admin/posts",
+    payload,
+  );
   return data.data;
 }
 
-export async function updatePost(id: string, payload: IUpdatePostPayload): Promise<IPost> {
-  const { data } = await apiClient.patch<IApiResponse<IPost>>(`/admin/posts/${id}`, payload);
+export async function updatePost(
+  id: string,
+  payload: IUpdatePostPayload,
+): Promise<IPost> {
+  const { data } = await axiosClient.patch<IApiResponse<IPost>>(
+    `/admin/posts/${id}`,
+    payload,
+  );
   return data.data;
 }
 
 export async function deletePost(id: string): Promise<void> {
-  await apiClient.delete(`/admin/posts/${id}`);
+  await axiosClient.delete(`/admin/posts/${id}`);
 }
 ```
 
 ## Rules
 
-- Never import `axios` directly in a module — always use `apiClient` from `@/lib/api/api-client`.
+- Never import `axios` or call `fetch` directly in a module — always use the app's client (`axiosClient` / `apiClient` / `publicFetchClient`) created from `@repo/lib`.
 - The only exception is inside the refresh interceptor in `apps/admin`, where raw `axios` is used to prevent the refresh request from going through the same interceptor and creating an infinite loop.
-- Services return **unwrapped** domain data (`.data.data`), not the raw `IApiResponse`.
-- Services never throw custom errors — the interceptor and TanStack Query handle them.
-- Services are never called directly from components — always go through a TanStack Query hook.
-- `packages/lib/api/api-client.ts` does not import from `apps/` — the dependency is unidirectional.
+- Shared services in `packages/lib` accept `IFetchClient` as a parameter — they never read env vars or create clients themselves.
+- Services return **unwrapped** domain data (`response.data` for fetch / `data.data` for Axios), not the raw `IApiResponse`.
+- Services never throw custom errors — the client and TanStack Query handle them.
+- Services are never called directly from Client Components — always go through a TanStack Query hook (Server Components in blog/web may call services directly for SSR).
+- `packages/lib` API factories do not import from `apps/` — the dependency is unidirectional.
 - The `IApiResponse` and `IApiErrorResponse` types live in `@repo/lib` and are imported from there in all services.
 - Error `message` can be `string` or `string[]` (class-validator validation) — type and handle both cases in the UI.
+- Keep Axios in `@repo/lib` for admin auth; do not remove it when adding fetch-based shared modules.

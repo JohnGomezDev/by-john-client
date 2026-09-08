@@ -1,5 +1,5 @@
 import axios, { type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
-import { createApiClient } from '@repo/lib/api/api-client';
+import { createAxiosClient } from '@repo/lib/api/axios-client';
 
 import { ROUTES } from '@/lib/constants/routes.constants';
 import { store } from '@/store';
@@ -7,9 +7,9 @@ import { clearAuth, setAccessToken } from '@/store/slices/auth.slice';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
 
-export const apiClient = createApiClient(BASE_URL, { withCredentials: true });
+export const axiosClient = createAxiosClient(BASE_URL, { withCredentials: true });
 
-apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+axiosClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = store.getState().auth.accessToken;
 
   if (token) {
@@ -38,7 +38,7 @@ const processQueue = (error: unknown, token: string | null = null): void => {
   failedQueue = [];
 };
 
-apiClient.interceptors.response.use(
+axiosClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: unknown) => {
     const originalRequest = (
@@ -57,7 +57,7 @@ apiClient.interceptors.response.use(
           failedQueue.push({ resolve, reject });
         }).then((token) => {
           originalRequest.headers.Authorization = `Bearer ${token as string}`;
-          return apiClient(originalRequest);
+          return axiosClient(originalRequest);
         });
       }
 
@@ -75,7 +75,7 @@ apiClient.interceptors.response.use(
         store.dispatch(setAccessToken(newToken));
         processQueue(null, newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return apiClient(originalRequest);
+        return axiosClient(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
 

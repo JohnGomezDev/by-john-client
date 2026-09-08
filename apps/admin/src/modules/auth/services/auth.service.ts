@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { IApiResponse } from '@repo/lib/api/api-response.types';
 
-import { apiClient } from '@/lib/api/api-client';
+import { axiosClient } from '@/lib/api/axios-client';
 
 import type { IAuthAdmin, ILoginPayload } from '../types/auth.types';
 
@@ -17,7 +17,7 @@ let refreshSessionPromise: Promise<TRefreshSessionResult> | null = null;
 export async function login(
   payload: ILoginPayload,
 ): Promise<{ accessToken: string; admin: IAuthAdmin }> {
-  const { data } = await apiClient.post<
+  const { data } = await axiosClient.post<
     IApiResponse<{ accessToken: string; admin: IAuthAdmin }>
   >('/auth/login', payload);
 
@@ -47,5 +47,5 @@ export async function refreshSession(): Promise<TRefreshSessionResult> {
 }
 
 export async function logout(): Promise<void> {
-  await apiClient.delete('/auth/logout');
+  await axiosClient.delete('/auth/logout');
 }

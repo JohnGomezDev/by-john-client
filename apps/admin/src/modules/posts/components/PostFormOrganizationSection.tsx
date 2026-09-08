@@ -7,7 +7,7 @@ import { Label } from '@repo/ui/components/ui/label';
 import { cn } from '@repo/ui/lib/utils';
 import type { Control, RegisterOptions, UseFormRegisterReturn } from 'react-hook-form';
 
-import { apiClient } from '@/lib/api/api-client';
+import { publicFetchClient } from '@/lib/api/public-fetch-client';
 
 import type { IPostFormValues } from '../types/post-form.types';
 import { PostFormTagsField } from './PostFormTagsField';
@@ -32,8 +32,9 @@ export function PostFormOrganizationSection({
     data: categories,
     isLoading: isLoadingCategories,
     isError: isErrorCategories,
-  } = useCategories(apiClient);
-  const { data: tags, isLoading: isLoadingTags, isError: isErrorTags } = useTags(apiClient);
+  } = useCategories(publicFetchClient);
+  const { data: tags, isLoading: isLoadingTags, isError: isErrorTags } =
+    useTags(publicFetchClient);
 
   return (
     <Card className="border-border py-0 shadow-sm">

@@ -1,6 +1,6 @@
 import type { IApiResponse } from '@repo/lib/api/api-response.types';
 
-import { apiClient } from '@/lib/api/api-client';
+import { axiosClient } from '@/lib/api/axios-client';
 
 import type {
   IAdminPostsListParams,
@@ -18,7 +18,7 @@ import type {
 export async function fetchAdminPosts(
   params: IAdminPostsListParams = {},
 ): Promise<IPostsListResponse> {
-  const { data } = await apiClient.get<IApiResponse<IPostsListResponse>>('/admin/posts', {
+  const { data } = await axiosClient.get<IApiResponse<IPostsListResponse>>('/admin/posts', {
     params,
   });
 
@@ -26,13 +26,13 @@ export async function fetchAdminPosts(
 }
 
 export async function fetchAdminPostById(id: string): Promise<IPost> {
-  const { data } = await apiClient.get<IApiResponse<IPost>>(`/admin/posts/${id}`);
+  const { data } = await axiosClient.get<IApiResponse<IPost>>(`/admin/posts/${id}`);
 
   return data.data;
 }
 
 export async function createPost(payload: ICreatePostPayload): Promise<ICreatePostResult> {
-  const { data } = await apiClient.post<IApiResponse<IPost>>('/admin/posts', payload);
+  const { data } = await axiosClient.post<IApiResponse<IPost>>('/admin/posts', payload);
 
   return { post: data.data, message: data.message };
 }
@@ -41,25 +41,25 @@ export async function updatePost(
   id: string,
   payload: IUpdatePostPayload,
 ): Promise<IUpdatePostResult> {
-  const { data } = await apiClient.patch<IApiResponse<IPost>>(`/admin/posts/${id}`, payload);
+  const { data } = await axiosClient.patch<IApiResponse<IPost>>(`/admin/posts/${id}`, payload);
 
   return { post: data.data, message: data.message };
 }
 
 export async function deletePost(id: string): Promise<IDeletePostResult> {
-  const { data } = await apiClient.delete<IApiResponse<null>>(`/admin/posts/${id}`);
+  const { data } = await axiosClient.delete<IApiResponse<null>>(`/admin/posts/${id}`);
 
   return { message: data.message };
 }
 
 export async function publishPost(id: string): Promise<IPublishPostResult> {
-  const { data } = await apiClient.patch<IApiResponse<IPost>>(`/admin/posts/${id}/publish`);
+  const { data } = await axiosClient.patch<IApiResponse<IPost>>(`/admin/posts/${id}/publish`);
 
   return { post: data.data, message: data.message };
 }
 
 export async function unpublishPost(id: string): Promise<IUnpublishPostResult> {
-  const { data } = await apiClient.patch<IApiResponse<IPost>>(`/admin/posts/${id}/unpublish`);
+  const { data } = await axiosClient.patch<IApiResponse<IPost>>(`/admin/posts/${id}/unpublish`);
 
   return { post: data.data, message: data.message };
 }

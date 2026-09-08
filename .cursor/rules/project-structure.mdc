@@ -16,7 +16,8 @@ alwaysApply: true
 - Tailwind CSS (all apps) + shadcn/ui (`apps/admin`, `apps/blog`, `packages/ui`)
 - Redux Toolkit — UI state + auth session (`apps/admin` only)
 - TanStack Query v5 — server state (`apps/web`, `apps/admin`, `apps/blog`)
-- Axios — HTTP client
+- Axios — HTTP client for authenticated admin requests
+- Native `fetch` — HTTP client for public/SSR reads (`web`, `blog`, shared taxonomy)
 - React Hook Form — forms (`apps/admin` only)
 
 ## Monorepo layout
@@ -44,7 +45,7 @@ apps/
             landing.query-keys.ts
       lib/
         api/
-          api-client.ts         # axios instance without auth interceptor
+          api-client.ts         # createFetchClient — public endpoints (SSR)
         providers/
           Providers.tsx         # QueryClientProvider
         constants/
@@ -68,14 +69,14 @@ apps/
             use-posts.ts        # TanStack Query hooks
             use-post.ts
           services/
-            blog.service.ts     # axios calls
+            blog.service.ts     # fetch calls via IFetchClient
           types/
             blog.types.ts
           constants/
             blog.query-keys.ts
       lib/
         api/
-          api-client.ts         # axios instance without auth interceptor
+          api-client.ts         # createFetchClient — public endpoints (SSR)
         providers/
           Providers.tsx         # QueryClientProvider only
         constants/
@@ -130,7 +131,8 @@ apps/
           ui.slice.ts           # sidebar open/close, theme
       lib/
         api/
-          api-client.ts         # extends @repo/lib with auth interceptor (imports store)
+          axios-client.ts       # Axios + auth interceptors (imports store)
+          public-fetch-client.ts # createFetchClient — public endpoints (taxonomy)
         providers/
           Providers.tsx         # QueryClientProvider + Redux Provider
         constants/
@@ -150,8 +152,11 @@ packages/
   lib/                          # Shared utilities — framework-agnostic
     src/
       api/
-        api-client.ts           # base axios instance — no auth interceptor
+        axios-client.ts         # createAxiosClient — Axios factory (no auth)
+        fetch-client.ts         # createFetchClient — native fetch factory
         api-response.types.ts   # IApiResponse<T> — backend shape
+      modules/
+        taxonomy/               # shared categories/tags (hooks + services)
       hooks/
     package.json                # name: "@repo/lib"
 

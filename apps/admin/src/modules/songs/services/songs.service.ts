@@ -1,6 +1,6 @@
 import type { IApiResponse } from '@repo/lib/api/api-response.types';
 
-import { apiClient } from '@/lib/api/api-client';
+import { axiosClient } from '@/lib/api/axios-client';
 
 import type {
   ISaveFavoriteSongPayload,
@@ -16,7 +16,7 @@ function getErrorStatus(error: unknown): number | undefined {
 
 export async function fetchFavoriteSong(): Promise<ISong | null> {
   try {
-    const { data } = await apiClient.get<IApiResponse<ISong>>('/songs/favorite');
+    const { data } = await axiosClient.get<IApiResponse<ISong>>('/songs/favorite');
 
     return data.data;
   } catch (error: unknown) {
@@ -29,7 +29,7 @@ export async function fetchFavoriteSong(): Promise<ISong | null> {
 }
 
 export async function searchSongs(query: string): Promise<ISongSearchResult[]> {
-  const { data } = await apiClient.get<IApiResponse<ISongSearchResult[]>>('/songs/search', {
+  const { data } = await axiosClient.get<IApiResponse<ISongSearchResult[]>>('/songs/search', {
     params: { query },
   });
 
@@ -39,7 +39,7 @@ export async function searchSongs(query: string): Promise<ISongSearchResult[]> {
 export async function saveFavoriteSong(
   payload: ISaveFavoriteSongPayload,
 ): Promise<ISaveFavoriteSongResult> {
-  const { data } = await apiClient.post<IApiResponse<ISong>>('/songs/favorite', payload);
+  const { data } = await axiosClient.post<IApiResponse<ISong>>('/songs/favorite', payload);
 
   return { song: data.data, message: data.message };
 }
