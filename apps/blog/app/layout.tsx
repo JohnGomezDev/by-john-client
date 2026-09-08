@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Ubuntu_Condensed, Ubuntu_Sans } from 'next/font/google';
 
+import { Providers } from '@/lib/providers/Providers';
+
 import './globals.css';
 
 const ubuntuSans = Ubuntu_Sans({
@@ -29,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${ubuntuSans.variable} ${ubuntuCondensed.variable} antialiased`}>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

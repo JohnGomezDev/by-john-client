@@ -8,6 +8,8 @@
     ],
     "strictNullChecks": true,
     "paths": {
+      "@/*": ["./src/*"],
+      "@repo/lib/*": ["../../packages/lib/src/*"],
       "@repo/modules/*": ["../../packages/modules/src/*"],
       "@repo/ui/*": ["../../packages/ui/src/*"]
     }

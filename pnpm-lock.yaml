@@ -93,12 +93,18 @@ importers:
 
   apps/blog:
     dependencies:
+      '@repo/lib':
+        specifier: workspace:*
+        version: link:../../packages/lib
       '@repo/modules':
         specifier: workspace:*
         version: link:../../packages/modules
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@tanstack/react-query':
+        specifier: ^5.85.5
+        version: 5.102.4(react@19.2.0)
       next:
         specifier: 16.3.0
         version: 16.3.0(@types/node@22.15.3)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -215,9 +221,6 @@ importers:
 
   packages/lib:
     dependencies:
-      '@tanstack/react-query':
-        specifier: ^5.85.5
-        version: 5.102.4(react@19.2.0)
       axios:
         specifier: ^1.12.2
         version: 1.19.0
