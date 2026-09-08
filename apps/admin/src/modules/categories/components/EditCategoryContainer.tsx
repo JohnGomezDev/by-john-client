@@ -1,8 +1,6 @@
 'use client';
 
-import { useCategories } from '@repo/lib/modules/taxonomy/hooks/use-categories';
-
-import { publicFetchClient } from '@/lib/api/public-fetch-client';
+import { useCategories } from '@/modules/categories/hooks/use-categories';
 import { mapCategoryToFormValues } from '../utils/category-form.utils';
 import { CategoryForm } from './CategoryForm';
 
@@ -13,7 +11,7 @@ interface IEditCategoryContainerProps {
 export function EditCategoryContainer({
   categoryId,
 }: IEditCategoryContainerProps): React.JSX.Element {
-  const { data: categories, isLoading, isError } = useCategories(publicFetchClient);
+  const { data: categories, isLoading, isError } = useCategories();
   const category = categories?.find((item) => item.id === categoryId);
 
   if (isLoading) {

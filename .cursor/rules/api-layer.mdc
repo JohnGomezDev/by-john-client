@@ -1,6 +1,6 @@
 ---
 description: Axios and Fetch client setup, token refresh interceptor, and service layer conventions
-globs: packages/lib/src/api/**/*.ts,apps/admin/src/lib/api/**/*.ts,apps/blog/src/lib/api/**/*.ts,apps/web/src/lib/api/**/*.ts,apps/admin/src/modules/**/services/**/*.ts,apps/blog/src/modules/**/services/**/*.ts,packages/lib/src/modules/**/services/**/*.ts
+globs: packages/lib/src/api/**/*.ts,apps/admin/src/lib/api/**/*.ts,apps/blog/src/lib/api/**/*.ts,apps/web/src/lib/api/**/*.ts,apps/admin/src/modules/**/services/**/*.ts,apps/blog/src/modules/**/services/**/*.ts
 alwaysApply: false
 ---
 
@@ -15,15 +15,14 @@ HTTP clients live in `packages/lib` as factories. Apps create their own instance
 | Client       | Location                                        | Transport            | Used by                                   |
 | ------------ | ----------------------------------------------- | -------------------- | ----------------------------------------- |
 | Axios base   | `packages/lib/src/api/axios-client.ts`          | Axios                | Factory only — apps extend or instantiate |
-| Axios auth   | `apps/admin/src/lib/api/axios-client.ts`        | Axios + interceptors | Admin protected endpoints (CRUD, auth)    |
+| Axios auth   | `apps/admin/src/lib/api/axios-client.ts`        | Axios + interceptors | All admin HTTP (CRUD, auth, public reads) |
 | Fetch base   | `packages/lib/src/api/fetch-client.ts`          | Native `fetch`       | Factory only — apps instantiate           |
-| Fetch public | `apps/admin/src/lib/api/public-fetch-client.ts` | Native `fetch`       | Admin public endpoints (taxonomy)         |
 | Fetch public | `apps/*/src/lib/api/api-client.ts`              | Native `fetch`       | `apps/web` and `apps/blog` (SSR-friendly) |
 
 **When to use which:**
 
-- **Axios** — admin authenticated requests that need interceptors (Bearer token + silent refresh).
-- **Fetch** — public reads and SSR/SSG in `web`/`blog`. Prefer fetch for shared modules in `packages/lib` that must work across apps without auth coupling.
+- **Axios** — `apps/admin` only. Every admin service uses `axiosClient` (including public list endpoints such as categories/tags). Do not mix fetch into admin.
+- **Fetch** — `apps/web` and `apps/blog` for public/SSR reads. Axios may be added later in those apps if needed (e.g. contact forms), but prefer fetch for SEO/SSR.
 
 ## Axios base client — `packages/lib`
 
@@ -187,19 +186,6 @@ axiosClient.interceptors.response.use(
 );
 ```
 
-## Fetch public client — `apps/admin` (taxonomy / public reads)
-
-```typescript
-// apps/admin/src/lib/api/public-fetch-client.ts
-import { createFetchClient } from "@repo/lib/api/fetch-client";
-
-export const publicFetchClient = createFetchClient(
-  process.env.NEXT_PUBLIC_API_URL!,
-);
-```
-
-Use `publicFetchClient` for public endpoints shared via `@repo/lib` (e.g. taxonomy). Do **not** pass the Axios `axiosClient` into shared fetch-based hooks.
-
 ## Fetch client — `apps/blog` and `apps/web` (no auth)
 
 ```typescript
@@ -239,29 +225,7 @@ export interface IApiErrorResponse {
 
 Each module owns its service file. Services are plain async functions — no classes.
 
-### Shared fetch services (`packages/lib`)
-
-Receive an `IFetchClient` from the calling app — never create the client inside the package:
-
-```typescript
-// packages/lib/src/modules/taxonomy/services/taxonomy.service.ts
-import type { IApiResponse } from "../../../api/api-response.types";
-import type { IFetchClient } from "../../../api/fetch-client";
-import type { ICategory, ITag } from "../types/taxonomy.types";
-
-export async function fetchCategories(
-  apiClient: IFetchClient,
-): Promise<ICategory[]> {
-  const response =
-    await apiClient.get<IApiResponse<ICategory[]>>("/blog/categories");
-  return response.data;
-}
-
-export async function fetchTags(apiClient: IFetchClient): Promise<ITag[]> {
-  const response = await apiClient.get<IApiResponse<ITag[]>>("/blog/tags");
-  return response.data;
-}
-```
+Shared domain types (e.g. `ICategory`, `ITag`) may live in `packages/lib`. Services, query keys, and TanStack Query hooks stay in each app — never share them via `packages/`.
 
 ### Blog / web fetch services (SSR-friendly)
 
@@ -286,7 +250,29 @@ export async function fetchPostBySlug(slug: string): Promise<IPostDetail> {
 }
 ```
 
-### Admin Axios services (authenticated)
+### Admin Axios services
+
+Admin uses **only** `axiosClient` — for protected CRUD and for public list endpoints alike:
+
+```typescript
+// apps/admin/src/modules/categories/services/categories.service.ts
+import type { IApiResponse } from "@repo/lib/api/api-response.types";
+import type { ICategory } from "@repo/lib/modules/taxonomy/types/taxonomy.types";
+import { axiosClient } from "@/lib/api/axios-client";
+
+export async function fetchCategories(): Promise<ICategory[]> {
+  const { data } = await axiosClient.get<IApiResponse<ICategory[]>>("/blog/categories");
+  return data.data;
+}
+
+export async function createCategory(payload: ICreateCategoryPayload): Promise<ICreateCategoryResult> {
+  const { data } = await axiosClient.post<IApiResponse<ICategory>>(
+    "/admin/blog/categories",
+    payload,
+  );
+  return { category: data.data, message: data.message };
+}
+```
 
 ```typescript
 // apps/admin/src/modules/admin/services/admin.service.ts
@@ -324,13 +310,14 @@ export async function deletePost(id: string): Promise<void> {
 
 ## Rules
 
-- Never import `axios` or call `fetch` directly in a module — always use the app's client (`axiosClient` / `apiClient` / `publicFetchClient`) created from `@repo/lib`.
+- Never import `axios` or call `fetch` directly in a module — always use the app's client (`axiosClient` in admin / `apiClient` from `createFetchClient` in web/blog).
 - The only exception is inside the refresh interceptor in `apps/admin`, where raw `axios` is used to prevent the refresh request from going through the same interceptor and creating an infinite loop.
-- Shared services in `packages/lib` accept `IFetchClient` as a parameter — they never read env vars or create clients themselves.
+- `apps/admin` must not use `createFetchClient` / fetch clients — Axios only.
+- `packages/lib` may share **types** across apps; do not put app-specific services, query keys, or TanStack Query hooks there.
 - Services return **unwrapped** domain data (`response.data` for fetch / `data.data` for Axios), not the raw `IApiResponse`.
 - Services never throw custom errors — the client and TanStack Query handle them.
 - Services are never called directly from Client Components — always go through a TanStack Query hook (Server Components in blog/web may call services directly for SSR).
 - `packages/lib` API factories do not import from `apps/` — the dependency is unidirectional.
 - The `IApiResponse` and `IApiErrorResponse` types live in `@repo/lib` and are imported from there in all services.
 - Error `message` can be `string` or `string[]` (class-validator validation) — type and handle both cases in the UI.
-- Keep Axios in `@repo/lib` for admin auth; do not remove it when adding fetch-based shared modules.
+- Keep both `createAxiosClient` and `createFetchClient` in `@repo/lib` — admin uses Axios; web/blog use fetch (Axios optional later).

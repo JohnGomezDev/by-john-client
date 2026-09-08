@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { taxonomyKeys } from '@repo/lib/modules/taxonomy/constants/taxonomy.query-keys';
+import { tagKeys } from '../constants/tags.query-keys';
 
 import { createTag } from '../services/tags.service';
 import type { ICreateTagPayload, ICreateTagResult } from '../types/tags.types';
@@ -14,7 +14,7 @@ export function useCreateTag(): ReturnType<
   return useMutation({
     mutationFn: createTag,
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: taxonomyKeys.tags() });
+      void queryClient.invalidateQueries({ queryKey: tagKeys.lists() });
     },
   });
 }

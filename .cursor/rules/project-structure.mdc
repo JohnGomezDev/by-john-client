@@ -132,7 +132,6 @@ apps/
       lib/
         api/
           axios-client.ts       # Axios + auth interceptors (imports store)
-          public-fetch-client.ts # createFetchClient — public endpoints (taxonomy)
         providers/
           Providers.tsx         # QueryClientProvider + Redux Provider
         constants/
@@ -156,7 +155,9 @@ packages/
         fetch-client.ts         # createFetchClient — native fetch factory
         api-response.types.ts   # IApiResponse<T> — backend shape
       modules/
-        taxonomy/               # shared categories/tags (hooks + services)
+        taxonomy/               # shared types only (ICategory, ITag)
+          types/
+            taxonomy.types.ts
       hooks/
     package.json                # name: "@repo/lib"
 

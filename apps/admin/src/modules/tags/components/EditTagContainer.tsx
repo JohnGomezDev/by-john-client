@@ -1,8 +1,6 @@
 'use client';
 
-import { useTags } from '@repo/lib/modules/taxonomy/hooks/use-tags';
-
-import { publicFetchClient } from '@/lib/api/public-fetch-client';
+import { useTags } from '@/modules/tags/hooks/use-tags';
 
 import { mapTagToFormValues } from '../utils/tag-form.utils';
 import { TagForm } from './TagForm';
@@ -12,7 +10,7 @@ interface IEditTagContainerProps {
 }
 
 export function EditTagContainer({ tagId }: IEditTagContainerProps): React.JSX.Element {
-  const { data: tags, isLoading, isError } = useTags(publicFetchClient);
+  const { data: tags, isLoading, isError } = useTags();
   const tag = tags?.find((item) => item.id === tagId);
 
   if (isLoading) {

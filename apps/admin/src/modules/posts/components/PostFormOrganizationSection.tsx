@@ -1,17 +1,16 @@
 'use client';
 
-import { useCategories } from '@repo/lib/modules/taxonomy/hooks/use-categories';
-import { useTags } from '@repo/lib/modules/taxonomy/hooks/use-tags';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { Label } from '@repo/ui/components/ui/label';
 import { cn } from '@repo/ui/lib/utils';
 import type { Control, RegisterOptions, UseFormRegisterReturn } from 'react-hook-form';
 
-import { publicFetchClient } from '@/lib/api/public-fetch-client';
+import { RequiredFieldIndicator } from '@/modules/common/components/RequiredFieldIndicator';
+import { useCategories } from '@/modules/categories/hooks/use-categories';
+import { useTags } from '@/modules/tags/hooks/use-tags';
 
 import type { IPostFormValues } from '../types/post-form.types';
 import { PostFormTagsField } from './PostFormTagsField';
-import { RequiredFieldIndicator } from '@/modules/common/components/RequiredFieldIndicator';
 
 interface IPostFormOrganizationSectionProps {
   categoryIdField: UseFormRegisterReturn<'categoryId'>;
@@ -32,9 +31,8 @@ export function PostFormOrganizationSection({
     data: categories,
     isLoading: isLoadingCategories,
     isError: isErrorCategories,
-  } = useCategories(publicFetchClient);
-  const { data: tags, isLoading: isLoadingTags, isError: isErrorTags } =
-    useTags(publicFetchClient);
+  } = useCategories();
+  const { data: tags, isLoading: isLoadingTags, isError: isErrorTags } = useTags();
 
   return (
     <Card className="border-border py-0 shadow-sm">

@@ -1,8 +1,7 @@
 'use client';
 
-import { useTags } from '@repo/lib/modules/taxonomy/hooks/use-tags';
+import { useTags } from '@/modules/tags/hooks/use-tags';
 
-import { publicFetchClient } from '@/lib/api/public-fetch-client';
 import { ROUTES } from '@/lib/constants/routes.constants';
 import { ListPageHeader } from '@/modules/common/components/ListPageHeader';
 import { ListPageToolbar } from '@/modules/common/components/ListPageToolbar';
@@ -10,7 +9,7 @@ import { ListPageToolbar } from '@/modules/common/components/ListPageToolbar';
 import { TagsTable } from './TagsTable';
 
 export function TagsListContainer(): React.JSX.Element {
-  const { data, isLoading, isError } = useTags(publicFetchClient);
+  const { data, isLoading, isError } = useTags();
 
   const renderContent = (): React.JSX.Element => {
     if (isLoading) {

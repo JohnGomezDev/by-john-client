@@ -11,6 +11,12 @@ import type {
   IUpdateCategoryResult,
 } from '../types/categories.types';
 
+export async function fetchCategories(): Promise<ICategory[]> {
+  const { data } = await axiosClient.get<IApiResponse<ICategory[]>>('/blog/categories');
+
+  return data.data;
+}
+
 export async function createCategory(
   payload: ICreateCategoryPayload,
 ): Promise<ICreateCategoryResult> {
