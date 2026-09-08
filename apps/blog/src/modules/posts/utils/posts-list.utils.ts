@@ -7,10 +7,6 @@ export function buildPostsListPath(params: IPostsListParams = {}): string {
     searchParams.set('page', String(params.page));
   }
 
-  if (params.limit !== undefined) {
-    searchParams.set('limit', String(params.limit));
-  }
-
   if (params.search) {
     searchParams.set('search', params.search);
   }
