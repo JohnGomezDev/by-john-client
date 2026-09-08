@@ -1,4 +1,4 @@
-import type { IAdminPostsListParams } from '../types/admin.types';
+import type { IAdminPostsListParams } from '../types/post.types';
 
 export const adminPostKeys = {
   all: () => ['admin', 'posts'] as const,

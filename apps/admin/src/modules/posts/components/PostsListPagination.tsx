@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Button } from '@repo/ui/components/ui/button';
 
-import type { IPaginationMeta } from '../types/admin.types';
+import type { IPaginationMeta } from '../types/post.types';
 
 interface IPostsListPaginationProps {
   meta: IPaginationMeta;

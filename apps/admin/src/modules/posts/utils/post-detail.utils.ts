@@ -1,4 +1,4 @@
-import type { IPostAuthor } from '../types/admin.types';
+import type { IPostAuthor } from '../types/post.types';
 
 export function getAuthorInitials(admin: IPostAuthor): string {
   const firstInitial = admin.name.charAt(0);

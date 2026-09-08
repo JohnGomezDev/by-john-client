@@ -18,7 +18,7 @@ import { Button } from '@repo/ui/components/ui/button';
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 
 import { usePostActions } from '../hooks/use-post-actions';
-import type { IPost } from '../types/admin.types';
+import type { IPost } from '../types/post.types';
 
 interface IPostDetailActionsCardProps {
   post: IPost;

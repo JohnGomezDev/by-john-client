@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import { PostDetailMarkdown } from '@repo/modules/posts/components/PostDetailMarkdown';
 
-import type { IPost } from '../types/admin.types';
+import type { IPost } from '../types/post.types';
 
 interface IPostDetailContentProps {
   post: IPost;

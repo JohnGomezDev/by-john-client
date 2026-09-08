@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { adminPostKeys } from '../constants/post.query-keys';
 import { unpublishPost } from '../services/posts.service';
-import type { IUnpublishPostResult } from '../types/admin.types';
+import type { IUnpublishPostResult } from '../types/post.types';
 
 export function useUnpublishPost(): ReturnType<
   typeof useMutation<IUnpublishPostResult, Error, string>

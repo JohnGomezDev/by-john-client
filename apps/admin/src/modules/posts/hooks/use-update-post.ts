@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { adminPostKeys } from '../constants/post.query-keys';
 import { updatePost } from '../services/posts.service';
-import type { IUpdatePostPayload, IUpdatePostResult } from '../types/admin.types';
+import type { IUpdatePostPayload, IUpdatePostResult } from '../types/post.types';
 
 interface IUpdatePostVariables {
   id: string;

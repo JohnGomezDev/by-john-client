@@ -1,4 +1,4 @@
-import type { IPostListItem } from '../types/admin.types';
+import type { IPostListItem } from '../types/post.types';
 
 interface IPostStatusBadgeProps {
   published: IPostListItem['published'];

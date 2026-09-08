@@ -6,7 +6,7 @@ import { Eye, Pencil } from 'lucide-react';
 import { ROUTES } from '@/lib/constants/routes.constants';
 import { Button } from '@repo/ui/components/ui/button';
 
-import type { IPostListItem } from '../types/admin.types';
+import type { IPostListItem } from '../types/post.types';
 import { formatAuthorName, formatCategoryName, formatPostDate, formatPublishedDate } from '../utils/post-list.utils';
 import { PostStatusBadge } from './PostStatusBadge';
 

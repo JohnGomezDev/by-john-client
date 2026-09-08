@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { adminPostKeys } from '../constants/post.query-keys';
 import { createPost } from '../services/posts.service';
-import type { ICreatePostPayload, ICreatePostResult } from '../types/admin.types';
+import type { ICreatePostPayload, ICreatePostResult } from '../types/post.types';
 
 export function useCreatePost(): ReturnType<
   typeof useMutation<ICreatePostResult, Error, ICreatePostPayload>

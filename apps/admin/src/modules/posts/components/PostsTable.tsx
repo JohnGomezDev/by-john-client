@@ -1,6 +1,6 @@
 'use client';
 
-import type { IPostListItem } from '../types/admin.types';
+import type { IPostListItem } from '../types/post.types';
 import { PostsTableRow } from './PostsTableRow';
 
 interface IPostsTableProps {

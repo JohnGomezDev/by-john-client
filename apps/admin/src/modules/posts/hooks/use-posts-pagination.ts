@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import type { IPaginationMeta } from '../types/admin.types';
+import type { IPaginationMeta } from '../types/post.types';
 
 interface IPageRange {
   startItem: number;

@@ -13,7 +13,7 @@ import type {
   IUpdatePostPayload,
   IUpdatePostResult,
   IUnpublishPostResult,
-} from '../types/admin.types';
+} from '../types/post.types';
 
 export async function fetchAdminPosts(
   params: IAdminPostsListParams = {},

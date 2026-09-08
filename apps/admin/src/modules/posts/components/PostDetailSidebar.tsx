@@ -1,4 +1,4 @@
-import type { IPost } from '../types/admin.types';
+import type { IPost } from '../types/post.types';
 import { PostDetailActionsCard } from './PostDetailActionsCard';
 import { PostDetailAuthorCard } from './PostDetailAuthorCard';
 import { PostDetailStatusCard } from './PostDetailStatusCard';

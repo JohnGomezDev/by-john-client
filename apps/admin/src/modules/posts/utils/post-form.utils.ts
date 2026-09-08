@@ -1,4 +1,4 @@
-import type { ICreatePostPayload, IPost, IUpdatePostPayload } from '../types/admin.types';
+import type { ICreatePostPayload, IPost, IUpdatePostPayload } from '../types/post.types';
 import type { IPostFormValues } from '../types/post-form.types';
 
 export function mapFormToPayload(data: IPostFormValues): ICreatePostPayload {
