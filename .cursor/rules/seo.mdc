@@ -1,0 +1,631 @@
+---
+description: Technical SEO rules for apps/web (personal portfolio) and apps/blog (software development blog) — metadata, robots, sitemap, JSON-LD, image optimization, and Core Web Vitals
+globs: apps/web/**/*.ts,apps/web/**/*.tsx,apps/blog/**/*.ts,apps/blog/**/*.tsx,packages/modules/**/*.ts,packages/modules/**/*.tsx
+alwaysApply: false
+---
+
+<!-- SCOPE: apps/web, apps/blog -->
+
+# SEO
+
+Full technical SEO rules for `apps/web` (personal portfolio, mostly static) and `apps/blog` (software development blog). Both apps are deployed on separate domains — `yourdomain.com` and `blog.yourdomain.com`. All content is in Spanish.
+
+> **Never apply these rules to `apps/admin`**. The admin panel must always have `robots: { index: false, follow: false }`.
+
+---
+
+## 1. Environment constants
+
+Each app exposes its production URL through an environment variable. Use it everywhere an absolute URL is constructed.
+
+```
+# apps/web/.env.local / .env.production
+NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+
+# apps/blog/.env.local / .env.production
+NEXT_PUBLIC_SITE_URL=https://blog.yourdomain.com
+```
+
+---
+
+## 2. `metadataBase` and global title — RootLayout
+
+`metadataBase` is required for Next.js to correctly resolve relative URLs in Open Graph, Twitter, and canonical tags. It must be defined **once** in each app's root layout.
+
+### apps/web — `app/layout.tsx`
+
+```tsx
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
+  title: {
+    default: 'Your Name · Software Developer',
+    template: '%s · Your Name',
+  },
+  description: 'Personal portfolio of Your Name, software developer focused on...',
+  authors: [{ name: 'Your Name', url: process.env.NEXT_PUBLIC_SITE_URL }],
+  creator: 'Your Name',
+  openGraph: {
+    type: 'website',
+    locale: 'es_ES',           // content is in Spanish — keep as-is
+    siteName: 'Your Name · Portfolio',
+    url: process.env.NEXT_PUBLIC_SITE_URL,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@yourtwitter',      // replace with your real handle (or remove if unused)
+    creator: '@yourtwitter',
+  },
+  robots: { index: true, follow: true },
+};
+
+export default function RootLayout({ children }: ...): React.JSX.Element {
+  return (
+    <html lang="es">           {/* always "es" — content is in Spanish */}
+      ...
+    </html>
+  );
+}
+```
+
+### apps/blog — `app/layout.tsx`
+
+```tsx
+export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
+  title: {
+    default: 'Blog · Your Name',
+    template: '%s · Blog de Your Name',
+  },
+  description: 'Articles about software development, technology and...',
+  authors: [{ name: 'Your Name', url: 'https://yourdomain.com' }],
+  creator: 'Your Name',
+  openGraph: {
+    type: 'website',
+    locale: 'es_ES',
+    siteName: 'Blog · Your Name',
+    url: process.env.NEXT_PUBLIC_SITE_URL,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@yourtwitter',
+    creator: '@yourtwitter',
+  },
+  robots: { index: true, follow: true },
+};
+
+export default function RootLayout({ children }: ...): React.JSX.Element {
+  return (
+    <html lang="es">
+      ...
+    </html>
+  );
+}
+```
+
+---
+
+## 3. `generateMetadata` on dynamic routes — blog
+
+Every dynamic route in the blog **must** implement `generateMetadata`. The post `slug` is the canonical URL. Use the `metaTitle`, `metaDescription`, and `ogImageUrl` fields already provided by the backend (`IPostDetail`).
+
+```tsx
+// apps/blog/app/posts/[slug]/page.tsx
+import type { Metadata } from 'next';
+import { fetchPostBySlug, fetchPosts } from '@/modules/posts/services/posts.service';
+import { notFound } from 'next/navigation';
+
+interface IProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: IProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await fetchPostBySlug(slug).catch(() => null);
+  if (!post) return { title: 'Post not found' };
+
+  const title = post.metaTitle ?? post.title;
+  const description = post.metaDescription ?? post.excerpt;
+  const canonicalUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/${slug}`;
+  const publishedTime = post.publishedAt ?? post.createdAt;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: 'article',
+      title,
+      description,
+      url: canonicalUrl,
+      locale: 'es_ES',
+      publishedTime,
+      modifiedTime: post.updatedAt,
+      authors: [`${post.admin.name} ${post.admin.lastName}`],
+      tags: post.tags.map((t) => t.name),
+      images: post.ogImageUrl
+        ? [{ url: post.ogImageUrl, width: 1200, height: 630, alt: title }]
+        : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: post.ogImageUrl ? [post.ogImageUrl] : [],
+    },
+    // Unpublished posts must not be indexed
+    robots: { index: post.published, follow: true },
+  };
+}
+
+// Required for SSG — fetches all published slugs at build time.
+// Do NOT set dynamicParams = false. The default (true) allows Next.js to
+// SSR-render any slug not pre-generated (e.g. a post published after the last build),
+// then cache it automatically via the revalidate set in fetchPostBySlug.
+//
+// The API enforces a max limit of 30 items per page — paginate to collect all slugs.
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
+  const first = await fetchPosts({ page: 1, limit: 30 });
+  const remaining = await Promise.all(
+    Array.from({ length: first.meta.totalPages - 1 }, (_, i) =>
+      fetchPosts({ page: i + 2, limit: 30 })
+    )
+  );
+  return [first, ...remaining].flatMap((r) => r.items).map((p) => ({ slug: p.slug }));
+}
+```
+
+### Category or tag pages
+
+If routes like `/categoria/[slug]` exist, they must also implement `generateMetadata`:
+
+```tsx
+export async function generateMetadata({ params }: IProps): Promise<Metadata> {
+  const { slug } = await params;
+  const canonicalUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/categoria/${slug}`;
+  return {
+    title: `Posts sobre ${slug}`,   // UI copy — Spanish is correct here
+    alternates: { canonical: canonicalUrl },
+    openGraph: { url: canonicalUrl },
+  };
+}
+```
+
+---
+
+## 4. `robots.ts` — both apps
+
+Create the file at `app/robots.ts` (not `public/robots.txt`). Next.js auto-generates the `/robots.txt` route from it.
+
+### apps/web — `app/robots.ts`
+
+```ts
+import type { MetadataRoute } from 'next';
+
+export default function robots(): MetadataRoute.Robots {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
+  return {
+    rules: { userAgent: '*', allow: '/' },
+    sitemap: `${siteUrl}/sitemap.xml`,
+    host: siteUrl,
+  };
+}
+```
+
+### apps/blog — `app/robots.ts`
+
+```ts
+import type { MetadataRoute } from 'next';
+
+export default function robots(): MetadataRoute.Robots {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
+  return {
+    rules: { userAgent: '*', allow: '/' },
+    sitemap: `${siteUrl}/sitemap.xml`,
+    host: siteUrl,
+  };
+}
+```
+
+---
+
+## 5. `sitemap.ts` — both apps
+
+Create the file at `app/sitemap.ts`. Next.js auto-generates the `/sitemap.xml` route from it.
+
+### apps/web — `app/sitemap.ts` (static)
+
+The portfolio is mostly static — sections are listed manually.
+
+```ts
+import type { MetadataRoute } from 'next';
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
+  return [
+    {
+      url: siteUrl,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 1,
+    },
+    // Add section anchors or additional routes as they are created:
+    // { url: `${siteUrl}/#projects`, changeFrequency: 'monthly', priority: 0.8 },
+  ];
+}
+```
+
+### apps/blog — `app/sitemap.ts` (dynamic)
+
+Includes the blog home + all published posts.
+
+`export const revalidate` is required so that posts published after the last build appear in the sitemap without needing a redeploy. 24 hours is a reasonable interval for a weekly-cadence blog — the sitemap is a crawl signal, not the primary discovery path for new posts (that is handled by the SSR fallback in `dynamicParams`).
+
+When traffic or post volume grows significantly, replace the time-based `revalidate` with on-demand revalidation (`revalidatePath('/sitemap.xml')`) triggered from the admin on publish — but that is out of scope for now.
+
+The API enforces a max limit of 30 items per page — paginate to collect all posts.
+
+```ts
+import type { MetadataRoute } from 'next';
+import { fetchPosts } from '@/modules/posts/services/posts.service';
+
+// Regenerates the sitemap every 24 hours.
+// For a weekly-cadence blog this is sufficient — new posts are discoverable
+// immediately via SSR fallback; the sitemap is updated for crawlers within a day.
+export const revalidate = 86400;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
+
+  const first = await fetchPosts({ page: 1, limit: 30 });
+  const remaining = await Promise.all(
+    Array.from({ length: first.meta.totalPages - 1 }, (_, i) =>
+      fetchPosts({ page: i + 2, limit: 30 })
+    )
+  );
+  const allPosts = [first, ...remaining].flatMap((r) => r.items);
+
+  const postEntries: MetadataRoute.Sitemap = allPosts
+    .filter((p) => p.published && p.publishedAt)
+    .map((post) => ({
+      url: `${siteUrl}/${post.slug}`,
+      lastModified: new Date(post.updatedAt),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    }));
+
+  return [
+    {
+      url: siteUrl,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 1,
+    },
+    ...postEntries,
+  ];
+}
+```
+
+---
+
+## 6. Structured data (JSON-LD)
+
+Inject JSON-LD via a server component using `<script type="application/ld+json">`. **Never use third-party libraries** for this — Next.js supports it natively.
+
+### apps/web — Person schema (in `app/page.tsx`)
+
+```tsx
+export default function HomePage(): React.JSX.Element {
+  const personSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Your Name',
+    url: process.env.NEXT_PUBLIC_SITE_URL,
+    jobTitle: 'Software Developer',
+    sameAs: [
+      'https://github.com/yourusername',
+      'https://linkedin.com/in/yourusername',
+      // 'https://twitter.com/yourtwitter',
+    ],
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
+      {/* rest of the page */}
+    </>
+  );
+}
+```
+
+### apps/blog — Blog schema (in `app/page.tsx`)
+
+```tsx
+export default function BlogHomePage(): React.JSX.Element {
+  const blogSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'Blog · Your Name',
+    url: process.env.NEXT_PUBLIC_SITE_URL,
+    author: { '@type': 'Person', name: 'Your Name' },
+    inLanguage: 'es',          // content language — keep as-is
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
+      />
+      {/* rest of the page */}
+    </>
+  );
+}
+```
+
+### apps/blog — Article schema (in `app/posts/[slug]/page.tsx`)
+
+```tsx
+export default async function PostPage({ params }: IProps): Promise<React.JSX.Element> {
+  const { slug } = await params;
+  const post = await fetchPostBySlug(slug).catch(() => null);
+  if (!post) notFound();
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: post.title,
+    description: post.excerpt,
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}/${post.slug}`,
+    datePublished: post.publishedAt ?? post.createdAt,
+    dateModified: post.updatedAt,
+    author: {
+      '@type': 'Person',
+      name: `${post.admin.name} ${post.admin.lastName}`,
+    },
+    image: post.ogImageUrl ?? undefined,
+    inLanguage: 'es',
+    keywords: post.tags.map((t) => t.name).join(', '),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <PostDetail post={post} />
+    </>
+  );
+}
+```
+
+---
+
+## 7. Images — `next/image`
+
+All images **must** use `next/image`. Never use a native `<img>` tag.
+
+### Required rules
+
+| Prop | Rule |
+|------|------|
+| `alt` | Always present. Descriptive of the content. Use `alt=""` only for purely decorative images. |
+| `width` + `height` | Always explicit for fixed-size images. Prevents CLS (Cumulative Layout Shift). |
+| `fill` | Use with `sizes` when the container is relative-positioned. Always wrap in a `div` with `position: relative`. |
+| `priority` | Required for the LCP image (above the fold: hero, profile avatar, cover). **At most one per page.** |
+| `sizes` | Required when using `fill` or when the image occupies a percentage of the viewport. |
+| `placeholder` | Use `placeholder="blur"` + `blurDataURL` for remote images to prevent layout shift. |
+
+```tsx
+// ✅ Hero image — above the fold (LCP)
+<Image
+  src="/hero.webp"
+  alt="Profile photo of Your Name, software developer"
+  width={400}
+  height={400}
+  priority              // LCP — only on the most important image per page
+  className="rounded-full"
+/>
+
+// ✅ Post cover with relative container
+<div className="relative aspect-video w-full">
+  <Image
+    src={post.ogImageUrl}
+    alt={post.title}
+    fill
+    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 760px"
+    className="object-cover"
+  />
+</div>
+
+// ✅ Decorative image
+<Image src="/decoration.svg" alt="" width={24} height={24} aria-hidden />
+
+// ❌ Never
+<img src="/photo.jpg" alt="photo" />
+```
+
+### External domains in `next.config.ts`
+
+If blog images come from a CDN or the backend, declare the domain in `next.config.ts`:
+
+```ts
+// apps/blog/next.config.ts
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'your-cdn.com',      // replace with the real domain
+        pathname: '/uploads/**',
+      },
+    ],
+  },
+};
+```
+
+---
+
+## 8. Markdown-rendered content (`PostDetailMarkdown`)
+
+Post content is rendered via `react-markdown` in `packages/modules/src/posts/components/PostDetailMarkdown.tsx`. This introduces two SEO-specific concerns.
+
+### 8.1 Images in Markdown — replace native `<img>` with `next/image`
+
+The current `img` custom renderer uses a native `<img>` tag. Replace it with `next/image` using `fill` + a relative container so that images benefit from lazy loading, format optimization (WebP/AVIF), and CLS prevention without requiring explicit dimensions (which Markdown images never have).
+
+```tsx
+// packages/modules/src/posts/components/PostDetailMarkdown.tsx
+import Image from 'next/image';
+
+// inside the components prop:
+img: ({ src, alt }) => (
+  <figure className="mt-5 sm:mt-6">
+    <div className="relative w-full overflow-hidden rounded-lg" style={{ aspectRatio: '16 / 9' }}>
+      <Image
+        src={src!}
+        alt={alt ?? ''}
+        fill
+        sizes="(max-width: 768px) 100vw, 760px"
+        className="object-contain"
+        // No priority — content images are always below the fold
+      />
+    </div>
+    {alt && (
+      <figcaption className="mt-2 text-center text-xs text-neutral/60">{alt}</figcaption>
+    )}
+  </figure>
+),
+```
+
+**`rehypeRaw` caveat:** The component uses `rehypeRaw`, which allows raw HTML in the Markdown source. A raw `<img>` tag written directly in the post content will **bypass the custom renderer** and render as native HTML. Authors must use Markdown image syntax (`![alt](url)`) — not raw `<img>` — for `next/image` to apply.
+
+Make sure the external image domain used in post content is declared in `next.config.ts` under `remotePatterns` (same domain as `ogImageUrl` likely covers this).
+
+### 8.2 Heading hierarchy — avoid duplicate `h1`
+
+The `PostDetailMarkdown` component already renders a styled `h1` when the Markdown source contains `# Heading`. If the post page also renders the post title inside an `<h1>`, there will be **two `h1` elements on the same page**, which harms SEO.
+
+**Rule:** The post page renders the title in an `h1`. Therefore, post authors must **never start their Markdown content with a `#` first-level heading**. Content should start from `##` (h2) downward.
+
+Document this as an authoring convention in the admin — the post title field is the `h1`; the body starts at `h2`.
+
+---
+
+## 9. Performance and Core Web Vitals
+
+### Fonts (`next/font`)
+Fonts are already optimized with `next/font/google` and `display: 'swap'`. **Never add** additional fonts via manual `<link>` tags or `@import` in CSS.
+
+### Third-party scripts
+- Never place `<script>` tags manually in `<head>`.
+- If a third-party script is needed (analytics, etc.), use `next/script` with `strategy="afterInteractive"` or `"lazyOnload"`.
+
+```tsx
+import Script from 'next/script';
+
+// ✅ Non-blocking analytics
+<Script
+  src="https://analytics.example.com/script.js"
+  strategy="afterInteractive"
+/>
+```
+
+### Favorite song component (`apps/web`)
+The component that loads the favorite song from the API **must** be a Client Component with an explicit loading state and must not block the initial page render. Reserve a fixed height to prevent CLS.
+
+```tsx
+// apps/web/app/components/FavoriteSong.tsx
+'use client';
+
+export function FavoriteSong(): React.JSX.Element {
+  const { data, isLoading } = useFavoriteSong();
+
+  // Fixed height container prevents CLS while the API call resolves
+  return (
+    <div className="h-16 w-full">
+      {isLoading ? <FavoriteSongSkeleton /> : <SongCard song={data} />}
+    </div>
+  );
+}
+```
+
+### Animations
+All CSS or Framer Motion animations must respect `prefers-reduced-motion`:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+```
+
+---
+
+## 10. Favicon and app icons
+
+Place the following files in `app/` (not in `public/`). Next.js registers them automatically:
+
+```
+app/
+  favicon.ico           # already exists — replace with the real one
+  icon.png              # 32×32 — PNG
+  apple-icon.png        # 180×180 — Apple Touch Icon
+  opengraph-image.png   # 1200×630 — default OG image (social sharing fallback)
+```
+
+The `opengraph-image.png` is used as a fallback when a page does not define its own OG image. It is especially important for the portfolio. Always use `1200×630 px`.
+
+---
+
+## 11. Canonical URLs
+
+The canonical URL is set via `alternates.canonical` inside the `Metadata` object. Always set it when there is a risk of duplicate URLs (pagination, query params, etc.).
+
+```tsx
+// apps/blog — home with pagination
+export const metadata: Metadata = {
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_SITE_URL,
+  },
+};
+
+// apps/blog — post detail (see section 3)
+alternates: { canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${slug}` }
+```
+
+---
+
+## 12. Pre-production checklist
+
+### Technical
+- [ ] `<html lang="es">` in both RootLayouts
+- [ ] `metadataBase` points to the correct production domain per app
+- [ ] `robots.ts` created in both apps
+- [ ] `sitemap.ts` created in both apps (web: static, blog: dynamic)
+- [ ] `generateMetadata` on every dynamic route in the blog
+- [ ] `generateStaticParams` on the `[slug]` route in the blog
+- [ ] JSON-LD present on web home (Person), blog home (Blog), and each post page (TechArticle)
+- [ ] All images use `next/image` with `alt`, explicit dimensions, and `priority` on the LCP image
+- [ ] `PostDetailMarkdown` `img` renderer uses `next/image` (not native `<img>`)
+- [ ] External image domains declared in `next.config.ts` (covers both `ogImageUrl` and Markdown content images)
+- [ ] `NEXT_PUBLIC_SITE_URL` env var configured per app
+- [ ] Default OG image (`opengraph-image.png`) present in both apps
+
+### Content
+- [ ] Unique and descriptive title per page (max 60 characters)
+- [ ] Unique meta description per page (max 160 characters)
+- [ ] Every post has `metaTitle`, `metaDescription`, and `ogImageUrl` filled in the admin
+- [ ] Portfolio has a visible `h1` with the author's name/role
+- [ ] Correct heading hierarchy (one `h1` per page)
+- [ ] Post authors do not use `#` (h1) inside Markdown content — body starts at `##`
+
+### Performance
+- [ ] `priority` only on the LCP image per page
+- [ ] No manual `<script>` tags in `<head>`
+- [ ] Fonts loaded exclusively via `next/font`
+- [ ] Favorite song component does not cause CLS
