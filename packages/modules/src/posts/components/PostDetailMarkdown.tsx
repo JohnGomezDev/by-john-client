@@ -3,6 +3,7 @@
 import 'highlight.js/styles/github-dark.min.css';
 import '../styles/post-detail-markdown.css';
 
+import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
@@ -132,9 +133,35 @@ export function PostDetailMarkdown({ content }: IPostDetailMarkdownProps): React
           td: ({ children }) => (
             <td className="border border-border px-3 py-2 text-neutral">{children}</td>
           ),
-          img: ({ src, alt }) => (
-            <img src={src} alt={alt ?? ''} className="mt-5 h-auto w-full rounded-lg sm:mt-6" />
-          ),
+          img: ({ src, alt }) => {
+            if (typeof src !== 'string' || src.length === 0) {
+              return null;
+            }
+
+            const imageAlt = alt ?? '';
+
+            return (
+              <figure className="mt-5 sm:mt-6">
+                <div
+                  className="relative w-full overflow-hidden rounded-lg"
+                  style={{ aspectRatio: '16 / 9' }}
+                >
+                  <Image
+                    src={src}
+                    alt={imageAlt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 760px"
+                    className="object-contain"
+                  />
+                </div>
+                {imageAlt ? (
+                  <figcaption className="mt-2 text-center text-xs text-neutral/60">
+                    {imageAlt}
+                  </figcaption>
+                ) : null}
+              </figure>
+            );
+          },
         }}
       >
         {content}
