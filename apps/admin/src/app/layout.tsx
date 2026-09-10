@@ -19,7 +19,8 @@ const ubuntuCondensed = Ubuntu_Condensed({
 });
 
 export const metadata: Metadata = {
-  title: 'Admin',
+  title: 'byJohn - Dashboard de administración',
+  robots: { index: false, follow: false },
 };
 
 interface IRootLayoutProps {
