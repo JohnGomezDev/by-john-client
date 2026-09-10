@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Ubuntu_Condensed, Ubuntu_Sans } from 'next/font/google';
 
 import { Providers } from '@/lib/providers/Providers';
+import { BlogFooter } from '@/modules/layout/components/BlogFooter';
+import { BlogHeader } from '@/modules/layout/components/BlogHeader';
 
 import './globals.css';
 
@@ -50,7 +52,13 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${ubuntuSans.variable} ${ubuntuCondensed.variable} antialiased`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="flex min-h-dvh flex-col">
+            <BlogHeader />
+            <main className="flex-1">{children}</main>
+            <BlogFooter />
+          </div>
+        </Providers>
       </body>
     </html>
   );

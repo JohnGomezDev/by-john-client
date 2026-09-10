@@ -1,3 +1,3 @@
 export const ROUTES = {
-  // Routes will be defined when blog pages are implemented.
+  home: '/',
 } as const;
