@@ -1,4 +1,4 @@
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { dehydrate, HydrationBoundary, noop } from '@tanstack/react-query';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -47,14 +47,18 @@ export default async function PostsPage({
   const queryClient = getQueryClient();
 
   await Promise.all([
-    queryClient.prefetchQuery({
-      queryKey: postKeys.list(params),
-      queryFn: () => fetchPosts(params),
-    }),
-    queryClient.prefetchQuery({
-      queryKey: categoryKeys.lists(),
-      queryFn: fetchCategories,
-    }),
+    queryClient
+      .query({
+        queryKey: postKeys.list(params),
+        queryFn: () => fetchPosts(params),
+      })
+      .catch(noop),
+    queryClient
+      .query({
+        queryKey: categoryKeys.lists(),
+        queryFn: fetchCategories,
+      })
+      .catch(noop),
   ]);
 
   const blogSchema = {
