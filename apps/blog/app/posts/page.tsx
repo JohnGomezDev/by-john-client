@@ -4,6 +4,8 @@ import { Suspense } from 'react';
 
 import { ROUTES } from '@/lib/constants/routes.constants';
 import { getQueryClient } from '@/lib/providers/get-query-client';
+import { categoryKeys } from '@/modules/categories/constants/categories.query-keys';
+import { fetchCategories } from '@/modules/categories/services/categories.service';
 import {
   SITE_FULL_NAME,
   SITE_NAME,
@@ -44,10 +46,16 @@ export default async function PostsPage({
   const params = parsePostsListSearchParams(await searchParams);
   const queryClient = getQueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: postKeys.list(params),
-    queryFn: () => fetchPosts(params),
-  });
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: postKeys.list(params),
+      queryFn: () => fetchPosts(params),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: categoryKeys.lists(),
+      queryFn: fetchCategories,
+    }),
+  ]);
 
   const blogSchema = {
     '@context': 'https://schema.org',

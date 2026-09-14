@@ -23,14 +23,6 @@ export const SOCIAL_LINKS: readonly ISocialLink[] = [
   { id: 'linkedin', label: 'LinkedIn', href: '#' },
 ] as const;
 
-export const FOOTER_CATEGORIES: readonly INavLink[] = [
-  { label: 'Tecnología e IA', href: '#' },
-  { label: 'Diseño de Producto', href: '#' },
-  { label: 'Arquitectura Frontend', href: '#' },
-  { label: 'Liderazgo & Cultura', href: '#' },
-  { label: 'Experiencia de Usuario', href: '#' },
-] as const;
-
 export const FOOTER_LEGAL_LINKS: readonly INavLink[] = [
   { label: 'Política de Privacidad', href: '#' },
   { label: 'Términos', href: '#' },

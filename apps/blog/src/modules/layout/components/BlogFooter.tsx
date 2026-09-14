@@ -1,13 +1,19 @@
+import type { ICategory } from '@repo/lib/modules/taxonomy/types/taxonomy.types';
+import Link from 'next/link';
+
+import { fetchCategories } from '@/modules/categories/services/categories.service';
+
 import {
-  FOOTER_CATEGORIES,
   FOOTER_LEGAL_LINKS,
   SITE_DESCRIPTION,
   SITE_FULL_NAME,
 } from '../constants/layout.constants';
 import { BlogBrand } from './BlogBrand';
 import { SocialLinks } from './SocialLinks';
+import { buildCategoryHref } from '../utils/footer.utils';
 
-export function BlogFooter(): React.JSX.Element {
+export async function BlogFooter(): Promise<React.JSX.Element> {
+  const categories: ICategory[] = await fetchCategories().catch(() => []);
   const currentYear = new Date().getFullYear();
 
   return (
@@ -31,18 +37,24 @@ export function BlogFooter(): React.JSX.Element {
             >
               Categorías
             </h2>
-            <ul className="mt-4 flex flex-col gap-2.5 sm:mt-5 sm:gap-3">
-              {FOOTER_CATEGORIES.map((item) => (
-                <li key={item.label}>
-                  <a
-                    href={item.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-primary sm:text-base"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            {categories.length > 0 ? (
+              <ul className="mt-4 flex flex-col gap-2.5 sm:mt-5 sm:gap-3">
+                {categories.map((category) => (
+                  <li key={category.id}>
+                    <Link
+                      href={buildCategoryHref(category.slug)}
+                      className="text-sm text-muted-foreground transition-colors hover:text-primary sm:text-base"
+                    >
+                      {category.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-4 text-sm text-muted-foreground sm:mt-5">
+                Aún no hay categorías.
+              </p>
+            )}
           </nav>
         </div>
 
