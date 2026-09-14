@@ -6,11 +6,15 @@ import type { IPostDetail, IPostsListParams, IPostsListResponse } from '../types
 import { buildPostsListPath } from '../utils/posts-list.utils';
 
 const ONE_HOUR_IN_SECONDS = 60 * 60;
+const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
 
 export async function fetchPosts(
   params: IPostsListParams = {},
 ): Promise<IPostsListResponse> {
-  const response = await apiClient.get<IApiResponse<IPostsListResponse>>(buildPostsListPath(params));
+  const response = await apiClient.get<IApiResponse<IPostsListResponse>>(
+    buildPostsListPath(params),
+    { next: { revalidate: ONE_DAY_IN_SECONDS } },
+  );
 
   return response.data;
 }

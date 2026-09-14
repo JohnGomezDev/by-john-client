@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 
+import { ROUTES } from '@/lib/constants/routes.constants';
 import { fetchPosts } from '@/modules/posts/services/posts.service';
 
 export const revalidate = 86400;
@@ -18,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const postEntries: MetadataRoute.Sitemap = allPosts
     .filter((post) => post.published && post.publishedAt)
     .map((post) => ({
-      url: `${siteUrl}/${post.slug}`,
+      url: `${siteUrl}${ROUTES.detail(post.slug)}`,
       lastModified: new Date(post.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
@@ -26,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     {
-      url: siteUrl,
+      url: `${siteUrl}${ROUTES.home}`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,

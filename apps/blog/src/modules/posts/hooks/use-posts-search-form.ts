@@ -7,6 +7,7 @@ import {
   type SubmitHandler,
   type UseFormHandleSubmit,
   type UseFormRegisterReturn,
+  type UseFormWatch,
 } from 'react-hook-form';
 
 import { buildUrl } from '../utils/posts-url.utils';
@@ -18,6 +19,8 @@ export interface IPostsSearchFormValues {
 export function usePostsSearchForm(): {
   searchField: UseFormRegisterReturn<'search'>;
   onSubmit: ReturnType<UseFormHandleSubmit<IPostsSearchFormValues>>;
+  clearSearch: () => void;
+  watch: UseFormWatch<IPostsSearchFormValues>;
   search: string | undefined;
 } {
   const router = useRouter();
@@ -26,7 +29,7 @@ export function usePostsSearchForm(): {
 
   const urlSearch = searchParams.get('search') ?? '';
 
-  const { register, handleSubmit, setValue } = useForm<IPostsSearchFormValues>({
+  const { register, handleSubmit, setValue, watch } = useForm<IPostsSearchFormValues>({
     defaultValues: {
       search: urlSearch,
     },
@@ -36,8 +39,8 @@ export function usePostsSearchForm(): {
     setValue('search', urlSearch);
   }, [urlSearch, setValue]);
 
-  const submitSearch: SubmitHandler<IPostsSearchFormValues> = (data): void => {
-    const nextSearch = data.search.trim();
+  const applySearch = (rawSearch: string): void => {
+    const nextSearch = rawSearch.trim();
     const nextParams = new URLSearchParams(searchParams.toString());
 
     if (nextSearch) {
@@ -51,9 +54,20 @@ export function usePostsSearchForm(): {
     router.replace(buildUrl(pathname, nextParams), { scroll: false });
   };
 
+  const submitSearch: SubmitHandler<IPostsSearchFormValues> = (data): void => {
+    applySearch(data.search);
+  };
+
+  const clearSearch = (): void => {
+    setValue('search', '');
+    applySearch('');
+  };
+
   return {
     searchField: register('search'),
     onSubmit: handleSubmit(submitSearch),
+    clearSearch,
+    watch,
     search: urlSearch || undefined,
   };
 }

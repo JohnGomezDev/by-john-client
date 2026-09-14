@@ -3,7 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import type { IPaginationMeta } from '../types/posts.types';
-import { buildUrl, parsePage } from '../utils/posts-url.utils';
+import { buildUrl, getVisiblePages, parsePage, type TPaginationItem } from '../utils/posts-url.utils';
 
 interface IPageRange {
   startItem: number;
@@ -12,9 +12,11 @@ interface IPageRange {
 
 export function usePostsPagination(): {
   page: number;
+  goToPage: (nextPage: number) => void;
   goToPreviousPage: () => void;
   goToNextPage: () => void;
   getPageRange: (meta: IPaginationMeta) => IPageRange;
+  getVisiblePages: (meta: IPaginationMeta) => TPaginationItem[];
   isPreviousDisabled: (meta: IPaginationMeta, isLoading?: boolean) => boolean;
   isNextDisabled: (meta: IPaginationMeta, isLoading?: boolean) => boolean;
 } {
@@ -24,11 +26,12 @@ export function usePostsPagination(): {
 
   const page = parsePage(searchParams.get('page'));
 
-  const setPage = (nextPage: number): void => {
+  const goToPage = (nextPage: number): void => {
+    const safePage = Math.max(1, nextPage);
     const nextParams = new URLSearchParams(searchParams.toString());
 
-    if (nextPage > 1) {
-      nextParams.set('page', String(nextPage));
+    if (safePage > 1) {
+      nextParams.set('page', String(safePage));
     } else {
       nextParams.delete('page');
     }
@@ -37,11 +40,11 @@ export function usePostsPagination(): {
   };
 
   const goToPreviousPage = (): void => {
-    setPage(Math.max(1, page - 1));
+    goToPage(page - 1);
   };
 
   const goToNextPage = (): void => {
-    setPage(page + 1);
+    goToPage(page + 1);
   };
 
   const getPageRange = (meta: IPaginationMeta): IPageRange => {
@@ -67,9 +70,11 @@ export function usePostsPagination(): {
 
   return {
     page,
+    goToPage,
     goToPreviousPage,
     goToNextPage,
     getPageRange,
+    getVisiblePages: (meta) => getVisiblePages(meta.currentPage, meta.totalPages),
     isPreviousDisabled,
     isNextDisabled,
   };
