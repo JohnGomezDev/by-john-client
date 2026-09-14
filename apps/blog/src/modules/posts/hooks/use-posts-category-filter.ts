@@ -12,15 +12,15 @@ export function usePostsCategoryFilter(): {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const categorySlug = searchParams.get('categorySlug')?.trim() || undefined;
+  const categorySlug = searchParams.get('category')?.trim() || undefined;
 
   const setCategorySlug = (slug: string | undefined): void => {
     const nextParams = new URLSearchParams(searchParams.toString());
 
     if (slug) {
-      nextParams.set('categorySlug', slug);
+      nextParams.set('category', slug);
     } else {
-      nextParams.delete('categorySlug');
+      nextParams.delete('category');
     }
 
     nextParams.delete('page');

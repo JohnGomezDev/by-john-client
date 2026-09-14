@@ -28,7 +28,7 @@ export function parsePostsListSearchParams(
 ): IPostsListParams {
   const page = parsePage(getSearchParamValue(searchParams.page) ?? null);
   const search = getSearchParamValue(searchParams.search)?.trim() || undefined;
-  const categorySlug = getSearchParamValue(searchParams.categorySlug)?.trim() || undefined;
+  const categorySlug = getSearchParamValue(searchParams.category)?.trim() || undefined;
 
   const params: IPostsListParams = { page };
 
