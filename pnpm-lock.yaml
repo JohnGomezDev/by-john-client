@@ -154,9 +154,12 @@ importers:
 
   apps/web:
     dependencies:
-      '@repo/ui':
+      '@repo/lib':
         specifier: workspace:*
-        version: link:../../packages/ui
+        version: link:../../packages/lib
+      '@tanstack/react-query':
+        specifier: ^5.85.5
+        version: 5.102.4(react@19.2.0)
       next:
         specifier: 16.3.0
         version: 16.3.0(@types/node@22.15.3)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)

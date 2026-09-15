@@ -1,4 +1,4 @@
-@import '../../../packages/ui/src/styles/brand.css';
+@import '../../../../packages/ui/src/styles/brand.css';
 
 :root {
   --background: var(--brand-background);
@@ -20,7 +20,6 @@ body {
 body {
   color: var(--foreground);
   font-family: var(--font-sans);
-  /* Background for web will be defined later */
   background: var(--background);
 }
 
