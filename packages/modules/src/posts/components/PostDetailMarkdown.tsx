@@ -1,6 +1,6 @@
 'use client';
 
-import 'highlight.js/styles/github-dark.min.css';
+import 'highlight.js/styles/obsidian.min.css';
 import '../styles/post-detail-markdown.css';
 
 import Image from 'next/image';
