@@ -2,7 +2,7 @@ export const SITE_NAME = 'byJohn';
 export const SITE_FULL_NAME = 'byJohn Blog';
 
 export const SITE_DESCRIPTION =
-  'Publicación editorial dedicada a la intersección del diseño, la ingeniería de software y la cultura digital contemporánea.';
+  'Experiencias, ideas y aprendizajes desde el código hasta las tendencias que están redefiniendo la tecnología.';
 
 export interface INavLink {
   label: string;

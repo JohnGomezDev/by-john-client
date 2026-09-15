@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     template: '%s · byJohn Blog',
   },
   description:
-    'Artículos sobre desarrollo de software, tecnología y buenas prácticas de ingeniería.',
+    'Experiencias, ideas y aprendizajes sobre desarrollo de software, programación y las tendencias que están redefiniendo la tecnología',
   authors: [{ name: 'John Gomez' }],
   creator: 'John Gomez',
   openGraph: {
