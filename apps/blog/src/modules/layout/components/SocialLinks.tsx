@@ -9,7 +9,7 @@ interface ISocialLinksProps {
   size?: 'sm' | 'md';
 }
 
-function SocialIcon({ id, className }: { id: ISocialLink['id']; className?: string }): React.JSX.Element {
+function SocialIcon({ id, className }: { id: ISocialLink['id']; className?: string }): React.JSX.Element | null {
   switch (id) {
     case 'facebook':
       return <FacebookIcon className={className} />;
@@ -19,6 +19,8 @@ function SocialIcon({ id, className }: { id: ISocialLink['id']; className?: stri
       return <XIcon className={className} />;
     case 'linkedin':
       return <LinkedInIcon className={className} />;
+    default:
+      return null;
   }
 }
 

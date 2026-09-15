@@ -9,10 +9,12 @@ export interface INavLink {
   href: string;
 }
 
+export type TSocialLinkId = 'facebook' | 'instagram' | 'x' | 'linkedin' | 'whatsapp' | 'copy';
+
 export interface ISocialLink {
-  id: 'facebook' | 'instagram' | 'x' | 'linkedin';
+  id: TSocialLinkId;
   label: string;
-  href: string;
+  href?: string;
 }
 
 /** Placeholder hrefs until routes / profiles are defined. */

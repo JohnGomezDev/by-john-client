@@ -1,10 +1,11 @@
 import type { IApiResponse } from '@repo/lib/api/api-response.types';
+import { cache } from 'react';
 
 import { apiClient } from '@/lib/api/api-client';
+import { ONE_DAY_IN_SECONDS } from '@/lib/constants/stale.constants';
 
 import type { IPostDetail, IPostsListParams, IPostsListResponse } from '../types/posts.types';
 import { buildPostsListPath } from '../utils/posts-list.utils';
-import { ONE_DAY_IN_SECONDS } from '@/lib/constants/stale.constants';
 
 export async function fetchPosts(
   params: IPostsListParams = {},
@@ -17,10 +18,11 @@ export async function fetchPosts(
   return response.data;
 }
 
-export async function fetchPostBySlug(slug: string): Promise<IPostDetail> {
+/** Dedupes requests between `generateMetadata` and the page within the same render. */
+export const fetchPostBySlug = cache(async (slug: string): Promise<IPostDetail> => {
   const response = await apiClient.get<IApiResponse<IPostDetail>>(`/blog/posts/${slug}`, {
     next: { revalidate: ONE_DAY_IN_SECONDS },
   });
 
   return response.data;
-}
+});
