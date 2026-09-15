@@ -2,6 +2,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 
+import { ONE_DAY_IN_SECONDS } from '@/lib/constants/stale.constants';
+
 import { postKeys } from '../constants/posts.query-keys';
 import { fetchPosts } from '../services/posts.service';
 import type { IPostsListParams, IPostsListResponse } from '../types/posts.types';
@@ -12,6 +14,6 @@ export function usePosts(
   return useQuery({
     queryKey: postKeys.list(params),
     queryFn: () => fetchPosts(params),
-    staleTime: 1000 * 60 * 5,
+    staleTime: ONE_DAY_IN_SECONDS * 1000,
   });
 }
