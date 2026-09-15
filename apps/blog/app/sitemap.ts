@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 
 import { ROUTES } from '@/lib/constants/routes.constants';
 import { PRIVACY_POLICY_LAST_UPDATED_ISO } from '@/modules/legal/constants/privacy-policy.constants';
+import { TERMS_OF_USE_LAST_UPDATED_ISO } from '@/modules/legal/constants/terms-of-use.constants';
 import { fetchPosts } from '@/modules/posts/services/posts.service';
 
 export const revalidate = 86400;
@@ -36,6 +37,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${siteUrl}${ROUTES.privacyPolicy}`,
       lastModified: new Date(PRIVACY_POLICY_LAST_UPDATED_ISO),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${siteUrl}${ROUTES.termsOfUse}`,
+      lastModified: new Date(TERMS_OF_USE_LAST_UPDATED_ISO),
       changeFrequency: 'yearly',
       priority: 0.3,
     },

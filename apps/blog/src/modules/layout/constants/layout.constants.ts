@@ -29,6 +29,6 @@ export const SOCIAL_LINKS: readonly ISocialLink[] = [
 
 export const FOOTER_LEGAL_LINKS: readonly INavLink[] = [
   { label: 'Política de Privacidad', href: ROUTES.privacyPolicy },
-  { label: 'Términos', href: '#' },
+  { label: 'Términos', href: ROUTES.termsOfUse },
   { label: 'Contacto', href: '#' },
 ] as const;
