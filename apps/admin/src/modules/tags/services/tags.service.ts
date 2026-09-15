@@ -1,0 +1,36 @@
+import type { IApiResponse } from '@repo/lib/api/api-response.types';
+import type { ITag } from '@repo/lib/modules/taxonomy/types/taxonomy.types';
+
+import { axiosClient } from '@/lib/api/axios-client';
+
+import type {
+  ICreateTagPayload,
+  ICreateTagResult,
+  IDeleteTagResult,
+  IUpdateTagPayload,
+  IUpdateTagResult,
+} from '../types/tags.types';
+
+export async function fetchTags(): Promise<ITag[]> {
+  const { data } = await axiosClient.get<IApiResponse<ITag[]>>('/blog/tags');
+
+  return data.data;
+}
+
+export async function createTag(payload: ICreateTagPayload): Promise<ICreateTagResult> {
+  const { data } = await axiosClient.post<IApiResponse<ITag>>('/admin/blog/tags', payload);
+
+  return { tag: data.data, message: data.message };
+}
+
+export async function updateTag(id: string, payload: IUpdateTagPayload): Promise<IUpdateTagResult> {
+  const { data } = await axiosClient.patch<IApiResponse<ITag>>(`/admin/blog/tags/${id}`, payload);
+
+  return { tag: data.data, message: data.message };
+}
+
+export async function deleteTag(id: string): Promise<IDeleteTagResult> {
+  const { data } = await axiosClient.delete<IApiResponse<null>>(`/admin/blog/tags/${id}`);
+
+  return { message: data.message };
+}

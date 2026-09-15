@@ -1,0 +1,45 @@
+import type { IApiResponse } from '@repo/lib/api/api-response.types';
+
+import { axiosClient } from '@/lib/api/axios-client';
+
+import type {
+  ISaveFavoriteSongPayload,
+  ISaveFavoriteSongResult,
+  ISong,
+  ISongSearchResult,
+} from '../types/songs.types';
+
+
+function getErrorStatus(error: unknown): number | undefined {
+  return (error as { response?: { status?: number } }).response?.status;
+}
+
+export async function fetchFavoriteSong(): Promise<ISong | null> {
+  try {
+    const { data } = await axiosClient.get<IApiResponse<ISong>>('/songs/favorite');
+
+    return data.data;
+  } catch (error: unknown) {
+    if (getErrorStatus(error) === 404) {
+      return null;
+    }
+
+    throw error;
+  }
+}
+
+export async function searchSongs(query: string): Promise<ISongSearchResult[]> {
+  const { data } = await axiosClient.get<IApiResponse<ISongSearchResult[]>>('/songs/search', {
+    params: { query },
+  });
+
+  return data.data;
+}
+
+export async function saveFavoriteSong(
+  payload: ISaveFavoriteSongPayload,
+): Promise<ISaveFavoriteSongResult> {
+  const { data } = await axiosClient.post<IApiResponse<ISong>>('/songs/favorite', payload);
+
+  return { song: data.data, message: data.message };
+}

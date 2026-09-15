@@ -1,0 +1,53 @@
+'use client';
+
+import { Button } from '@repo/ui/components/ui/button';
+
+import { ROUTES } from '@/lib/constants/routes.constants';
+import { FormPageHeader } from '@/modules/common/components/FormPageHeader';
+
+import { useCategoryForm } from '../hooks/use-category-form';
+import type { ICategoryFormValues } from '../types/category-form.types';
+import { CategoryFormNameSection } from './CategoryFormNameSection';
+
+interface ICategoryFormProps {
+  categoryId?: string;
+  defaultValues?: ICategoryFormValues;
+}
+
+export function CategoryForm({ categoryId, defaultValues }: ICategoryFormProps): React.JSX.Element {
+  const { nameField, slugField, onSubmit, isPending, isEditMode, isDirty, errors } = useCategoryForm({
+    categoryId,
+    defaultValues,
+  });
+
+  const isSubmitDisabled = isPending || (isEditMode && !isDirty);
+
+  return (
+    <div className="space-y-6">
+      <FormPageHeader
+        title={isEditMode ? 'Editar categoría' : 'Crear categoría'}
+        backHref={ROUTES.admin.categorias.list}
+        backAriaLabel="Volver al listado de categorías"
+      />
+
+      <form onSubmit={onSubmit} className="space-y-6">
+        <CategoryFormNameSection
+          nameField={nameField}
+          slugField={slugField}
+          nameError={errors.name?.message}
+          slugError={errors.slug?.message}
+        />
+
+        <div className="flex justify-end pb-2">
+          <Button
+            type="submit"
+            disabled={isSubmitDisabled}
+            className="w-full cursor-pointer bg-primary hover:bg-primary/90 sm:w-auto"
+          >
+            {isPending ? 'Guardando...' : isEditMode ? 'Guardar cambios' : 'Guardar'}
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}

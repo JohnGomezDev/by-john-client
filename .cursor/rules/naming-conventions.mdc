@@ -20,7 +20,7 @@ alwaysApply: true
 - **Folders**: kebab-case.
 - **Files**:
   - Components: `PascalCase.tsx` (e.g. `PostCard.tsx`).
-  - Hooks, utils, services, stores: kebab-case (e.g. `use-auth.ts`, `api-client.ts`).
+  - Hooks, utils, services, stores: kebab-case (e.g. `use-auth.ts`, `axios-client.ts`, `fetch-client.ts`).
   - Types: kebab-case with suffix `.types.ts` (e.g. `post.types.ts`).
   - Constants: kebab-case with suffix `.constants.ts`.
 - **CSS / Tailwind**: utility-first; no custom class names unless encapsulating a repeated pattern via `@apply` in a dedicated `.css` module.

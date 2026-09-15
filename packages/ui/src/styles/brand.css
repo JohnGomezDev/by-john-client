@@ -1,0 +1,12 @@
+/**
+ * Shared brand tokens — admin, blog, and web.
+ * Primary #0F172A · Secondary #86EFAC · Tertiary #FDE047 · Neutral #1E293B
+ */
+:root {
+  --brand-primary: #0f172a;
+  --brand-secondary: #86efac;
+  --brand-tertiary: #fde047;
+  --brand-neutral: #1e293b;
+  --brand-background: #ffffff;
+  --brand-foreground: #0f172a;
+}

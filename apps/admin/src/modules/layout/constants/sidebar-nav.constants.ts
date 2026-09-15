@@ -1,0 +1,32 @@
+import { FileText, FolderOpen, Music, Tags, type LucideIcon } from 'lucide-react';
+
+import { ROUTES } from '@/lib/constants/routes.constants';
+
+export interface ISidebarNavItem {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+}
+
+export const SIDEBAR_NAV_ITEMS: ISidebarNavItem[] = [
+  {
+    label: 'Posts',
+    href: ROUTES.admin.posts.list,
+    icon: FileText,
+  },
+  {
+    label: 'Categorías',
+    href: ROUTES.admin.categorias.list,
+    icon: FolderOpen,
+  },
+  {
+    label: 'Tags',
+    href: ROUTES.admin.tags.list,
+    icon: Tags,
+  },
+  {
+    label: 'Canciones',
+    href: ROUTES.admin.canciones,
+    icon: Music,
+  },
+];
