@@ -1,3 +1,5 @@
+import { ROUTES } from '@/lib/constants/routes.constants';
+
 export const SITE_NAME = 'byJohn';
 export const SITE_FULL_NAME = 'byJohn Blog';
 
@@ -26,7 +28,7 @@ export const SOCIAL_LINKS: readonly ISocialLink[] = [
 ] as const;
 
 export const FOOTER_LEGAL_LINKS: readonly INavLink[] = [
-  { label: 'Política de Privacidad', href: '#' },
+  { label: 'Política de Privacidad', href: ROUTES.privacyPolicy },
   { label: 'Términos', href: '#' },
   { label: 'Contacto', href: '#' },
 ] as const;

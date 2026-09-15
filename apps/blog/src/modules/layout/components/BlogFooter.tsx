@@ -67,12 +67,12 @@ export async function BlogFooter(): Promise<React.JSX.Element> {
             <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-x-6">
               {FOOTER_LEGAL_LINKS.map((item) => (
                 <li key={item.label}>
-                  <a
+                  <Link
                     href={item.href}
                     className="text-xs text-muted-foreground transition-colors hover:text-primary sm:text-sm"
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
