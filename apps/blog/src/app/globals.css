@@ -1,8 +1,8 @@
 @import 'tailwindcss';
-@import '../../../packages/ui/src/styles/brand.css';
+@import '../../../../packages/ui/src/styles/brand.css';
 
-@source "../../../packages/ui/src/**/*.{ts,tsx}";
-@source "../../../packages/modules/src/**/*.{ts,tsx}";
+@source "../../../../packages/ui/src/**/*.{ts,tsx}";
+@source "../../../../packages/modules/src/**/*.{ts,tsx}";
 
 @theme inline {
   --color-background: var(--background);
