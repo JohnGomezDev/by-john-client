@@ -6,7 +6,7 @@ import { SECTION_CLASS } from '@/modules/landing/constants/landing.constants';
 
 import { MusicPlayerCard } from './MusicPlayerCard';
 
-export function AboutSection(): React.JSX.Element {
+export function VibesSection(): React.JSX.Element {
   const shouldReduce = useReducedMotion();
 
   const baseVariant = {
@@ -26,7 +26,7 @@ export function AboutSection(): React.JSX.Element {
   };
 
   return (
-    <section id="about" aria-labelledby="about-heading" className={SECTION_CLASS}>
+    <section id="vibes" aria-labelledby="vibes-heading" className={SECTION_CLASS}>
       <div className="grid grid-cols-1 items-stretch gap-4 sm:gap-5 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] md:gap-6">
         <motion.article
           {...baseVariant}

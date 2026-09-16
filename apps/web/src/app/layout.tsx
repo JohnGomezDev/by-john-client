@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Ubuntu_Condensed, Ubuntu_Sans } from 'next/font/google';
 
-import { WebFooter } from '@/components/WebFooter';
-import { WebHeader } from '@/components/WebHeader';
-import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { WebFooter } from '@/modules/landing/components/WebFooter';
+import { WebHeader } from '@/modules/landing/components/WebHeader';
+import { WhatsAppButton } from '@/modules/landing/components/WhatsAppButton';
 import { Providers } from '@/lib/providers/Providers';
 
 import '@/styles/globals.css';

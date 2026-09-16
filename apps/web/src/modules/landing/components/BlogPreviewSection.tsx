@@ -3,7 +3,10 @@
 import { motion } from 'framer-motion';
 
 import { useScrollFadeUp } from '@/lib/hooks/use-animations';
-import { SECTION_CLASS } from '@/modules/landing/constants/landing.constants';
+import {
+  BLOG_HREF,
+  SECTION_CLASS,
+} from '@/modules/landing/constants/landing.constants';
 
 export function BlogPreviewSection(): React.JSX.Element {
   const content = useScrollFadeUp();
@@ -30,7 +33,9 @@ export function BlogPreviewSection(): React.JSX.Element {
             patrones de diseño y la filosofía de construir sistemas resilientes.
           </p>
           <a
-            href="#"
+            href={BLOG_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
             className="mt-1 inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface sm:text-base"
           >
             Leer el Blog

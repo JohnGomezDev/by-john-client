@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { useFadeUp } from '@/lib/hooks/use-animations';
 import {
   GITHUB_HREF,
+  BLOG_HREF,
   SECTION_CLASS,
 } from '@/modules/landing/constants/landing.constants';
 
@@ -54,10 +55,12 @@ export function HeroSection(): React.JSX.Element {
             className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4"
           >
             <a
-              href="#projects"
+              href={BLOG_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              Ver Proyectos
+              Leer blog
             </a>
             <a
               href={GITHUB_HREF}

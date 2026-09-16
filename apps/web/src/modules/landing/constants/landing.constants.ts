@@ -11,10 +11,20 @@ export interface INavLink {
   href: string;
 }
 
+/** Profile links shared with SocialLinks (GitHub is opted-in via `showGithub`). */
+export const SOCIAL_LINKS: readonly ISocialLink[] = [
+  { id: 'facebook', label: 'Facebook', href: '#' },
+  { id: 'instagram', label: 'Instagram', href: '#' },
+  { id: 'x', label: 'X', href: '#' },
+  { id: 'linkedin', label: 'LinkedIn', href: '#' },
+] as const;
+
+export const GITHUB_HREF = 'https://github.com/JohnGomezDev';
+export const BLOG_HREF = 'http://localhost:3002';
+
 export const NAV_LINKS: readonly INavLink[] = [
-  { label: 'Proyectos', href: '#projects' },
-  { label: 'Stack', href: '#stack' },
-  { label: 'Sobre mí', href: '#about' },
+  { label: 'Tecnologías', href: '#technologies' },
+  { label: 'Vibras', href: '#vibes' },
   { label: 'Blog', href: '#blog' },
 ] as const;
 
@@ -59,25 +69,14 @@ export const TECH_STACK: ITechStackSnippet = {
       technologies: ['MySQL', 'PostgreSQL', 'MongoDB'],
     },
     {
-      key: 'infra',
-      label: 'Infraestructura',
-      technologies: ['Docker', 'Git'],
+      key: 'tools',
+      label: 'Herramientas',
+      technologies: ['Docker', 'Git', 'Linux'],
     },
   ],
 };
 
-/** Profile links shared with SocialLinks (GitHub is opted-in via `showGithub`). */
-export const SOCIAL_LINKS: readonly ISocialLink[] = [
-  { id: 'facebook', label: 'Facebook', href: '#' },
-  { id: 'instagram', label: 'Instagram', href: '#' },
-  { id: 'x', label: 'X', href: '#' },
-  { id: 'linkedin', label: 'LinkedIn', href: '#' },
-] as const;
-
-/** Placeholder until the real GitHub profile URL is set. */
-export const GITHUB_HREF = '#';
-
 /** Número de WhatsApp con código de país, sin espacios ni guiones. */
-export const WHATSAPP_NUMBER = '1234567890';
+export const WHATSAPP_NUMBER = '+573009592092';
 export const WHATSAPP_MESSAGE =
   'Hola! Vi tu portafolio y me gustaría hablar sobre un proyecto. ¿Tienes disponibilidad?';

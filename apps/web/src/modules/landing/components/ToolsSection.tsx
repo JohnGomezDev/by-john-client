@@ -187,10 +187,10 @@ export function ToolsSection(): React.JSX.Element {
   const panel = useScrollFadeUp(0.08);
 
   return (
-    <section id="stack" aria-labelledby="tools-heading" className={SECTION_CLASS}>
+    <section id="technologies" aria-labelledby="technologies-heading" className={SECTION_CLASS}>
       <motion.h2
         {...heading}
-        id="tools-heading"
+        id="technologies-heading"
         className="mb-8 font-display text-2xl font-bold tracking-tight text-foreground sm:mb-10 sm:text-3xl"
       >
         Herramientas del oficio
