@@ -1,3 +1,5 @@
+import type { ISocialLink } from '@repo/modules/layout/types/layout.types';
+
 import { ROUTES } from '@/lib/constants/routes.constants';
 
 export const SITE_NAME = 'byJohn';
@@ -9,14 +11,6 @@ export const SITE_DESCRIPTION =
 export interface INavLink {
   label: string;
   href: string;
-}
-
-export type TSocialLinkId = 'facebook' | 'instagram' | 'x' | 'linkedin' | 'whatsapp' | 'copy';
-
-export interface ISocialLink {
-  id: TSocialLinkId;
-  label: string;
-  href?: string;
 }
 
 /** Placeholder hrefs until routes / profiles are defined. */

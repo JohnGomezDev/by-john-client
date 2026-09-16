@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import { Ubuntu_Condensed, Ubuntu_Sans } from 'next/font/google';
 
+import { WebFooter } from '@/components/WebFooter';
+import { WebHeader } from '@/components/WebHeader';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { Providers } from '@/lib/providers/Providers';
 
 import '@/styles/globals.css';
@@ -50,7 +53,16 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${ubuntuSans.variable} ${ubuntuCondensed.variable} antialiased`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="flex min-h-dvh flex-col">
+            <WebHeader />
+            <main id="main-content" className="flex-1">
+              {children}
+            </main>
+            <WebFooter />
+            <WhatsAppButton />
+          </div>
+        </Providers>
       </body>
     </html>
   );

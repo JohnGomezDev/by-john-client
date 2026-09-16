@@ -1,15 +1,18 @@
 import type { ICategory } from '@repo/lib/modules/taxonomy/types/taxonomy.types';
+import { SiteBrand } from '@repo/modules/layout/components/SiteBrand';
+import { SocialLinks } from '@repo/modules/layout/components/SocialLinks';
 import Link from 'next/link';
 
 import { fetchCategories } from '@/modules/categories/services/categories.service';
+import { ROUTES } from '@/lib/constants/routes.constants';
 
 import {
   FOOTER_LEGAL_LINKS,
   SITE_DESCRIPTION,
   SITE_FULL_NAME,
+  SITE_NAME,
+  SOCIAL_LINKS,
 } from '../constants/layout.constants';
-import { BlogBrand } from './BlogBrand';
-import { SocialLinks } from './SocialLinks';
 import { buildCategoryHref } from '../utils/footer.utils';
 
 export async function BlogFooter(): Promise<React.JSX.Element> {
@@ -21,12 +24,12 @@ export async function BlogFooter(): Promise<React.JSX.Element> {
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="grid gap-10 sm:gap-12 md:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)] md:gap-16">
           <div className="flex flex-col gap-5">
-            <BlogBrand />
+            <SiteBrand href={ROUTES.home} name={SITE_NAME} tone="light" />
             <p className="max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
               {SITE_DESCRIPTION}
             </p>
             <nav aria-label="Redes sociales">
-              <SocialLinks />
+              <SocialLinks links={SOCIAL_LINKS} tone="light" />
             </nav>
           </div>
 

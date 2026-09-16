@@ -10,11 +10,25 @@ import {
   InstagramIcon,
   LinkedInIcon,
   XIcon,
-} from '@/modules/layout/components/SocialIcons';
+} from '@repo/modules/layout/components/SocialIcons';
+
 import { WhatsAppIcon } from '@/modules/layout/components/WhatsAppIcon';
-import type { ISocialLink, TSocialLinkId } from '@/modules/layout/constants/layout.constants';
 
 import type { IPostShareUrls } from '../utils/post-detail.utils';
+
+type TShareActionId =
+  | 'facebook'
+  | 'instagram'
+  | 'x'
+  | 'linkedin'
+  | 'whatsapp'
+  | 'copy';
+
+interface IShareAction {
+  id: TShareActionId;
+  label: string;
+  href?: string;
+}
 
 interface IPostDetailShareButtonsProps {
   url: string;
@@ -25,7 +39,7 @@ interface IPostDetailShareButtonsProps {
 const SHARE_BUTTON_CLASS =
   'inline-flex size-9 items-center justify-center rounded-md border border-border bg-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:size-10';
 
-const SHARE_BRAND_CLASSES: Record<TSocialLinkId, string> = {
+const SHARE_BRAND_CLASSES: Record<TShareActionId, string> = {
   facebook: 'text-[#1877F2] hover:border-[#1877F2]/40 hover:bg-[#1877F2]/10',
   instagram: 'text-[#E1306C] hover:border-[#E1306C]/40 hover:bg-[#E1306C]/10',
   x: 'text-[#0F1419] hover:border-[#0F1419]/35 hover:bg-[#0F1419]/5',
@@ -39,7 +53,7 @@ export function PostDetailShareButtons({
   title,
   shareUrls,
 }: IPostDetailShareButtonsProps): React.JSX.Element {
-  const actions: ISocialLink[] = [
+  const actions: IShareAction[] = [
     { id: 'facebook', label: 'Compartir en Facebook', href: shareUrls.facebook },
     { id: 'instagram', label: 'Copiar enlace para Instagram' },
     { id: 'x', label: 'Compartir en X', href: shareUrls.x },
@@ -121,7 +135,7 @@ export function PostDetailShareButtons({
   );
 }
 
-function ShareIcon({ id }: { id: TSocialLinkId }): React.JSX.Element {
+function ShareIcon({ id }: { id: TShareActionId }): React.JSX.Element {
   const className = 'size-4';
 
   switch (id) {
