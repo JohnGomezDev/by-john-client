@@ -26,11 +26,11 @@ export function BlogPreviewSection(): React.JSX.Element {
             id="blog-preview-heading"
             className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl"
           >
-            Pensamientos e ideas
+            Del editor al artículo
           </h2>
           <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base lg:text-lg">
-            Una colección de análisis profundos sobre arquitectura de software,
-            patrones de diseño y la filosofía de construir sistemas resilientes.
+            Lecciones aprendidas en producción, análisis técnicos sin jerga
+            vacía y reflexiones sobre el oficio de construir software que dure.
           </p>
           <a
             href={BLOG_HREF}

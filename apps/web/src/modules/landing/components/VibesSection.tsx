@@ -27,16 +27,14 @@ export function VibesSection(): React.JSX.Element {
 
           <div className="flex flex-col gap-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             <p>
-              Creo que escribir código es un acto de diseño. Cada función, cada
-              componente y cada decisión arquitectónica moldea la experiencia
-              final. Mi enfoque está arraigado en el minimalismo: eliminar lo
-              innecesario para revelar la estructura esencial.
+              Para mí, escribir código es fundamentalmente un acto de diseño.
+              Cada función, cada interfaz y cada decisión de arquitectura moldea
+              la experiencia del usuario final. Me guía el minimalismo: eliminar
+              lo accidental para revelar lo esencial.
             </p>
             <p>
-              Cuando no estoy arquitectando sistemas, probablemente estoy
-              explorando la intersección entre el arte generativo y el diseño de
-              interfaces, o curando playlists para sesiones de código de alta
-              concentración.
+              Fuera del editor, soy una persona apasionada por la vida. Me gustan los deportes, la astronomía, los videojuegos, y por supuesto, la música.
+              Es por eso que comparto contigo mi canción favorita del momento, la cual iré actualizando según mi mood.
             </p>
           </div>
         </motion.article>

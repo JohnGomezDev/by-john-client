@@ -27,7 +27,7 @@ export function HeroSection(): React.JSX.Element {
                 className="size-1.5 shrink-0 rounded-full bg-accent shadow-[0_0_8px_var(--accent)]"
                 aria-hidden="true"
               />
-              Disponible para nuevas oportunidades
+              Aquí, haciendo cosas...
             </p>
           </motion.div>
 
@@ -36,8 +36,8 @@ export function HeroSection(): React.JSX.Element {
               id="hero-heading"
               className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:text-6xl"
             >
-              El código como{' '}
-              <em className="not-italic text-accent">Arte.</em>
+              Menos código,{' '}
+              <em className="not-italic text-accent">Más intención.</em>
             </h1>
           </motion.div>
 
@@ -45,9 +45,9 @@ export function HeroSection(): React.JSX.Element {
             {...line3}
             className="max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg"
           >
-            Creando arquitecturas de software elegantes y de alto rendimiento.
-            Cerrando la brecha entre la ingeniería compleja y la experiencia
-            humana fluida.
+            Diseño sistemas full-stack que escalan sin perder claridad. De la
+            arquitectura de datos al componente de interfaz, cada decisión
+            construida con propósito.
           </motion.p>
 
           <motion.div
@@ -60,7 +60,7 @@ export function HeroSection(): React.JSX.Element {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              Leer blog
+              ¿Te gusta leer?
             </a>
             <a
               href={GITHUB_HREF}

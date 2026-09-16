@@ -25,11 +25,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'byJohn Blog',
+    default: 'byJohn Blog · Desarrollo de Software',
     template: '%s · byJohn Blog',
   },
   description:
-    'Experiencias, ideas y aprendizajes sobre desarrollo de software, programación y las tendencias que están redefiniendo la tecnología',
+    'Artículos técnicos sobre arquitectura de software, Next.js, TypeScript y buenas prácticas de desarrollo. Reflexiones honestas de un desarrollador full-stack en activo.',
   authors: [{ name: 'John Gomez' }],
   creator: 'John Gomez',
   openGraph: {

@@ -16,7 +16,7 @@ const personSchema = {
   url: siteUrl,
   jobTitle: 'Desarrollador de software',
   description:
-    'Desarrollador de software especializado en arquitecturas elegantes y de alto rendimiento.',
+    'Desarrollador full-stack especializado en Next.js, TypeScript y arquitecturas de software escalables. Construye sistemas robustos que equilibran rendimiento y claridad de código.',
   sameAs: [GITHUB_HREF, BLOG_HREF],
 };
 

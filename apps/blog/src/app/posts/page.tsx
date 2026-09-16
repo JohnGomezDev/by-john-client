@@ -28,11 +28,19 @@ export async function generateMetadata({
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
   const postsUrl = `${siteUrl}${ROUTES.home}`;
 
+  const isSearching = Boolean(params.search);
+
   return {
+    title: isSearching
+      ? `Resultados para "${params.search}"`
+      : 'Todos los artículos',
+    description: isSearching
+      ? `Artículos de byJohn Blog que coinciden con la búsqueda "${params.search}". Desarrollo de software, arquitecturas y buenas prácticas.`
+      : 'Explora todos los artículos sobre arquitectura de software, Next.js, TypeScript y el oficio de construir software que dure.',
     alternates: {
       canonical: postsUrl,
     },
-    robots: params.search
+    robots: isSearching
       ? { index: false, follow: true }
       : { index: true, follow: true },
   };
