@@ -1,6 +1,7 @@
 import type { ICategory } from '@repo/lib/modules/taxonomy/types/taxonomy.types';
 import { SiteBrand } from '@repo/modules/layout/components/SiteBrand';
 import { SocialLinks } from '@repo/modules/layout/components/SocialLinks';
+import { SOCIAL_LINKS } from '@repo/modules/layout/constants/social.constants';
 import Link from 'next/link';
 
 import { fetchCategories } from '@/modules/categories/services/categories.service';
@@ -11,7 +12,6 @@ import {
   SITE_DESCRIPTION,
   SITE_FULL_NAME,
   SITE_NAME,
-  SOCIAL_LINKS,
 } from '../constants/layout.constants';
 import { buildCategoryHref } from '../utils/footer.utils';
 

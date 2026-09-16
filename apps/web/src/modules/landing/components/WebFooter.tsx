@@ -1,10 +1,7 @@
 import { SocialLinks } from '@repo/modules/layout/components/SocialLinks';
+import { SOCIAL_LINKS } from '@repo/modules/layout/constants/social.constants';
 
-import {
-  GITHUB_HREF,
-  SITE_NAME,
-  SOCIAL_LINKS,
-} from '@/modules/landing/constants/landing.constants';
+import { GITHUB_HREF, SITE_NAME } from '@/modules/landing/constants/landing.constants';
 
 export function WebFooter(): React.JSX.Element {
   const currentYear = new Date().getFullYear();

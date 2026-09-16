@@ -1,5 +1,3 @@
-import type { ISocialLink } from '@repo/modules/layout/types/layout.types';
-
 export const SITE_NAME = 'byJohn';
 
 /** Shared vertical rhythm between landing sections (mobile-first). */
@@ -10,14 +8,6 @@ export interface INavLink {
   label: string;
   href: string;
 }
-
-/** Profile links shared with SocialLinks (GitHub is opted-in via `showGithub`). */
-export const SOCIAL_LINKS: readonly ISocialLink[] = [
-  { id: 'facebook', label: 'Facebook', href: '#' },
-  { id: 'instagram', label: 'Instagram', href: '#' },
-  { id: 'x', label: 'X', href: '#' },
-  { id: 'linkedin', label: 'LinkedIn', href: '#' },
-] as const;
 
 export const GITHUB_HREF = 'https://github.com/JohnGomezDev';
 export const BLOG_HREF = 'http://localhost:3002';

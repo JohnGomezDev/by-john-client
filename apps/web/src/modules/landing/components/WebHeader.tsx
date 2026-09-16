@@ -5,13 +5,10 @@ import { useState } from 'react';
 import { SiteBrand } from '@repo/modules/layout/components/SiteBrand';
 import { SiteHeader } from '@repo/modules/layout/components/SiteHeader';
 import { SocialLinks } from '@repo/modules/layout/components/SocialLinks';
+import { SOCIAL_LINKS } from '@repo/modules/layout/constants/social.constants';
 
 import { ROUTES } from '@/lib/constants/routes.constants';
-import {
-  NAV_LINKS,
-  SITE_NAME,
-  SOCIAL_LINKS,
-} from '@/modules/landing/constants/landing.constants';
+import { NAV_LINKS, SITE_NAME } from '@/modules/landing/constants/landing.constants';
 
 export function WebHeader(): React.JSX.Element {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

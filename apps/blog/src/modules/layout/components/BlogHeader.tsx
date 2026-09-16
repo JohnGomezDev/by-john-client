@@ -1,10 +1,11 @@
 import { SiteBrand } from '@repo/modules/layout/components/SiteBrand';
 import { SiteHeader } from '@repo/modules/layout/components/SiteHeader';
 import { SocialLinks } from '@repo/modules/layout/components/SocialLinks';
+import { SOCIAL_LINKS } from '@repo/modules/layout/constants/social.constants';
 
 import { ROUTES } from '@/lib/constants/routes.constants';
 
-import { SITE_NAME, SOCIAL_LINKS } from '../constants/layout.constants';
+import { SITE_NAME } from '../constants/layout.constants';
 
 export function BlogHeader(): React.JSX.Element {
   return (
