@@ -49,7 +49,7 @@ export interface ITechStackSnippet {
 export const TECH_STACK: ITechStackSnippet = {
   fileName: 'stack.ts',
   comment:
-    '// Texto de prueba: stack que uso para construir productos sólidos y mantenibles.',
+    '// Stack que uso para construir productos sólidos y mantenibles.',
   variableName: 'stack',
   typeAnnotation: 'Record<string, string[]>',
   categories: [
