@@ -3,6 +3,7 @@
 import { GitHubIcon } from '@repo/modules/layout/components/SocialIcons';
 import { motion } from 'framer-motion';
 
+import { HeroTerminal } from '@/modules/landing/components/HeroTerminal';
 import { useFadeUp } from '@/modules/landing/hooks/use-animations';
 import {
   GITHUB_HREF,
@@ -15,7 +16,7 @@ export function HeroSection(): React.JSX.Element {
   const line2 = useFadeUp(0.2);
   const line3 = useFadeUp(0.35);
   const line4 = useFadeUp(0.5);
-  const placeholder = useFadeUp(0.3);
+  const terminal = useFadeUp(0.3);
 
   return (
     <section id="hero" aria-labelledby="hero-heading" className={SECTION_CLASS}>
@@ -74,35 +75,8 @@ export function HeroSection(): React.JSX.Element {
           </motion.div>
         </div>
 
-        {/* Right column — content placeholder */}
-        <motion.div {...placeholder} className="relative" aria-hidden="true">
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border bg-surface sm:aspect-[5/4]">
-            <div
-              className="absolute inset-0 opacity-[0.04]"
-              style={{
-                backgroundImage:
-                  'radial-gradient(circle, #86efac 1px, transparent 1px)',
-                backgroundSize: '22px 22px',
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-sky-500/5" />
-
-            <div className="relative flex h-full flex-col items-center justify-center gap-3 p-6 text-center">
-              <span className="rounded-md border border-accent/20 bg-accent/5 px-3 py-1 font-mono text-xs text-accent">
-                {'// placeholder'}
-              </span>
-              <p className="text-sm text-muted-foreground">
-                Contenido próximamente
-              </p>
-            </div>
-
-            <div className="absolute bottom-4 left-4 right-4 rounded-lg border border-border bg-background/85 px-3.5 py-2.5 backdrop-blur-sm sm:right-auto sm:max-w-[260px]">
-              <p className="font-mono text-[11px] text-accent">{'// estado'}</p>
-              <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
-                Arquitectura del sistema en progreso…
-              </p>
-            </div>
-          </div>
+        <motion.div {...terminal} className="relative">
+          <HeroTerminal />
         </motion.div>
       </div>
     </section>
