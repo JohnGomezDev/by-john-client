@@ -2,12 +2,12 @@
 
 import { Heart } from 'lucide-react';
 
+import { formatDurationFromSeconds } from '@repo/lib/modules/songs/utils/song-data.utils';
 import { Button } from '@repo/ui/components/ui/button';
 
 import { useFavoriteSong } from '../hooks/use-favorite-song';
 import { useSongActions } from '../hooks/use-song-actions';
 import type { ISongSearchResult } from '../types/songs.types';
-import { formatDurationFromSeconds } from '../utils/song-data.utils';
 import { SongCover } from './SongCover';
 import { SongPlayButton } from './SongPlayButton';
 

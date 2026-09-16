@@ -2,6 +2,10 @@
 
 import Image from 'next/image';
 import type { ISong } from '@repo/lib/modules/songs/types/songs.types';
+import {
+  formatDurationFromMs,
+  formatSongArtists,
+} from '@repo/lib/modules/songs/utils/song-data.utils';
 
 import { useFavoriteSong } from '@/modules/songs/hooks/use-favorite-song';
 
@@ -12,17 +16,6 @@ const WAVEFORM_BARS = [
 
 const PLAYER_SHELL_CLASS =
   'flex h-full min-h-[280px] flex-col gap-5 rounded-xl border border-border bg-surface p-5 sm:min-h-[300px] sm:p-6';
-
-function formatMs(ms: number): string {
-  const totalSecs = Math.floor(ms / 1000);
-  const mins = Math.floor(totalSecs / 60);
-  const secs = totalSecs % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-}
-
-function formatArtists(artists: ISong['artists']): string {
-  return artists.map((artist) => artist.name).join(', ');
-}
 
 function AlbumCover({
   song,
@@ -232,7 +225,7 @@ interface IMusicPlayerContentProps {
 }
 
 function MusicPlayerContent({ song }: IMusicPlayerContentProps): React.JSX.Element {
-  const artistNames = formatArtists(song.artists);
+  const artistNames = formatSongArtists(song.artists);
 
   return (
     <aside
@@ -271,7 +264,7 @@ function MusicPlayerContent({ song }: IMusicPlayerContentProps): React.JSX.Eleme
         </div>
         <div className="flex items-center justify-between font-mono text-[11px] text-muted-foreground">
           <span>0:00</span>
-          <span>{formatMs(song.durationMs)}</span>
+          <span>{formatDurationFromMs(song.durationMs)}</span>
         </div>
       </div>
 

@@ -1,7 +1,11 @@
 import { User } from 'lucide-react';
 
+import {
+  formatDurationFromMs,
+  formatSongArtists,
+} from '@repo/lib/modules/songs/utils/song-data.utils';
+
 import type { ISong } from '../types/songs.types';
-import { formatDurationFromMs, formatSongArtists } from '../utils/song-data.utils';
 import { SongCover } from './SongCover';
 import { SongPlayButton } from './SongPlayButton';
 
