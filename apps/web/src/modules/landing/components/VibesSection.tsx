@@ -1,40 +1,25 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 import { SECTION_CLASS } from '@/modules/landing/constants/landing.constants';
+import { useScrollFadeUp } from '@/modules/landing/hooks/use-animations';
 
 import { MusicPlayerCard } from './MusicPlayerCard';
 
 export function VibesSection(): React.JSX.Element {
-  const shouldReduce = useReducedMotion();
-
-  const baseVariant = {
-    initial: shouldReduce ? { opacity: 0 } : { opacity: 0, y: 24 },
-    whileInView: shouldReduce ? { opacity: 1 } : { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.15 } as const,
-  };
-
-  const leftTransition = {
-    duration: shouldReduce ? 0.01 : 0.5,
-    ease: 'easeOut' as const,
-  };
-  const rightTransition = {
-    duration: shouldReduce ? 0.01 : 0.5,
-    ease: 'easeOut' as const,
-    delay: shouldReduce ? 0 : 0.12,
-  };
+  const aboutCard = useScrollFadeUp();
+  const playerCard = useScrollFadeUp(0.12);
 
   return (
     <section id="vibes" aria-labelledby="vibes-heading" className={SECTION_CLASS}>
       <div className="grid grid-cols-1 items-stretch gap-4 sm:gap-5 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] md:gap-6">
         <motion.article
-          {...baseVariant}
-          transition={leftTransition}
+          {...aboutCard}
           className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-6 sm:gap-5 sm:p-8"
         >
           <h2
-            id="about-heading"
+            id="vibes-heading"
             className="font-display text-xl font-bold tracking-tight text-foreground sm:text-2xl"
           >
             Más allá de la pantalla
@@ -56,7 +41,7 @@ export function VibesSection(): React.JSX.Element {
           </div>
         </motion.article>
 
-        <motion.div {...baseVariant} transition={rightTransition} className="h-full">
+        <motion.div {...playerCard} className="h-full">
           <MusicPlayerCard />
         </motion.div>
       </div>

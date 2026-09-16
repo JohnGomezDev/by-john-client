@@ -3,7 +3,7 @@
 import { GitHubIcon } from '@repo/modules/layout/components/SocialIcons';
 import { motion } from 'framer-motion';
 
-import { useFadeUp } from '@/lib/hooks/use-animations';
+import { useFadeUp } from '@/modules/landing/hooks/use-animations';
 import {
   GITHUB_HREF,
   BLOG_HREF,

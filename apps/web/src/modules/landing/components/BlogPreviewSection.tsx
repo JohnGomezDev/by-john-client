@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 
-import { useScrollFadeUp } from '@/lib/hooks/use-animations';
+import { useScrollFadeUp } from '@/modules/landing/hooks/use-animations';
 import {
   BLOG_HREF,
   SECTION_CLASS,

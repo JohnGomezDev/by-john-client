@@ -1,18 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
-import { motion, useReducedMotion } from 'framer-motion';
-
-import { useScrollFadeUp } from '@/lib/hooks/use-animations';
+import { useScrollFadeUp } from '@/modules/landing/hooks/use-animations';
 import {
   SECTION_CLASS,
   TECH_STACK,
   type ITechStackCategory,
   type ITechStackSnippet,
 } from '@/modules/landing/constants/landing.constants';
-
-const TYPING_MS_PER_CHAR = 28;
+import { useTypingAnimation } from '@/modules/landing/hooks/use-typing-animation';
 
 function CodeKeyword({ children }: { children: React.ReactNode }): React.JSX.Element {
   return <span className="text-sky-300">{children}</span>;
@@ -43,49 +40,7 @@ function CodePunctuation({
 }
 
 function TypedComment({ text }: { text: string }): React.JSX.Element {
-  const shouldReduce = useReducedMotion();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [hasStarted, setHasStarted] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(
-    shouldReduce ? text.length : 0,
-  );
-
-  useEffect(() => {
-    if (shouldReduce) {
-      setVisibleCount(text.length);
-      return;
-    }
-
-    const node = containerRef.current;
-    if (!node) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          setHasStarted(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.35 },
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [shouldReduce, text.length]);
-
-  useEffect(() => {
-    if (shouldReduce || !hasStarted || visibleCount >= text.length) {
-      return;
-    }
-
-    const timeoutId = window.setTimeout(() => {
-      setVisibleCount((count) => count + 1);
-    }, TYPING_MS_PER_CHAR);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [hasStarted, shouldReduce, text.length, visibleCount]);
-
-  const isTyping = !shouldReduce && visibleCount < text.length;
+  const { containerRef, displayedText, isTyping } = useTypingAnimation(text);
 
   return (
     <div ref={containerRef} className="mb-3 sm:mb-4">
@@ -93,7 +48,7 @@ function TypedComment({ text }: { text: string }): React.JSX.Element {
       <span className="sr-only">{text}</span>
       <div aria-hidden="true">
         <CodeComment>
-          {text.slice(0, visibleCount)}
+          {displayedText}
           {isTyping ? (
             <span
               className="ml-0.5 inline-block h-[1em] w-1.5 translate-y-0.5 bg-accent/70 align-baseline motion-safe:animate-pulse"
