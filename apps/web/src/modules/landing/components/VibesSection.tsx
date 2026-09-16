@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { SECTION_CLASS } from '@/modules/landing/constants/landing.constants';
 import { useScrollFadeUp } from '@/modules/landing/hooks/use-animations';
 
-import { MusicPlayerCard } from './MusicPlayerCard';
+import { MusicPlayerCard } from '@/modules/songs/components/MusicPlayerCard';
 
 export function VibesSection(): React.JSX.Element {
   const aboutCard = useScrollFadeUp();
