@@ -5,7 +5,7 @@ import { Providers } from '@/lib/providers/Providers';
 import { BlogFooter } from '@/modules/layout/components/BlogFooter';
 import { BlogHeader } from '@/modules/layout/components/BlogHeader';
 
-import './globals.css';
+import '@/styles/globals.css';
 
 const ubuntuSans = Ubuntu_Sans({
   subsets: ['latin', 'latin-ext'],
