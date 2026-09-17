@@ -18,7 +18,7 @@ export function FavoriteSongCard({ song }: IFavoriteSongCardProps): React.JSX.El
   const duration = formatDurationFromMs(song.durationMs);
 
   return (
-    <article className="rounded-xl border border-border bg-white p-4 shadow-sm sm:p-5">
+    <article className="rounded-xl border border-border bg-background p-4 shadow-sm sm:p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="flex min-w-0 flex-1 gap-3 sm:gap-4">
           <SongCover src={song.albumCoverUrl} alt={`Portada de ${song.albumName}`} size="lg" />

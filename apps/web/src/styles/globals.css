@@ -51,16 +51,17 @@
 }
 
 :root {
-  --background: #171717;
-  --foreground: #f4f0e8;
-  --accent: #d83a2e;
-  --accent-foreground: #f4f0e8;
-  --surface: color-mix(in srgb, #f4f0e8 4%, #171717);
-  --surface-elevated: color-mix(in srgb, #f4f0e8 8%, #171717);
-  --muted: color-mix(in srgb, #f4f0e8 6%, #171717);
-  --muted-foreground: color-mix(in srgb, #f4f0e8 62%, #171717);
-  --border: color-mix(in srgb, #f4f0e8 12%, transparent);
-  --ring: #d83a2e;
+  /* Palette test: #121212 · #BCBCBC · #D6FF00 · #FFFFFF */
+  --background: #121212;
+  --foreground: #ffffff;
+  --accent: #d6ff00;
+  --accent-foreground: #121212;
+  --surface: color-mix(in srgb, #bcbcbc 10%, #121212);
+  --surface-elevated: color-mix(in srgb, #bcbcbc 16%, #121212);
+  --muted: color-mix(in srgb, #bcbcbc 12%, #121212);
+  --muted-foreground: #bcbcbc;
+  --border: color-mix(in srgb, #bcbcbc 28%, transparent);
+  --ring: #d6ff00;
 }
 
 @layer base {

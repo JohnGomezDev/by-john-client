@@ -92,7 +92,7 @@ export default async function PostsPage({
           <Suspense
             fallback={
               <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,280px)_minmax(0,1fr)] lg:gap-8">
-                <div className="h-64 animate-pulse rounded-xl border border-border bg-white" />
+                <div className="h-64 animate-pulse rounded-xl border border-border bg-background" />
                 <PostsListSkeleton />
               </div>
             }

@@ -41,12 +41,12 @@
   --primary-foreground: #ffffff;
   --secondary: var(--brand-secondary);
   --secondary-foreground: var(--brand-primary);
-  --tertiary: var(--brand-tertiary);
+  --tertiary: color-mix(in srgb, var(--brand-secondary) 45%, var(--brand-background));
   --tertiary-foreground: var(--brand-primary);
   --neutral: var(--brand-neutral);
-  --muted: color-mix(in srgb, var(--brand-neutral) 6%, white);
-  --muted-foreground: var(--brand-neutral);
-  --border: color-mix(in srgb, var(--brand-neutral) 14%, white);
+  --muted: color-mix(in srgb, var(--brand-tertiary) 28%, var(--brand-background));
+  --muted-foreground: var(--brand-tertiary);
+  --border: color-mix(in srgb, var(--brand-tertiary) 55%, var(--brand-background));
   --ring: var(--brand-secondary);
 }
 

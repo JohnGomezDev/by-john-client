@@ -25,7 +25,7 @@ export async function BlogFooter(): Promise<React.JSX.Element> {
         <div className="grid gap-10 sm:gap-12 md:grid-cols-[minmax(0,1.4fr)_minmax(0,0.8fr)] md:gap-16">
           <div className="flex flex-col gap-5">
             <SiteBrand href={ROUTES.home} name={SITE_NAME} tone="light" />
-            <p className="max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+            <p className="max-w-md text-sm leading-relaxed text-neutral/65 sm:text-base">
               {SITE_DESCRIPTION}
             </p>
             <nav aria-label="Redes sociales">
@@ -46,7 +46,7 @@ export async function BlogFooter(): Promise<React.JSX.Element> {
                   <li key={category.id}>
                     <Link
                       href={buildCategoryHref(category.slug)}
-                      className="text-sm text-muted-foreground transition-colors hover:text-primary sm:text-base"
+                      className="text-sm text-neutral/65 transition-colors hover:text-primary sm:text-base"
                     >
                       {category.name}
                     </Link>
@@ -54,7 +54,7 @@ export async function BlogFooter(): Promise<React.JSX.Element> {
                 ))}
               </ul>
             ) : (
-              <p className="mt-4 text-sm text-muted-foreground sm:mt-5">
+              <p className="mt-4 text-sm text-neutral/65 sm:mt-5">
                 Aún no hay categorías.
               </p>
             )}
@@ -62,7 +62,7 @@ export async function BlogFooter(): Promise<React.JSX.Element> {
         </div>
 
         <div className="mt-10 flex flex-col gap-4 border-t border-border pt-6 sm:mt-12 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-          <p className="text-xs text-muted-foreground sm:text-sm">
+          <p className="text-xs text-neutral/65 sm:text-sm">
             © {currentYear} {SITE_FULL_NAME}. Todos los derechos reservados.
           </p>
 
@@ -72,7 +72,7 @@ export async function BlogFooter(): Promise<React.JSX.Element> {
                 <li key={item.label}>
                   <Link
                     href={item.href}
-                    className="text-xs text-muted-foreground transition-colors hover:text-primary sm:text-sm"
+                    className="text-xs text-neutral/65 transition-colors hover:text-primary sm:text-sm"
                   >
                     {item.label}
                   </Link>

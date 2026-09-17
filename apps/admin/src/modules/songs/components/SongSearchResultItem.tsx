@@ -52,7 +52,7 @@ export function SongSearchResultItem({
               size="sm"
               disabled={isSavingFavorite}
               onClick={handleSaveFavorite}
-              className="h-8 cursor-pointer border-primary bg-white text-primary hover:bg-secondary/40"
+              className="h-8 cursor-pointer border-primary bg-background text-primary hover:bg-secondary/40"
             >
               <Heart aria-hidden="true" className="size-3.5" />
               <span className="hidden sm:inline">

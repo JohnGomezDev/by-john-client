@@ -66,7 +66,7 @@ export function PostCard({ post, className }: IPostCardProps): React.JSX.Element
   return (
     <article
       className={cn(
-        'rounded-xl border border-border bg-white p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6',
+        'rounded-xl border border-border bg-background p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6',
         className,
       )}
     >

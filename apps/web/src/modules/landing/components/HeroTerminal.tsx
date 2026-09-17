@@ -60,7 +60,7 @@ export function HeroTerminal(): React.JSX.Element {
         className="pointer-events-none absolute inset-0 opacity-[0.04]"
         style={{
           backgroundImage:
-            'radial-gradient(circle, #d83a2e 1px, transparent 1px)',
+            'radial-gradient(circle, #d6ff00 1px, transparent 1px)',
           backgroundSize: '22px 22px',
         }}
       />
