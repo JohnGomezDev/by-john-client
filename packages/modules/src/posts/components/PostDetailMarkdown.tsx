@@ -1,6 +1,6 @@
 'use client';
 
-import 'highlight.js/styles/obsidian.min.css';
+import 'highlight.js/styles/gml.css';
 import '../styles/post-detail-markdown.css';
 
 import Image from 'next/image';

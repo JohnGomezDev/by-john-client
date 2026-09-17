@@ -50,11 +50,7 @@ export function PostDetailMeta({ post }: IPostDetailMetaProps): React.JSX.Elemen
           </div>
         </div>
 
-        <PostDetailShareButtons
-          url={canonicalUrl}
-          title={post.title}
-          shareUrls={shareUrls}
-        />
+        <PostDetailShareButtons url={canonicalUrl} shareUrls={shareUrls} />
       </div>
     </div>
   );
