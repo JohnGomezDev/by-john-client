@@ -61,7 +61,7 @@ export function HeroSection(): React.JSX.Element {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              ¿Te gusta leer?
+              ¿Te gusta aprender?
             </a>
             <a
               href={GITHUB_HREF}

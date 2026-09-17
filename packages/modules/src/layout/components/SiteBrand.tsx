@@ -12,6 +12,7 @@ interface ISiteBrandProps {
   animated?: boolean;
   /** `light` = blog (accent mark on light canvas). `dark` = web (accent mark on dark canvas). */
   tone?: TLayoutTone;
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 function BrandMark({
@@ -58,6 +59,7 @@ export function SiteBrand({
   size = 'md',
   animated = false,
   tone = 'light',
+  onClick,
 }: ISiteBrandProps): React.JSX.Element {
   const markSize = size === 'sm' ? 'size-7' : 'size-8 sm:size-9';
   const textSize = size === 'sm' ? 'text-base' : 'text-lg sm:text-xl';
@@ -65,6 +67,7 @@ export function SiteBrand({
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={cn(
         'inline-flex items-center gap-2.5 transition-opacity',
         tone === 'light'

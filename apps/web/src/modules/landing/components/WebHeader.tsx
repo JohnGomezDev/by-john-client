@@ -9,6 +9,7 @@ import { SOCIAL_LINKS } from '@repo/modules/layout/constants/social.constants';
 
 import { ROUTES } from '@/lib/constants/routes.constants';
 import { NAV_LINKS, SITE_NAME } from '@/modules/landing/constants/landing.constants';
+import { handleBrandClick } from '@/modules/landing/utils/brand-navigation.utils';
 
 export function WebHeader(): React.JSX.Element {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,6 +24,7 @@ export function WebHeader(): React.JSX.Element {
           size="sm"
           animated
           tone="dark"
+          onClick={handleBrandClick}
         />
       }
       below={
