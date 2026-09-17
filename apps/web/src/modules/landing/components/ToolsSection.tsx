@@ -12,19 +12,19 @@ import {
 import { useTypingAnimation } from '@/modules/landing/hooks/use-typing-animation';
 
 function CodeKeyword({ children }: { children: React.ReactNode }): React.JSX.Element {
-  return <span className="text-sky-300">{children}</span>;
-}
-
-function CodeProperty({ children }: { children: React.ReactNode }): React.JSX.Element {
   return <span className="text-accent">{children}</span>;
 }
 
+function CodeProperty({ children }: { children: React.ReactNode }): React.JSX.Element {
+  return <span className="text-foreground">{children}</span>;
+}
+
 function CodeString({ children }: { children: React.ReactNode }): React.JSX.Element {
-  return <span className="text-amber-200">{children}</span>;
+  return <span className="text-foreground/80">{children}</span>;
 }
 
 function CodeType({ children }: { children: React.ReactNode }): React.JSX.Element {
-  return <span className="text-violet-300">{children}</span>;
+  return <span className="text-accent/80">{children}</span>;
 }
 
 function CodeComment({ children }: { children: React.ReactNode }): React.JSX.Element {

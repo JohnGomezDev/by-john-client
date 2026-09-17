@@ -51,16 +51,16 @@
 }
 
 :root {
-  --background: #0b1120;
-  --foreground: #f1f5f9;
-  --accent: var(--brand-secondary);
-  --accent-foreground: #0b1120;
-  --surface: #131e2e;
-  --surface-elevated: #1a2840;
-  --muted: #1a2436;
-  --muted-foreground: #94a3b8;
-  --border: rgb(148 163 184 / 0.12);
-  --ring: var(--brand-secondary);
+  --background: #171717;
+  --foreground: #f4f0e8;
+  --accent: #d83a2e;
+  --accent-foreground: #f4f0e8;
+  --surface: color-mix(in srgb, #f4f0e8 4%, #171717);
+  --surface-elevated: color-mix(in srgb, #f4f0e8 8%, #171717);
+  --muted: color-mix(in srgb, #f4f0e8 6%, #171717);
+  --muted-foreground: color-mix(in srgb, #f4f0e8 62%, #171717);
+  --border: color-mix(in srgb, #f4f0e8 12%, transparent);
+  --ring: #d83a2e;
 }
 
 @layer base {

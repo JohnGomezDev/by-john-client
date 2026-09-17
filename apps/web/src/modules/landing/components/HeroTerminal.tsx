@@ -12,9 +12,9 @@ const TONE_CLASS: Record<TTerminalTone, string> = {
   default: 'text-foreground',
   muted: 'text-muted-foreground',
   accent: 'text-accent',
-  sky: 'text-sky-300',
-  amber: 'text-amber-200',
-  error: 'text-red-400',
+  sky: 'text-foreground',
+  amber: 'text-muted-foreground',
+  error: 'text-accent',
 };
 
 function TerminalLineView({ line, prompt }: { line: ITerminalLine; prompt: string }): React.JSX.Element {
@@ -60,17 +60,17 @@ export function HeroTerminal(): React.JSX.Element {
         className="pointer-events-none absolute inset-0 opacity-[0.04]"
         style={{
           backgroundImage:
-            'radial-gradient(circle, #86efac 1px, transparent 1px)',
+            'radial-gradient(circle, #d83a2e 1px, transparent 1px)',
           backgroundSize: '22px 22px',
         }}
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-sky-500/5" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-foreground/5" />
 
       {/* Title bar — matches ToolsSection chrome */}
       <div className="relative z-10 flex shrink-0 items-center gap-2 border-b border-border bg-surface-elevated px-4 py-3">
-        <span className="size-2.5 rounded-full bg-[#f87171]/80" aria-hidden="true" />
-        <span className="size-2.5 rounded-full bg-[#fde047]/80" aria-hidden="true" />
         <span className="size-2.5 rounded-full bg-accent/80" aria-hidden="true" />
+        <span className="size-2.5 rounded-full bg-foreground/50" aria-hidden="true" />
+        <span className="size-2.5 rounded-full bg-muted-foreground/80" aria-hidden="true" />
         <span className="ml-3 font-mono text-xs text-muted-foreground">
           {TERMINAL_WINDOW_TITLE}
         </span>

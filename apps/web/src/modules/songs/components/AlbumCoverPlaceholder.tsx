@@ -1,7 +1,7 @@
 export function AlbumCoverPlaceholder(): React.JSX.Element {
   return (
     <div
-      className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-accent/25 via-surface-elevated to-sky-500/15 sm:size-16"
+      className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-accent/25 via-surface-elevated to-foreground/10 sm:size-16"
       aria-hidden="true"
     >
       <span className="absolute inset-[18%] rounded-full border border-accent/20" />

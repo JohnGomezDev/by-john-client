@@ -13,6 +13,5 @@ export interface INavLink {
 
 export const FOOTER_LEGAL_LINKS: readonly INavLink[] = [
   { label: 'Política de Privacidad', href: ROUTES.privacyPolicy },
-  { label: 'Términos', href: ROUTES.termsOfUse },
-  { label: 'Contacto', href: '#' },
+  { label: 'Términos de uso', href: ROUTES.termsOfUse }
 ] as const;
