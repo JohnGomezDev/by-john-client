@@ -1,7 +1,13 @@
 import { ROUTES } from '@/lib/constants/routes.constants';
 
-export const SITE_NAME = 'byJohn';
-export const SITE_FULL_NAME = 'byJohn Blog';
+/** Display name in the UI. */
+export const SITE_NAME = 'John-ish';
+/** Public blog title shown in the UI. */
+export const SITE_FULL_NAME = 'John-ish Blog';
+/** Registered brand / domain label (no hyphen). */
+export const SITE_BRAND = 'John-ish';
+/** Blog public hostname placeholder. */
+export const SITE_DOMAIN = 'blog.johnish.dev';
 
 export const SITE_DESCRIPTION =
   'Experiencias, ideas y aprendizajes desde el código hasta las tendencias que están redefiniendo la tecnología.';

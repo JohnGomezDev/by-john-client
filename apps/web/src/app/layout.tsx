@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: 'John Gomez · Desarrollador de Software Full-Stack',
-    template: '%s · byJohn',
+    template: '%s · John-ish',
   },
   description:
     'Portafolio de John Gomez, desarrollador full-stack especializado en Next.js, TypeScript y arquitecturas de software escalables. Disponible para nuevos proyectos.',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'es_ES',
-    siteName: 'byJohn',
+    siteName: 'John-ish',
     url: siteUrl,
   },
   twitter: {

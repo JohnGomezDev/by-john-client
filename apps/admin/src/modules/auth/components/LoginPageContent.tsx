@@ -14,7 +14,7 @@ export function LoginPageContent(): React.JSX.Element {
             <PenLine className="size-6 text-white sm:size-7" />
           </div>
           <h1 className="text-xl font-bold tracking-tight text-primary sm:text-2xl">
-            byJohn dashboard
+            John-ish dashboard
           </h1>
         </header>
 

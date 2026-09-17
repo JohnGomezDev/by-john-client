@@ -9,8 +9,8 @@ import { ROUTES } from '@/lib/constants/routes.constants';
 
 import {
   FOOTER_LEGAL_LINKS,
+  SITE_BRAND,
   SITE_DESCRIPTION,
-  SITE_FULL_NAME,
   SITE_NAME,
 } from '../constants/layout.constants';
 import { buildCategoryHref } from '../utils/footer.utils';
@@ -63,7 +63,7 @@ export async function BlogFooter(): Promise<React.JSX.Element> {
 
         <div className="mt-10 flex flex-col gap-4 border-t border-border pt-6 sm:mt-12 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
           <p className="text-xs text-neutral/65 sm:text-sm">
-            © {currentYear} {SITE_FULL_NAME}. Todos los derechos reservados.
+            © {currentYear} {SITE_BRAND}. Todos los derechos reservados.
           </p>
 
           <nav aria-label="Enlaces legales">

@@ -1,6 +1,7 @@
 import {
   BLOG_HREF,
   GITHUB_HREF,
+  SITE_BRAND,
   SITE_NAME,
 } from '@/modules/landing/constants/landing.constants';
 
@@ -24,12 +25,12 @@ export interface ITerminalCommand {
   run: () => readonly Omit<ITerminalLine, 'id'>[];
 }
 
-export const TERMINAL_PROMPT = `${SITE_NAME.toLowerCase()} ~ %`;
+export const TERMINAL_PROMPT = `${SITE_BRAND.toLowerCase()} ~ %`;
 
-export const TERMINAL_WINDOW_TITLE = 'byjohn — zsh';
+export const TERMINAL_WINDOW_TITLE = `${SITE_BRAND.toLowerCase()} — zsh`;
 
 export const TERMINAL_WELCOME: readonly Omit<ITerminalLine, 'id'>[] = [
-  { text: 'Bienvenido a byJohn OS (build del portafolio).', tone: 'muted' },
+  { text: `Bienvenido a ${SITE_NAME} OS (build del portafolio).`, tone: 'muted' },
   {
     text: 'Escribe `help` para ver comandos — o prueba algo raro.',
     tone: 'muted',
@@ -167,7 +168,7 @@ const funCommands: ITerminalCommand[] = [
     fun: true,
     run: () =>
       lines([
-        { text: 'byJohnOS 1.0.0 (Edición Intencional)', tone: 'accent' },
+        { text: `${SITE_BRAND}OS 1.0.0 (Edición Intencional)`, tone: 'accent' },
         '-------------------------------',
         { text: 'Host:     una silla cómoda', tone: 'muted' },
         { text: 'CPU:      overthinking.js @ 3 pensamientos/s', tone: 'muted' },

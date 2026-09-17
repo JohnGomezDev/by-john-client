@@ -19,7 +19,7 @@ const ubuntuCondensed = Ubuntu_Condensed({
 });
 
 export const metadata: Metadata = {
-  title: 'byJohn - Dashboard de administración',
+  title: 'John-ish - Dashboard de administración',
   robots: { index: false, follow: false },
 };
 

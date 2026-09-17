@@ -25,8 +25,8 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'byJohn Blog · Desarrollo de Software',
-    template: '%s · byJohn Blog',
+    default: 'John-ish Blog · Desarrollo de Software',
+    template: '%s · John-ish Blog',
   },
   description:
     'Artículos técnicos sobre arquitectura de software, Next.js, TypeScript y buenas prácticas de desarrollo. Reflexiones honestas de un desarrollador full-stack en activo.',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'es_ES',
-    siteName: 'byJohn Blog',
+    siteName: 'John-ish Blog',
     url: siteUrl,
   },
   twitter: {

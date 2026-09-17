@@ -53,7 +53,7 @@ export function AdminLayoutShell({ children }: IAdminLayoutShellProps): React.JS
           >
             <Menu className="size-5" />
           </Button>
-          <p className="ml-2 truncate font-display text-base font-bold text-primary">byJohn dashboard</p>
+          <p className="ml-2 truncate font-display text-base font-bold text-primary">John-ish dashboard</p>
         </header>
 
         <main className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">{children}</main>

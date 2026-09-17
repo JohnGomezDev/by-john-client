@@ -10,7 +10,7 @@ interface ISiteBrandProps {
   size?: 'sm' | 'md';
   /** Caret blink — intended for the header mark only. */
   animated?: boolean;
-  /** `light` = blog (mint on navy text). `dark` = web (mint on dark canvas). */
+  /** `light` = blog (accent mark on light canvas). `dark` = web (accent mark on dark canvas). */
   tone?: TLayoutTone;
 }
 
@@ -18,15 +18,18 @@ function BrandMark({
   className,
   animated = false,
   tone = 'light',
+  size = 'md',
 }: {
   className?: string;
   animated?: boolean;
   tone?: TLayoutTone;
+  size?: 'sm' | 'md';
 }): React.JSX.Element {
   return (
     <span
       className={cn(
-        'inline-flex shrink-0 items-center justify-center rounded-md',
+        'inline-flex shrink-0 items-center justify-center rounded-md font-display font-bold tracking-tight',
+        size === 'sm' ? 'text-xs' : 'text-sm sm:text-base',
         tone === 'light'
           ? 'bg-secondary text-primary'
           : 'bg-accent text-accent-foreground',
@@ -34,12 +37,16 @@ function BrandMark({
       )}
       aria-hidden="true"
     >
-      <span
-        className={cn(
-          'h-[52%] w-0.5 rounded-full bg-current sm:w-[2.5px]',
-          animated && 'animate-brand-caret-blink motion-reduce:animate-none',
-        )}
-      />
+      <span className="inline-flex items-baseline leading-none">
+        <span>J</span>
+        <span
+          className={cn(
+            animated && 'animate-brand-caret-blink motion-reduce:animate-none',
+          )}
+        >
+          _
+        </span>
+      </span>
     </span>
   );
 }
@@ -67,7 +74,7 @@ export function SiteBrand({
         className,
       )}
     >
-      <BrandMark className={markSize} animated={animated} tone={tone} />
+      <BrandMark className={markSize} animated={animated} tone={tone} size={size} />
       <span className={cn('font-display font-bold tracking-tight', textSize)}>
         {name}
       </span>

@@ -12,7 +12,7 @@ export function AdminSidebar({ onNavigate }: IAdminSidebarProps): React.JSX.Elem
     <div className="flex h-full flex-col">
       <div className="border-b border-border px-6 py-5">
         <p className="font-display text-lg font-bold tracking-tight text-primary sm:text-xl">
-          byJohn dashboard
+          John-ish dashboard
         </p>
       </div>
 

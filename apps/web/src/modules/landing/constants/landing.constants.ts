@@ -1,4 +1,7 @@
-export const SITE_NAME = 'byJohn';
+/** Display name in the UI. */
+export const SITE_NAME = 'John-ish';
+/** Registered brand / domain label (no hyphen). */
+export const SITE_BRAND = 'John-ish';
 
 /** Shared vertical rhythm between landing sections (mobile-first). */
 export const SECTION_CLASS =

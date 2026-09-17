@@ -35,7 +35,7 @@ export async function generateMetadata({
       ? `Resultados para "${params.search}"`
       : 'Todos los artículos',
     description: isSearching
-      ? `Artículos de byJohn Blog que coinciden con la búsqueda "${params.search}". Desarrollo de software, arquitecturas y buenas prácticas.`
+      ? `Artículos de ${SITE_FULL_NAME} que coinciden con la búsqueda "${params.search}". Desarrollo de software, arquitecturas y buenas prácticas.`
       : 'Explora todos los artículos sobre arquitectura de software, Next.js, TypeScript y el oficio de construir software que dure.',
     alternates: {
       canonical: postsUrl,
