@@ -13,7 +13,7 @@ export function PrivacyPolicyContent(): React.JSX.Element {
   return (
     <article className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
       <header className="border-b border-border pb-6 sm:pb-8">
-        <h1 className="font-display text-2xl leading-tight font-bold tracking-tight text-primary sm:text-3xl md:text-4xl">
+        <h1 className="font-display text-2xl leading-tight font-medium tracking-tight text-primary sm:text-3xl md:text-4xl">
           Política de Privacidad
         </h1>
         <p className="mt-3 text-sm text-muted-foreground sm:text-base">
@@ -30,7 +30,7 @@ export function PrivacyPolicyContent(): React.JSX.Element {
         </p>
 
         <section className="flex flex-col gap-3 sm:gap-4">
-          <h2 className="font-display text-xl font-bold tracking-tight text-primary sm:text-2xl">
+          <h2 className="font-display text-xl font-medium tracking-tight text-primary sm:text-2xl">
             1. Responsable
           </h2>
           <p>
@@ -68,7 +68,7 @@ export function PrivacyPolicyContent(): React.JSX.Element {
         </section>
 
         <section className="flex flex-col gap-3 sm:gap-4">
-          <h2 className="font-display text-xl font-bold tracking-tight text-primary sm:text-2xl">
+          <h2 className="font-display text-xl font-medium tracking-tight text-primary sm:text-2xl">
             2. Información que recopilamos
           </h2>
           <p>
@@ -86,7 +86,7 @@ export function PrivacyPolicyContent(): React.JSX.Element {
         </section>
 
         <section className="flex flex-col gap-3 sm:gap-4">
-          <h2 className="font-display text-xl font-bold tracking-tight text-primary sm:text-2xl">
+          <h2 className="font-display text-xl font-medium tracking-tight text-primary sm:text-2xl">
             3. Información técnica
           </h2>
           <p>
@@ -109,7 +109,7 @@ export function PrivacyPolicyContent(): React.JSX.Element {
         </section>
 
         <section className="flex flex-col gap-3 sm:gap-4">
-          <h2 className="font-display text-xl font-bold tracking-tight text-primary sm:text-2xl">
+          <h2 className="font-display text-xl font-medium tracking-tight text-primary sm:text-2xl">
             4. Cookies y tecnologías de seguimiento
           </h2>
           <p>
@@ -126,7 +126,7 @@ export function PrivacyPolicyContent(): React.JSX.Element {
         </section>
 
         <section className="flex flex-col gap-3 sm:gap-4">
-          <h2 className="font-display text-xl font-bold tracking-tight text-primary sm:text-2xl">
+          <h2 className="font-display text-xl font-medium tracking-tight text-primary sm:text-2xl">
             5. Enlaces a sitios y servicios externos
           </h2>
           <p>
@@ -147,7 +147,7 @@ export function PrivacyPolicyContent(): React.JSX.Element {
         </section>
 
         <section className="flex flex-col gap-3 sm:gap-4">
-          <h2 className="font-display text-xl font-bold tracking-tight text-primary sm:text-2xl">
+          <h2 className="font-display text-xl font-medium tracking-tight text-primary sm:text-2xl">
             6. Finalidad del tratamiento de datos personales
           </h2>
           <p>
@@ -165,7 +165,7 @@ export function PrivacyPolicyContent(): React.JSX.Element {
         </section>
 
         <section className="flex flex-col gap-3 sm:gap-4">
-          <h2 className="font-display text-xl font-bold tracking-tight text-primary sm:text-2xl">
+          <h2 className="font-display text-xl font-medium tracking-tight text-primary sm:text-2xl">
             7. Consultas y solicitudes
           </h2>
           <p>
@@ -188,7 +188,7 @@ export function PrivacyPolicyContent(): React.JSX.Element {
         </section>
 
         <section className="flex flex-col gap-3 sm:gap-4">
-          <h2 className="font-display text-xl font-bold tracking-tight text-primary sm:text-2xl">
+          <h2 className="font-display text-xl font-medium tracking-tight text-primary sm:text-2xl">
             8. Seguridad
           </h2>
           <p>
@@ -204,7 +204,7 @@ export function PrivacyPolicyContent(): React.JSX.Element {
         </section>
 
         <section className="flex flex-col gap-3 sm:gap-4">
-          <h2 className="font-display text-xl font-bold tracking-tight text-primary sm:text-2xl">
+          <h2 className="font-display text-xl font-medium tracking-tight text-primary sm:text-2xl">
             9. Actualizaciones de esta política
           </h2>
           <p>

@@ -30,7 +30,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --font-sans: var(--font-ubuntu-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-ubuntu-condensed), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-saira-condensed), ui-sans-serif, system-ui, sans-serif;
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -108,19 +108,19 @@
   }
 
   .post-form-mdx-editor-content h1 {
-    @apply mt-6 mb-4 font-display text-3xl font-bold text-primary;
+    @apply mt-6 mb-4 font-display text-3xl font-medium text-primary;
   }
 
   .post-form-mdx-editor-content h2 {
-    @apply mt-6 mb-3 font-display text-2xl font-bold text-primary;
+    @apply mt-6 mb-3 font-display text-2xl font-medium text-primary;
   }
 
   .post-form-mdx-editor-content h3 {
-    @apply mt-5 mb-2 font-display text-xl font-semibold text-primary;
+    @apply mt-5 mb-2 font-display text-xl font-medium text-primary;
   }
 
   .post-form-mdx-editor-content h4 {
-    @apply mt-4 mb-2 font-display text-lg font-semibold text-primary;
+    @apply mt-4 mb-2 font-display text-lg font-medium text-primary;
   }
 
   .post-form-mdx-editor-content ul {

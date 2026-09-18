@@ -89,7 +89,7 @@ export function PostCard({ post, className }: IPostCardProps): React.JSX.Element
         ) : null}
       </div>
 
-      <h2 className="font-display text-xl leading-snug font-bold tracking-tight text-primary sm:text-2xl">
+      <h2 className="font-display text-xl leading-snug font-medium tracking-tight text-primary sm:text-2xl">
         <Link href={href} className="transition-colors hover:text-primary/80">
           {post.title}
         </Link>

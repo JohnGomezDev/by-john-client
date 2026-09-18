@@ -24,7 +24,7 @@ export function BlogPreviewSection(): React.JSX.Element {
         <div className="flex flex-col items-center gap-5 px-6 py-14 text-center sm:gap-6 sm:px-12 sm:py-16 lg:py-20">
           <h2
             id="blog-preview-heading"
-            className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl"
+            className="font-display text-3xl font-medium tracking-tight text-foreground sm:text-4xl lg:text-5xl"
           >
             Del editor al artículo
           </h2>

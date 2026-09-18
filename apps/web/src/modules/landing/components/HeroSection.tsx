@@ -35,7 +35,7 @@ export function HeroSection(): React.JSX.Element {
           <motion.div {...line2}>
             <h1
               id="hero-heading"
-              className="font-display text-4xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:text-6xl"
+              className="font-display text-4xl font-medium leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:text-6xl"
             >
               Menos código,{' '}
               <em className="not-italic text-accent">Más intención.</em>
@@ -61,7 +61,7 @@ export function HeroSection(): React.JSX.Element {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              ¿Te gusta aprender?
+              ¿Te gusta leer?
             </a>
             <a
               href={GITHUB_HREF}

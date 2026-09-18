@@ -20,14 +20,14 @@ export function VibesSection(): React.JSX.Element {
         >
           <h2
             id="vibes-heading"
-            className="font-display text-xl font-bold tracking-tight text-foreground sm:text-2xl"
+            className="font-display text-xl font-medium tracking-tight text-foreground sm:text-2xl"
           >
             Más allá de la pantalla
           </h2>
 
           <div className="flex flex-col gap-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             <p>
-              Para mí, escribir código es fundamentalmente un acto de diseño.
+              Para mí, desarrollar software es fundamentalmente un acto de diseño.
               Cada función, cada interfaz y cada decisión de arquitectura moldea
               la experiencia del usuario final. Me guía el minimalismo: eliminar
               lo accidental para revelar lo esencial.

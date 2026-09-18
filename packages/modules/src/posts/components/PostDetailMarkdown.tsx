@@ -34,22 +34,22 @@ export function PostDetailMarkdown({ content }: IPostDetailMarkdownProps): React
         rehypePlugins={[rehypeRaw, [rehypeHighlight, rehypeHighlightOptions]]}
         components={{
           h1: ({ children }) => (
-            <h1 className="mt-8 font-display text-2xl leading-tight font-bold text-primary first:mt-0 sm:mt-10 sm:text-3xl">
+            <h1 className="mt-8 font-display text-2xl leading-tight font-medium text-primary first:mt-0 sm:mt-10 sm:text-3xl">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="mt-8 font-display text-xl leading-tight font-bold text-primary first:mt-0 sm:mt-10 sm:text-2xl">
+            <h2 className="mt-8 font-display text-xl leading-tight font-medium text-primary first:mt-0 sm:mt-10 sm:text-2xl">
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className="mt-6 font-display text-lg leading-snug font-bold text-primary first:mt-0 sm:mt-8 sm:text-xl">
+            <h3 className="mt-6 font-display text-lg leading-snug font-medium text-primary first:mt-0 sm:mt-8 sm:text-xl">
               {children}
             </h3>
           ),
           h4: ({ children }) => (
-            <h4 className="mt-5 font-display text-base leading-snug font-bold text-primary first:mt-0 sm:mt-6 sm:text-lg">
+            <h4 className="mt-5 font-display text-base leading-snug font-medium text-primary first:mt-0 sm:mt-6 sm:text-lg">
               {children}
             </h4>
           ),

@@ -29,7 +29,7 @@ function BrandMark({
   return (
     <span
       className={cn(
-        'inline-flex shrink-0 items-center justify-center rounded-md font-display font-bold tracking-tight',
+        'inline-flex shrink-0 items-center justify-center rounded-md font-display font-medium tracking-tight',
         size === 'sm' ? 'text-xs' : 'text-sm sm:text-base',
         tone === 'light'
           ? 'bg-secondary text-primary'
@@ -78,7 +78,7 @@ export function SiteBrand({
       )}
     >
       <BrandMark className={markSize} animated={animated} tone={tone} size={size} />
-      <span className={cn('font-display font-bold tracking-tight', textSize)}>
+      <span className={cn('font-display font-medium tracking-tight', textSize)}>
         {name}
       </span>
     </Link>

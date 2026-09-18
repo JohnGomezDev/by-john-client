@@ -19,7 +19,7 @@
   --color-border: var(--border);
   --color-ring: var(--ring);
   --font-sans: var(--font-ubuntu-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-ubuntu-condensed), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-saira-condensed), ui-sans-serif, system-ui, sans-serif;
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);

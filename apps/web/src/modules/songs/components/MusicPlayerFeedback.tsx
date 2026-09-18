@@ -21,7 +21,7 @@ export function MusicPlayerFeedback({
       <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
         <AlbumCoverPlaceholder />
         <div className="space-y-1.5">
-          <p className="font-display text-base font-bold text-foreground">{title}</p>
+          <p className="font-display text-base font-medium text-foreground">{title}</p>
           <p className="max-w-[16rem] text-sm text-muted-foreground">{message}</p>
         </div>
         {onRetry ? (

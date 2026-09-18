@@ -38,7 +38,7 @@ export function MusicPlayerContent({ song }: IMusicPlayerContentProps): React.JS
       <div className="flex items-center gap-3.5 sm:gap-4">
         <AlbumCover song={song} />
         <div className="min-w-0 flex-1">
-          <p className="truncate font-display text-base font-bold text-foreground sm:text-lg">
+          <p className="truncate font-display text-base font-medium text-foreground sm:text-lg">
             {song.trackName}
           </p>
           <p className="mt-0.5 truncate text-sm text-muted-foreground">{artistNames}</p>

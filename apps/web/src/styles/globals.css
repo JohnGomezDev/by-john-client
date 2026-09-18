@@ -15,7 +15,7 @@
   --color-border: var(--border);
   --color-ring: var(--ring);
   --font-sans: var(--font-ubuntu-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-ubuntu-condensed), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-saira-condensed), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --animate-brand-caret-blink: brand-caret-blink 1s step-end infinite;
   --animate-pulse-ring: pulse-ring 2.5s ease-out infinite;

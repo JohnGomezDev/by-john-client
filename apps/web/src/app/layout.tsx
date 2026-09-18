@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Ubuntu_Condensed, Ubuntu_Sans } from 'next/font/google';
+import { Saira_Condensed, Ubuntu_Sans } from 'next/font/google';
 
 import { WebFooter } from '@/modules/landing/components/WebFooter';
 import { WebHeader } from '@/modules/landing/components/WebHeader';
@@ -14,10 +14,10 @@ const ubuntuSans = Ubuntu_Sans({
   display: 'swap',
 });
 
-const ubuntuCondensed = Ubuntu_Condensed({
-  weight: '400',
+const sairaCondensed = Saira_Condensed({
+  weight: ['400', '500'],
   subsets: ['latin', 'latin-ext'],
-  variable: '--font-ubuntu-condensed',
+  variable: '--font-saira-condensed',
   display: 'swap',
 });
 
@@ -52,7 +52,7 @@ export default function RootLayout({
 }>): React.JSX.Element {
   return (
     <html lang="es">
-      <body className={`${ubuntuSans.variable} ${ubuntuCondensed.variable} antialiased`}>
+      <body className={`${ubuntuSans.variable} ${sairaCondensed.variable} antialiased`}>
         <Providers>
           <div className="flex min-h-dvh flex-col">
             <WebHeader />

@@ -146,7 +146,7 @@ export function ToolsSection(): React.JSX.Element {
       <motion.h2
         {...heading}
         id="technologies-heading"
-        className="mb-8 font-display text-2xl font-bold tracking-tight text-foreground sm:mb-10 sm:text-3xl"
+        className="mb-8 font-display text-2xl font-medium tracking-tight text-foreground sm:mb-10 sm:text-3xl"
       >
         Mi caja de herramientas
       </motion.h2>

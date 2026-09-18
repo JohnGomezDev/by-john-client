@@ -8,7 +8,7 @@ interface IErrorPageProps {
 export default function ErrorPage({ reset }: IErrorPageProps): React.JSX.Element {
   return (
     <section className="mx-auto flex w-full max-w-6xl flex-col items-start gap-4 px-4 py-20 sm:px-6 lg:px-8">
-      <h1 className="font-display text-3xl font-bold text-foreground">
+      <h1 className="font-display text-3xl font-medium text-foreground">
         Algo salió mal
       </h1>
       <p className="text-muted-foreground">Ocurrió un error inesperado.</p>
