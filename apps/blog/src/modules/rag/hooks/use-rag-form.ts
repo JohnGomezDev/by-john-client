@@ -24,6 +24,7 @@ export function useRagForm({ onAppendMessage }: IUseRagFormOptions): {
   queryField: UseFormRegisterReturn<'query'>;
   onSubmit: ReturnType<UseFormHandleSubmit<IRagFormValues>>;
   isPending: boolean;
+  clearErrors: () => void;
   errors: {
     query?: { message?: string };
   };
@@ -34,6 +35,7 @@ export function useRagForm({ onAppendMessage }: IUseRagFormOptions): {
     register,
     handleSubmit,
     reset,
+    clearErrors,
     formState: { errors },
   } = useForm<IRagFormValues>({
     defaultValues: {
@@ -102,6 +104,7 @@ export function useRagForm({ onAppendMessage }: IUseRagFormOptions): {
     }),
     onSubmit: handleSubmit(submitQuery),
     isPending,
+    clearErrors,
     errors,
   };
 }

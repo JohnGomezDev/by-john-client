@@ -4,6 +4,7 @@ import { Saira_Condensed, Ubuntu_Sans } from 'next/font/google';
 import { Providers } from '@/lib/providers/Providers';
 import { BlogFooter } from '@/modules/layout/components/BlogFooter';
 import { BlogHeader } from '@/modules/layout/components/BlogHeader';
+import { RagWidget } from '@/modules/rag/components/RagWidget';
 
 import '@/styles/globals.css';
 
@@ -58,6 +59,7 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
             <BlogFooter />
           </div>
+          <RagWidget />
         </Providers>
       </body>
     </html>

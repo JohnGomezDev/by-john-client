@@ -18,6 +18,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
   --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
   --font-sans: var(--font-ubuntu-sans), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-saira-condensed), ui-sans-serif, system-ui, sans-serif;
   --radius-sm: calc(var(--radius) * 0.6);
@@ -48,6 +49,7 @@
   --muted-foreground: var(--brand-tertiary);
   --border: color-mix(in srgb, var(--brand-tertiary) 55%, var(--brand-background));
   --ring: var(--brand-secondary);
+  --destructive: oklch(0.577 0.245 27.325);
 }
 
 @layer base {
