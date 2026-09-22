@@ -9,6 +9,11 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
+import {
+  paragraphContainsImage,
+  paragraphIsOnlyImage,
+} from '../utils/post-detail-markdown.utils';
+
 interface IPostDetailMarkdownProps {
   content: string;
 }
@@ -25,6 +30,9 @@ const rehypeHighlightOptions = {
 function isHighlightedCodeBlock(className?: string): boolean {
   return Boolean(className?.includes('hljs'));
 }
+
+const PARAGRAPH_CLASS_NAME =
+  'mt-4 text-sm leading-relaxed text-neutral first:mt-0 sm:mt-5 sm:text-base sm:leading-7';
 
 export function PostDetailMarkdown({ content }: IPostDetailMarkdownProps): React.JSX.Element {
   return (
@@ -53,11 +61,19 @@ export function PostDetailMarkdown({ content }: IPostDetailMarkdownProps): React
               {children}
             </h4>
           ),
-          p: ({ children }) => (
-            <p className="mt-4 text-sm leading-relaxed text-neutral first:mt-0 sm:mt-5 sm:text-base sm:leading-7">
-              {children}
-            </p>
-          ),
+          p: ({ children, node }) => {
+            // Markdown wraps `![alt](src)` in <p>; our img renderer returns <figure>/<div>,
+            // which is invalid inside <p> and causes hydration errors.
+            if (paragraphContainsImage(node)) {
+              if (paragraphIsOnlyImage(node)) {
+                return <>{children}</>;
+              }
+
+              return <div className={PARAGRAPH_CLASS_NAME}>{children}</div>;
+            }
+
+            return <p className={PARAGRAPH_CLASS_NAME}>{children}</p>;
+          },
           em: ({ children }) => <em className="italic text-neutral">{children}</em>,
           strong: ({ children }) => (
             <strong className="font-bold text-primary underline decoration-secondary decoration-[0.22em] underline-offset-[0.22em]">
@@ -169,3 +185,4 @@ export function PostDetailMarkdown({ content }: IPostDetailMarkdownProps): React
     </div>
   );
 }
+
