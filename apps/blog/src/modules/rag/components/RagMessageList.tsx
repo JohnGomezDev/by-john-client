@@ -1,11 +1,12 @@
 'use client';
 
-import { BotMessageSquare } from 'lucide-react';
+import { ArrowUpRight, BotMessageSquare, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 
 import { ROUTES } from '@/lib/constants/routes.constants';
 
+import { RagAssistantMarkdown } from './RagAssistantMarkdown';
 import type { IRagMessage } from '../types/rag.types';
 
 interface IRagMessageListProps {
@@ -51,16 +52,17 @@ export function RagMessageList({
               aria-hidden
             />
             <article className="rounded-xl border border-border bg-muted px-3.5 py-2.5 text-sm leading-relaxed text-neutral">
-              <p className="whitespace-pre-wrap">{message.content}</p>
+              <RagAssistantMarkdown content={message.content} />
               {message.sources && message.sources.length > 0 ? (
                 <ul className="mt-2 space-y-1 border-t border-border/60 pt-2">
                   {message.sources.map((source) => (
                     <li key={source.slug}>
                       <Link
                         href={ROUTES.detail(source.slug)}
-                        className="text-xs font-medium text-primary underline-offset-2 hover:underline"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-primary underline-offset-2 hover:underline"
                       >
-                        {source.title}
+                        <span>{source.title}</span>
+                        <ArrowUpRight className="size-3 shrink-0" aria-hidden />
                       </Link>
                     </li>
                   ))}
@@ -74,8 +76,9 @@ export function RagMessageList({
       {isPending ? (
         <div className="mr-auto flex max-w-[85%] items-start gap-2">
           <BotMessageSquare className="mt-2.5 size-3.5 shrink-0 text-neutral/50" aria-hidden />
-          <div className="rounded-xl border border-border bg-muted px-3.5 py-2.5 text-sm text-neutral/65">
-            Pensando…
+          <div className="flex items-center gap-2 rounded-xl border border-border bg-muted px-3.5 py-2.5 text-sm text-neutral/65">
+            <Loader2 className="size-3.5 shrink-0 animate-spin" aria-hidden />
+            <span>Pensando…</span>
           </div>
         </div>
       ) : null}

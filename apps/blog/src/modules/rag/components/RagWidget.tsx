@@ -1,51 +1,24 @@
 'use client';
 
-import { useState } from 'react';
-
 import { RagFab } from './RagFab';
 import { RagPanel } from './RagPanel';
 import { useRagForm } from '../hooks/use-rag-form';
-import type { IRagMessage } from '../types/rag.types';
+import { useRagWidget } from '../hooks/use-rag-widget';
 
 export function RagWidget(): React.JSX.Element {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<IRagMessage[]>([
-    {
-      id: 'demo-user',
-      role: 'user',
-      content: '¿Cómo implementar autenticación JWT en NestJS?',
-    },
-    {
-      id: 'demo-assistant',
-      role: 'assistant',
-      content:
-        'Según el post [1], la autenticación JWT en NestJS se implementa con Passport y un módulo Auth que emite el access token tras el login.',
-      sources: [
-        {
-          title: 'Autenticación JWT en NestJS',
-          slug: 'autenticacion-jwt-en-nestjs',
-        },
-      ],
-    },
-  ]);
+  const { isOpen, messages, appendMessage, openPanel, closePanel, clearChat } = useRagWidget();
 
   const { queryField, onSubmit, isPending, errors, clearErrors } = useRagForm({
-    onAppendMessage: (message) => {
-      setMessages((previous) => [...previous, message]);
-    },
+    onAppendMessage: appendMessage,
   });
 
-  const openPanel = (): void => {
-    setIsOpen(true);
-  };
-
-  const closePanel = (): void => {
+  const handleClose = (): void => {
     clearErrors();
-    setIsOpen(false);
+    closePanel();
   };
 
-  const clearChat = (): void => {
-    setMessages([]);
+  const handleClearChat = (): void => {
+    clearChat();
     clearErrors();
   };
 
@@ -56,8 +29,8 @@ export function RagWidget(): React.JSX.Element {
         <RagPanel
           messages={messages}
           isPending={isPending}
-          onClose={closePanel}
-          onClearChat={clearChat}
+          onClose={handleClose}
+          onClearChat={handleClearChat}
           queryField={queryField}
           onSubmit={onSubmit}
           errors={errors}
