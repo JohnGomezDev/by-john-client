@@ -36,33 +36,33 @@ export function RagMessageList({
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-4">
+    <div className="flex min-w-0 flex-1 flex-col gap-3 overflow-x-hidden overflow-y-auto px-4 py-4">
       {messages.map((message) =>
         message.role === 'user' ? (
           <article
             key={message.id}
-            className="ml-auto max-w-[85%] rounded-xl bg-primary px-3.5 py-2.5 text-sm leading-relaxed text-primary-foreground"
+            className="ml-auto max-w-[85%] min-w-0 shrink-0 rounded-xl bg-primary px-3.5 py-2.5 text-sm leading-relaxed wrap-anywhere text-primary-foreground"
           >
-            <p className="whitespace-pre-wrap">{message.content}</p>
+            <p className="whitespace-pre-wrap wrap-anywhere">{message.content}</p>
           </article>
         ) : (
-          <div key={message.id} className="mr-auto flex max-w-[85%] items-start gap-2">
+          <div key={message.id} className="mr-auto flex max-w-[85%] min-w-0 shrink-0 items-start gap-2">
             <BotMessageSquare
               className="mt-2.5 size-3.5 shrink-0 text-neutral/50"
               aria-hidden
             />
-            <article className="rounded-xl border border-border bg-muted px-3.5 py-2.5 text-sm leading-relaxed text-neutral">
+            <article className="min-w-0 flex-1 overflow-hidden rounded-xl border border-border bg-muted px-3.5 py-2.5 text-sm leading-relaxed wrap-anywhere text-neutral">
               <RagAssistantMarkdown content={message.content} />
               {message.sources && message.sources.length > 0 ? (
                 <ul className="mt-2 space-y-1 border-t border-border/60 pt-2">
                   {message.sources.map((source) => (
-                    <li key={source.slug}>
+                    <li key={source.slug} className="min-w-0">
                       <Link
                         href={ROUTES.detail(source.slug)}
-                        className="inline-flex items-center gap-1 text-xs font-medium text-primary underline-offset-2 hover:underline"
+                        className="inline-flex max-w-full items-start gap-1 text-xs font-medium wrap-anywhere text-primary underline-offset-2 hover:underline"
                       >
-                        <span>{source.title}</span>
-                        <ArrowUpRight className="size-3 shrink-0" aria-hidden />
+                        <span className="min-w-0 wrap-anywhere">{source.title}</span>
+                        <ArrowUpRight className="mt-0.5 size-3 shrink-0" aria-hidden />
                       </Link>
                     </li>
                   ))}
@@ -74,7 +74,7 @@ export function RagMessageList({
       )}
 
       {isPending ? (
-        <div className="mr-auto flex max-w-[85%] items-start gap-2">
+        <div className="mr-auto flex max-w-[85%] shrink-0 items-start gap-2">
           <BotMessageSquare className="mt-2.5 size-3.5 shrink-0 text-neutral/50" aria-hidden />
           <div className="flex items-center gap-2 rounded-xl border border-border bg-muted px-3.5 py-2.5 text-sm text-neutral/65">
             <Loader2 className="size-3.5 shrink-0 animate-spin" aria-hidden />
