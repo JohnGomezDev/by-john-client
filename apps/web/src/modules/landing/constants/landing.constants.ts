@@ -72,4 +72,4 @@ export const TECH_STACK: ITechStackSnippet = {
 /** Número de WhatsApp con código de país, sin espacios ni guiones. */
 export const WHATSAPP_NUMBER = '+573009592092';
 export const WHATSAPP_MESSAGE =
-  'Hola! Vi tu portafolio y me gustaría hablar sobre un proyecto. ¿Tienes disponibilidad?';
+  'Hola John, llegué a través de John-ish y me gustaría hablar contigo';

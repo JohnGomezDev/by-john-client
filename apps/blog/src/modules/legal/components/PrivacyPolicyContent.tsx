@@ -5,11 +5,10 @@ import {
   PRIVACY_CONTROLLER_COUNTRY,
   PRIVACY_CONTROLLER_NAME,
   PRIVACY_POLICY_LAST_UPDATED,
+  PRIVACY_SITE_URL,
 } from '../constants/privacy-policy.constants';
 
 export function PrivacyPolicyContent(): React.JSX.Element {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
-
   return (
     <article className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
       <header className="border-b border-border pb-6 sm:pb-8">
@@ -49,10 +48,10 @@ export function PrivacyPolicyContent(): React.JSX.Element {
             <li>
               <span className="font-medium text-foreground">Sitio web:</span>{' '}
               <a
-                href={siteUrl}
+                href={PRIVACY_SITE_URL}
                 className="text-primary underline-offset-2 transition-colors hover:underline"
               >
-                {siteUrl}
+                {PRIVACY_SITE_URL}
               </a>
             </li>
             <li>

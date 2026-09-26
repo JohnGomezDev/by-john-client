@@ -1,6 +1,9 @@
 import { SITE_FULL_NAME } from '@/modules/layout/constants/layout.constants';
 
-import { TERMS_OF_USE_LAST_UPDATED } from '../constants/terms-of-use.constants';
+import {
+  TERMS_CONTACT_EMAIL,
+  TERMS_OF_USE_LAST_UPDATED,
+} from '../constants/terms-of-use.constants';
 
 export function TermsOfUseContent(): React.JSX.Element {
   return (
@@ -261,8 +264,16 @@ export function TermsOfUseContent(): React.JSX.Element {
           </h2>
           <p>
             Para preguntas relacionadas con el contenido, estos términos o el
-            funcionamiento del sitio, puedes utilizar los medios de contacto
-            disponibles en la página principal o en la sección de contacto.
+            funcionamiento del sitio, puedes escribir a:
+          </p>
+          <p>
+            <span className="font-medium text-foreground">Correo electrónico:</span>{' '}
+            <a
+              href={`mailto:${TERMS_CONTACT_EMAIL}`}
+              className="text-primary underline-offset-2 transition-colors hover:underline"
+            >
+              {TERMS_CONTACT_EMAIL}
+            </a>
           </p>
         </section>
 
