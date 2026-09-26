@@ -10,7 +10,7 @@ export const SITE_BRAND = 'John-ish';
 export const SITE_DOMAIN = 'blog.johnish.dev';
 
 export const SITE_DESCRIPTION =
-  'Experiencias, ideas y aprendizajes desde el código hasta las tendencias que están redefiniendo la tecnología.';
+  'Comparto lo que construyo, aprendo y descubro mientras desarrollo software: experiencias reales, conceptos, decisiones técnicas y proyectos. Sin humo ni recetas mágicas.';
 
 export interface INavLink {
   label: string;

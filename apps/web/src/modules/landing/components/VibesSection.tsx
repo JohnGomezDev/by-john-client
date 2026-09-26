@@ -27,10 +27,7 @@ export function VibesSection(): React.JSX.Element {
 
           <div className="flex flex-col gap-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
             <p>
-              Para mí, desarrollar software es fundamentalmente un acto de diseño.
-              Cada función, cada interfaz y cada decisión de arquitectura moldea
-              la experiencia del usuario final. Me guía el minimalismo: eliminar
-              lo accidental para revelar lo esencial.
+              No todo empieza con la solución correcta. A veces hay que probar, equivocarse, investigar y volver a empezar. Me interesa entender por qué hacemos las cosas de cierta manera, qué problemas estamos resolviendo y qué podemos simplificar. Construyo software, pero también aprendo de cada decisión que tomo en el camino.
             </p>
             <p>
               Fuera del editor, soy una persona apasionada por la vida. Me gustan los deportes, la astronomía, los videojuegos, y por supuesto, la música.

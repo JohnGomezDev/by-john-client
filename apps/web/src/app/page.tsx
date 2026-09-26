@@ -16,7 +16,7 @@ const personSchema = {
   url: siteUrl,
   jobTitle: 'Desarrollador de software',
   description:
-    'Desarrollador full-stack especializado en Next.js, TypeScript y arquitecturas de software escalables. Construye sistemas robustos que equilibran rendimiento y claridad de código.',
+    'John Gomez, desarrollador de software full-stack. Construyo, aprendo y comparto sobre desarrollo web, arquitectura, backend, frontend y tecnología.',
   sameAs: [GITHUB_HREF, BLOG_HREF],
 };
 

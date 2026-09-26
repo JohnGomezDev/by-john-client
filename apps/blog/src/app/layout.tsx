@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: '%s · John-ish Blog',
   },
   description:
-    'Artículos técnicos sobre arquitectura de software, Next.js, TypeScript y buenas prácticas de desarrollo. Reflexiones honestas de un desarrollador full-stack en activo.',
+    'Artículos sobre desarrollo de software, arquitectura, backend, frontend, TypeScript, React, NestJS y tecnología. Experiencias y aprendizajes sin humo ni recetas mágicas.',
   authors: [{ name: 'John Gomez' }],
   creator: 'John Gomez',
   openGraph: {

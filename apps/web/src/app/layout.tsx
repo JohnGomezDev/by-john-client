@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: '%s · John-ish',
   },
   description:
-    'Portafolio de John Gomez, desarrollador full-stack especializado en Next.js, TypeScript y arquitecturas de software escalables. Disponible para nuevos proyectos.',
+    'John Gomez, desarrollador de software full-stack. Construyo, aprendo y comparto sobre desarrollo web, arquitectura, backend, frontend y tecnología.',
   authors: [{ name: 'John Gomez', url: siteUrl }],
   creator: 'John Gomez',
   openGraph: {

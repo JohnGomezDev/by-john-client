@@ -30,7 +30,7 @@ export function BlogPreviewSection(): React.JSX.Element {
           </h2>
           <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base lg:text-lg">
             Lecciones aprendidas en producción, análisis técnicos sin jerga
-            vacía y reflexiones sobre el oficio de construir software que dure.
+            vacía y reflexiones sobre el oficio de construir software con proposito.
           </p>
           <a
             href={BLOG_HREF}
@@ -38,7 +38,7 @@ export function BlogPreviewSection(): React.JSX.Element {
             rel="noopener noreferrer"
             className="mt-1 inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface sm:text-base"
           >
-            Leer el Blog
+            Ir al Blog
             <svg
               viewBox="0 0 24 24"
               fill="none"
